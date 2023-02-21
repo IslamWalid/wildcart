@@ -1,0 +1,14 @@
+{
+  "dbConfig": {
+    "dialect": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "database": "wildcart_dev",
+    "username": "postgres",
+    "password": "secret",
+    "logging": true
+  },
+  "server": {
+    "port": 8080
+  }
+}

@@ -7,8 +7,8 @@
     "start": "nodemon server.js",
     "start:debug": "nodemon --inspect server.js",
     "test": "NODE_ENV=testing jest",
-    "migrate:up": "npx sequelize-cli db:migrate",
-    "migrate:down": "npx sequelize-cli db:migrate:undo"
+    "migrate:up": "NODE_CONFIG_DIR='src/configs/' npx sequelize-cli db:migrate",
+    "migrate:down": "NODE_CONFIG_DIR='src/configs/' npx sequelize-cli db:migrate:undo"
   },
   "repository": {
     "type": "git",
