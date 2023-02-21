@@ -1,0 +1,39 @@
+{
+  "name": "wildcart",
+  "version": "1.0.0",
+  "description": "E-Commerce RESTful API",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "start:debug": "nodemon --inspect server.js",
+    "test": "NODE_ENV=testing jest",
+    "migrate:up": "npx sequelize-cli db:migrate",
+    "migrate:down": "npx sequelize-cli db:migrate:undo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IslamWalid/wildcart.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IslamWalid/wildcart/issues"
+  },
+  "homepage": "https://github.com/IslamWalid/wildcart#readme",
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1"
+  },
+  "dependencies": {
+    "config": "^3.3.9",
+    "dotenv": "^16.0.3",
+    "pg": "^8.9.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.28.0",
+    "sequelize-cli": "^6.6.0"
+  }
+}
