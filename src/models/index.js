@@ -5,7 +5,6 @@ const { Sequelize } = require('sequelize');
 
 const db = {};
 const basename = path.basename(__filename);
-
 const sequelize = new Sequelize(config.get('dbConfig'));
 
 fs
@@ -18,7 +17,7 @@ fs
   ))
   .map((file) => {
     const model = require(path.join(__dirname, file));
-    model.init();
+    model.init(sequelize);
     db[model.name] = model;
 
     return model;
