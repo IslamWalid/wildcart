@@ -5,8 +5,7 @@
     "port": 5432,
     "database": "wildcart_dev",
     "username": "postgres",
-    "password": "secret",
-    "logging": true
+    "password": "secret"
   },
   "server": {
     "port": 8080
