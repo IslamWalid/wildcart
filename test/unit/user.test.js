@@ -3,8 +3,8 @@ require('dotenv').config();
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const req = require('supertest');
-const app = require('../../../app');
-const { sequelize, User, Customer } = require('../../../src/models/');
+const app = require('../../app');
+const { sequelize, User, Customer } = require('../../src/models/');
 
 async function createUser() {
   const id = crypto.randomUUID();
