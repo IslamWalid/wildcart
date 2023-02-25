@@ -30,9 +30,14 @@
     "eslint-plugin-promise": "^6.1.1"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "config": "^3.3.9",
+    "connect-session-sequelize": "^7.1.5",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.9.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.28.0",
