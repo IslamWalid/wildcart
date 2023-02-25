@@ -41,4 +41,6 @@ module.exports = (passport) => {
   passport.serializeUser(serialize);
   passport.deserializeUser(deserialize);
   passport.use(new LocalStrategy(opts, verify));
+
+  return passport;
 };

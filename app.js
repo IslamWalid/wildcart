@@ -4,7 +4,6 @@ const session = require('express-session');
 const db = require('./src/models/');
 const passport = require('passport');
 const userRouter = require('./src/routers/user');
-const configPassport = require('./src/configs/passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
@@ -24,8 +23,6 @@ app.use(session({
     maxAge: 7 * 24 * 60 * 60 * 1000 // expires in 7 days
   }
 }));
-
-configPassport(passport);
 
 app.use(passport.initialize());
 app.use(passport.session());
