@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const db = require('./src/models/');
 const passport = require('passport');
+const userRouter = require('./src/routers/user');
 const configPassport = require('./src/configs/passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
@@ -34,8 +35,6 @@ app.use(cors({
   origin: process.env.ALLOWED_ORIGIN
 }));
 
-app.get('/', (req, res) => {
-  res.send({ msg: 'hello' });
-});
+app.use('/user', userRouter);
 
 module.exports = app;
