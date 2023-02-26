@@ -4,8 +4,9 @@
   "description": "E-Commerce RESTful API",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "debug": "nodemon --inspect index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "debug": "node --inspect index.js",
     "test": "NODE_ENV=test jest",
     "migrate:up": "NODE_CONFIG_DIR='src/configs/' npx sequelize-cli db:migrate",
     "migrate:down": "NODE_CONFIG_DIR='src/configs/' npx sequelize-cli db:migrate:undo",

@@ -4,6 +4,7 @@ const session = require('express-session');
 const db = require('./src/models/');
 const passport = require('passport');
 const userRouter = require('./src/routers/user');
+const errHandler = require('./src/middlewares/err_handler');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
@@ -33,5 +34,7 @@ app.use(cors({
 }));
 
 app.use('/user', userRouter);
+
+app.use(errHandler);
 
 module.exports = app;
