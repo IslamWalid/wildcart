@@ -1,0 +1,43 @@
+name: test
+
+on: [ push ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: secret
+        options: >-
+          --name postgres-test
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: clone the repo
+      uses: actions/checkout@v3
+
+    - name: install dependencies
+      run: npm install
+
+    - name: create wildcart_test database
+      run: docker container exec --user postgres postgres-test psql -c "CREATE DATABASE wildcart_test"
+
+    - name: create database tables
+      run: npm run migrate:up
+      env:
+        NODE_ENV: test
+
+    - name: run jest tests
+      run: npm test
+      env:
+        ALLOWED_ORIGIN: "*"
+        NODE_CONFIG_DIR: src/configs/ 
+        SESSION_SECRET: session secret

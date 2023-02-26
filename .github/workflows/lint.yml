@@ -1,4 +1,4 @@
-name: wildcart CI
+name: lint
 
 on: [ push ]
 
