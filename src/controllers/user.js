@@ -7,23 +7,19 @@ async function register(req, res) {
   const { phone, address, shopName, userType } = req.body;
 
   if (!username || !firstName || !lastName || !password || !phone || !address || !userType) {
-    res.status(400).json({ msg: 'required fields are missing' });
-    return;
+    return res.status(400).json({ msg: 'required fields are missing' });
   }
 
   if (userType === 'seller' && !shopName) {
-    res.status(400).json({ msg: 'required fields are missing' });
-    return;
+    return res.status(400).json({ msg: 'required fields are missing' });
   }
 
   if (!validator.isStrongPassword(password)) {
-    res.status(400).json({ msg: 'weak password' });
-    return;
+    return res.status(400).json({ msg: 'weak password' });
   }
 
   if (!validator.isMobilePhone(phone)) {
-    res.status(400).json({ msg: 'invalid phone number' });
-    return;
+    return res.status(400).json({ msg: 'invalid phone number' });
   }
 
   try {

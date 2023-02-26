@@ -32,10 +32,7 @@
       "warn"
     ],
     "consistent-return": [
-      "warn",
-      {
-        "treatUndefinedAsUnspecified": true
-      }
+      "off"
     ],
     "space-before-function-paren": [
       "warn",

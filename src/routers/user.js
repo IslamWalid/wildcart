@@ -9,19 +9,16 @@ router.post('/register', register);
 router.post('/login', (req, res) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err) {
-      res.sendStatus(500);
-      return;
+      return res.sendStatus(500);
     }
 
     if (!user) {
-      res.status(401).json(info);
-      return;
+      return res.status(401).json(info);
     }
 
     req.login(user, (err) => {
       if (err) {
-        res.sendStatus(500);
-        return;
+        return res.sendStatus(500);
       }
 
       res.sendStatus(200);
@@ -32,8 +29,7 @@ router.post('/login', (req, res) => {
 router.get('/logout', (req, res) => {
   req.logout((err) => {
     if (err) {
-      res.sendStatus(500);
-      return;
+      return res.sendStatus(500);
     }
 
     res.sendStatus(200);
