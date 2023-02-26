@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./src/utils/check_env')();
 
 const app = require('./app');
 const config = require('config');

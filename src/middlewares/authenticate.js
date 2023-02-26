@@ -1,26 +1,26 @@
-function authenticateUser(req, res, next) {
+const authenticateUser = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
 
   res.status(401).json({ msg: 'unauthorized user' });
-}
+};
 
-function authenticateCustomer(req, res, next) {
+const authenticateCustomer = (req, res, next) => {
   if (req.isAuthenticated() && req.user.userType === 'customer') {
     return next();
   }
 
   res.status(401).json({ msg: 'unauthorized user' });
-}
+};
 
-function authenticateSeller(req, res, next) {
+const authenticateSeller = (req, res, next) => {
   if (req.isAuthenticated() && req.user.userType === 'seller') {
     return next();
   }
 
   res.status(401).json({ msg: 'unauthorized user' });
-}
+};
 
 module.exports = {
   authenticateUser,

@@ -1,8 +1,7 @@
 const validator = require('validator');
-const { UniqueConstraintError } = require('sequelize');
 const { createUser } = require('../services/user');
 
-async function register(req, res) {
+const register = async (req, res, next) => {
   const { username, firstName, lastName, password } = req.body;
   const { phone, address, shopName, userType } = req.body;
 
@@ -26,15 +25,9 @@ async function register(req, res) {
     await createUser(req.body);
     res.sendStatus(201);
   } catch (err) {
-    console.error(err);
-    if (err instanceof UniqueConstraintError) {
-      const { username } = err.fields;
-      res.status(409).json({ msg: `${username} already exists` });
-    } else {
-      res.sendStatus(500);
-    }
+    next(err);
   }
-}
+};
 
 module.exports = {
   register

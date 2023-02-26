@@ -6,30 +6,30 @@ const router = express.Router();
 
 router.post('/register', register);
 
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err) {
-      return res.sendStatus(500);
+      return next(err);
     }
 
     if (!user) {
-      return res.status(401).json(info);
+      return next({ status: 401, msg: info.msg });
     }
 
     req.login(user, (err) => {
       if (err) {
-        return res.sendStatus(500);
+        return next(err);
       }
 
       res.sendStatus(200);
     });
-  })(req, res);
+  })(req, res, next);
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) {
-      return res.sendStatus(500);
+      return next(err);
     }
 
     res.sendStatus(200);
