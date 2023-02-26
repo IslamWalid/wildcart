@@ -8,8 +8,8 @@
     "dev": "nodemon index.js",
     "debug": "node --inspect index.js",
     "test": "NODE_ENV=test jest",
-    "migrate:up": "NODE_CONFIG_DIR='src/configs/' npx sequelize-cli db:migrate",
-    "migrate:down": "NODE_CONFIG_DIR='src/configs/' npx sequelize-cli db:migrate:undo",
+    "migrate:up": "npx sequelize-cli db:migrate",
+    "migrate:down": "npx sequelize-cli db:migrate:undo",
     "lint": "eslint . --max-warnings 0"
   },
   "repository": {

@@ -39,5 +39,4 @@ jobs:
       run: npm test
       env:
         ALLOWED_ORIGIN: "*"
-        NODE_CONFIG_DIR: src/configs/ 
         SESSION_SECRET: session secret
