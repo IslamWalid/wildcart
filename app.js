@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const db = require('./src/models/');
 const passport = require('passport');
-const userRouter = require('./src/routers/user');
+const userRouter = require('./src/routes/user');
 const errHandler = require('./src/middlewares/err_handler');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
