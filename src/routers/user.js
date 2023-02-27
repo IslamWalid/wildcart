@@ -13,7 +13,8 @@ router.post('/login', (req, res, next) => {
     }
 
     if (!user) {
-      return next({ status: 401, msg: info.msg });
+      info.status = 401;
+      return next(info);
     }
 
     req.login(user, (err) => {

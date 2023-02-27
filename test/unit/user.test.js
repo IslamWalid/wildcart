@@ -80,7 +80,7 @@ describe('user endpoints', () => {
     await createUser();
     const res = await req(app).post('/user/login').send(reqBody);
     expect(res.statusCode).toBe(401);
-    expect(res.body.msg).toBe('incorrect password');
+    expect(res.body.message).toBe('incorrect password');
   });
 
   it('should logout', async () => {

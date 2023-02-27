@@ -3,7 +3,7 @@ const authenticateUser = (req, res, next) => {
     return next();
   }
 
-  res.status(401).json({ msg: 'unauthorized user' });
+  res.status(401).json({ message: 'unauthorized user' });
 };
 
 const authenticateCustomer = (req, res, next) => {
@@ -11,7 +11,7 @@ const authenticateCustomer = (req, res, next) => {
     return next();
   }
 
-  res.status(401).json({ msg: 'unauthorized user' });
+  res.status(401).json({ message: 'unauthorized user' });
 };
 
 const authenticateSeller = (req, res, next) => {
@@ -19,7 +19,7 @@ const authenticateSeller = (req, res, next) => {
     return next();
   }
 
-  res.status(401).json({ msg: 'unauthorized user' });
+  res.status(401).json({ message: 'unauthorized user' });
 };
 
 module.exports = {

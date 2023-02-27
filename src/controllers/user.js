@@ -6,19 +6,19 @@ const register = async (req, res, next) => {
   const { phone, address, shopName, userType } = req.body;
 
   if (!username || !firstName || !lastName || !password || !phone || !address || !userType) {
-    return res.status(400).json({ msg: 'required fields are missing' });
+    return res.status(400).json({ message: 'required fields are missing' });
   }
 
   if (userType === 'seller' && !shopName) {
-    return res.status(400).json({ msg: 'required fields are missing' });
+    return res.status(400).json({ message: 'required fields are missing' });
   }
 
   if (!validator.isStrongPassword(password)) {
-    return res.status(400).json({ msg: 'weak password' });
+    return res.status(400).json({ message: 'weak password' });
   }
 
   if (!validator.isMobilePhone(phone)) {
-    return res.status(400).json({ msg: 'invalid phone number' });
+    return res.status(400).json({ message: 'invalid phone number' });
   }
 
   try {
