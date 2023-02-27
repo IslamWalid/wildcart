@@ -4,7 +4,7 @@ const session = require('express-session');
 const db = require('./src/models/');
 const passport = require('passport');
 const userRouter = require('./src/routes/user');
-const errHandler = require('./src/middlewares/err_handler');
+const errHandler = require('./src/middlewares/err-handler');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();

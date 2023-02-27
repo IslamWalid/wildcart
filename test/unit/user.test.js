@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('../../src/utils/check_env')();
+require('../../src/utils/check-env')();
 
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
