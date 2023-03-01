@@ -35,7 +35,7 @@ describe('user register', () => {
       firstName: 'Jane',
       lastName: 'Doe',
       password: 'AnotherStrongPassword123!',
-      phone: '+201012345678',
+      phone: '+201087654321',
       address: 'some home address',
       userType: 'seller',
       shopName: 'offmarket'
@@ -71,6 +71,22 @@ describe('user register', () => {
     const res = await req(app).post('/user/register').send(reqBody);
     expect(res.statusCode).toBe(409);
     expect(res.body.message).toBe('username already exists');
+  });
+
+  it('should register new user with already used phone number', async () => {
+    const reqBody = {
+      username: 'john_lnu',
+      firstName: 'John',
+      lastName: 'Lnu',
+      password: 'AnotherStrongPassword123!',
+      phone: '+201012345678',
+      address: 'some home address',
+      userType: 'seller',
+      shopName: 'offmarket'
+    };
+    const res = await req(app).post('/user/register').send(reqBody);
+    expect(res.statusCode).toBe(409);
+    expect(res.body.message).toBe('phone number is already used');
   });
 });
 

@@ -30,6 +30,7 @@ class User extends Model {
       },
       phone: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false
       },
       userType: {
