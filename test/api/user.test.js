@@ -72,7 +72,7 @@ describe('user register', () => {
     };
     const res = await req(app).post('/user/register').send(reqBody);
     expect(res.statusCode).toBe(409);
-    expect(res.body.message).toBe('phone number is already used');
+    expect(res.body.message).toBe('phone already exists');
   });
 });
 
