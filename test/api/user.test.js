@@ -88,6 +88,22 @@ describe('user register', () => {
     expect(res.statusCode).toBe(409);
     expect(res.body.message).toBe('phone number is already used');
   });
+
+  it('should register user with invalid userType', async () => {
+    const reqBody = {
+      username: 'jane_doe',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      password: 'AnotherStrongPassword123!',
+      phone: '+201087654321',
+      address: 'some home address',
+      userType: 'admin',
+      shopName: 'offmarket'
+    };
+    const res = await req(app).post('/user/register').send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe('userType must be customer or seller only');
+  });
 });
 
 describe('user login', () => {
