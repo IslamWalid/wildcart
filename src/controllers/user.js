@@ -28,7 +28,7 @@ const login = (req, res, next) => {
     }
 
     if (!user) {
-      return next(info);
+      return res.status(401).json(info);
     }
 
     req.login(user, (err) => {

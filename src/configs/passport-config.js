@@ -24,11 +24,11 @@ async function verify(username, password, done) {
   try {
     const user = await User.findOne({ where: { username } });
     if (!user) {
-      return done(null, false, { status: 401, message: 'incorrect username' });
+      return done(null, false, { message: 'incorrect username' });
     }
 
     if (!await bcrypt.compare(password, user.password)) {
-      return done(null, false, { status: 401, message: 'incorrect password' });
+      return done(null, false, { message: 'incorrect password' });
     }
 
     done(null, user);
