@@ -10,6 +10,10 @@ const register = async (req, res, next) => {
     return res.status(400).json({ message: 'required fields are missing' });
   }
 
+  if (userType !== 'customer' && userType !== 'seller') {
+    return res.status(400).json({ message: 'userType must be customer or seller only' });
+  }
+
   if (userType === 'seller' && !shopName) {
     return res.status(400).json({ message: 'required fields are missing' });
   }
