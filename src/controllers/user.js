@@ -1,29 +1,11 @@
-const validator = require('validator');
 const { createUser } = require('../services/user');
+const { validateInput, inputTypes } = require('../utils/validate-input');
 const passport = require('../configs/passport-config')(require('passport'));
 
 const register = async (req, res, next) => {
-  const { username, firstName, lastName, password } = req.body;
-  const { phone, address, shopName, userType } = req.body;
-
-  if (!username || !firstName || !lastName || !password || !phone || !address || !userType) {
-    return res.status(400).json({ message: 'required fields are missing' });
-  }
-
-  if (userType !== 'customer' && userType !== 'seller') {
-    return res.status(400).json({ message: 'userType must be customer or seller only' });
-  }
-
-  if (userType === 'seller' && !shopName) {
-    return res.status(400).json({ message: 'required fields are missing' });
-  }
-
-  if (!validator.isStrongPassword(password)) {
-    return res.status(400).json({ message: 'weak password' });
-  }
-
-  if (!validator.isMobilePhone(phone)) {
-    return res.status(400).json({ message: 'invalid phone number' });
+  const message = validateInput(req.body, inputTypes.REGISTER);
+  if (message) {
+    return res.status(400).json({ message });
   }
 
   try {
@@ -35,6 +17,11 @@ const register = async (req, res, next) => {
 };
 
 const login = (req, res, next) => {
+  const message = validateInput(req.body, inputTypes.LOGIN);
+  if (message) {
+    return res.status(400).json({ message });
+  }
+
   passport.authenticate('local', { session: true }, (err, user, info) => {
     if (err) {
       return next(err);

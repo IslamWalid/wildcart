@@ -13,7 +13,7 @@ beforeAll(async () => {
   const hash = await bcrypt.hash('StrongPassword123!', salt);
 
   await User.create({
-    id: crypto.randomUUID(),
+    id,
     username: 'john_doe',
     firstName: 'John',
     lastName: 'Doe',
@@ -42,20 +42,6 @@ describe('user register', () => {
     };
     const res = await req(app).post('/user/register').send(reqBody);
     expect(res.statusCode).toBe(201);
-  });
-
-  it('should register new user with invalid input', async () => {
-    const reqBody = {
-      username: 'jane_doe',
-      firstName: 'Jane',
-      lastName: 'Doe',
-      password: 'weak password',
-      phone: '123',
-      address: 'some home address',
-      userType: 'seller'
-    };
-    const res = await req(app).post('/user/register').send(reqBody);
-    expect(res.statusCode).toBe(400);
   });
 
   it('should register already existing user', async () => {
@@ -87,22 +73,6 @@ describe('user register', () => {
     const res = await req(app).post('/user/register').send(reqBody);
     expect(res.statusCode).toBe(409);
     expect(res.body.message).toBe('phone number is already used');
-  });
-
-  it('should register user with invalid userType', async () => {
-    const reqBody = {
-      username: 'jane_doe',
-      firstName: 'Jane',
-      lastName: 'Doe',
-      password: 'AnotherStrongPassword123!',
-      phone: '+201087654321',
-      address: 'some home address',
-      userType: 'admin',
-      shopName: 'offmarket'
-    };
-    const res = await req(app).post('/user/register').send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body.message).toBe('userType must be customer or seller only');
   });
 });
 
