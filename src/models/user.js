@@ -35,7 +35,10 @@ class User extends Model {
       },
       userType: {
         type: DataTypes.ENUM(['customer', 'seller']),
-        defaultValue: 'customer'
+        defaultValue: 'customer',
+        validate: {
+          isIn: [['customer', 'seller']]
+        }
       }
     },
     {
