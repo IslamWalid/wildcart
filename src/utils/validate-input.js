@@ -2,7 +2,8 @@ const validator = require('validator');
 
 const inputTypes = {
   LOGIN: 0,
-  REGISTER: 1
+  REGISTER: 1,
+  CREATE_PRODUCT: 2
 };
 
 function validateRegister(input) {
@@ -13,9 +14,9 @@ function validateRegister(input) {
     return 'required fields are missing';
   }
 
-  if (userType !== 'customer' && userType !== 'seller') {
-    return 'userType must be customer or seller only';
-  }
+  // if (userType !== 'customer' && userType !== 'seller') {
+  //   return 'userType must be customer or seller only';
+  // }
 
   if (userType === 'seller' && !shopName) {
     return 'required fields are missing';
@@ -42,6 +43,16 @@ function validateLogin(input) {
   return null;
 }
 
+function validateCreateProduct(input) {
+  const { name, brand, quantity, price, categories } = input;
+
+  if (!name || !brand || !quantity || !price || !categories) {
+    return 'required fields are missing';
+  }
+
+  return null;
+}
+
 function validateInput(input, inputType) {
   switch (inputType) {
     case inputTypes.REGISTER:
@@ -49,6 +60,9 @@ function validateInput(input, inputType) {
 
     case inputTypes.LOGIN:
       return validateLogin(input);
+
+    case inputTypes.CREATE_PRODUCT:
+      return validateCreateProduct(input);
   }
 }
 

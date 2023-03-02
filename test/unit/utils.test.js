@@ -63,3 +63,32 @@ describe('validate login input', () => {
       .toBe('required fields are missing');
   });
 });
+
+describe('validate create product input', () => {
+  it('should pass valid input', async () => {
+    const input = {
+      name: 'T-shirt',
+      brand: 'POLO',
+      quantity: 20,
+      price: 100,
+      categories: [
+        'clothes',
+        'menFashion'
+      ]
+    };
+    expect(validateInput(input, inputTypes.CREATE_PRODUCT)).toBeNull();
+  });
+
+  it('should pass input with missing fields', async () => {
+    const input = {
+      name: 'T-shirt',
+      quantity: 20,
+      categories: [
+        'clothes',
+        'menFashion'
+      ]
+    };
+    expect(validateInput(input, inputTypes.CREATE_PRODUCT))
+      .toBe('required fields are missing');
+  });
+});
