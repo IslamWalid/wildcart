@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { Product, ProductCategory } = require('../models');
+const { sequelize, Product, ProductCategory } = require('../models');
 
 async function listProducts() {
   return await Product.findAll({ attributes: { exclude: ['image'] } });
@@ -8,17 +8,27 @@ async function listProducts() {
 async function insertProduct(productData, sellerId) {
   const id = crypto.randomUUID();
 
-  productData.productCategories = productData.categories.map((category) => {
+  const categories = productData.categories.map((category) => {
     return { categoryName: category, productId: id };
   });
 
-  await Product.create({
-    id,
-    sellerId,
-    ...productData
-  },
-  {
-    include: ProductCategory
+  await sequelize.transaction(async (t) => {
+    await Product.create({
+      id,
+      sellerId,
+      categories,
+      name: productData.name,
+      brand: productData.brand,
+      quantity: productData.quantity,
+      price: productData.price
+    },
+    {
+      transaction: t,
+      include: {
+        model: ProductCategory,
+        as: 'categories'
+      }
+    });
   });
 }
 
