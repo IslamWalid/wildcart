@@ -53,7 +53,7 @@ class Product extends Model {
     this.belongsTo(Seller, { foreignKey: 'sellerId' });
     this.hasMany(Order, { foreignKey: 'productId' });
     this.hasMany(Review, { foreignKey: 'productId' });
-    this.hasMany(ProductCategory, { foreignKey: 'productId' });
+    this.hasMany(ProductCategory, { foreignKey: 'productId', as: 'categories' });
   }
 }
 
