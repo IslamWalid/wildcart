@@ -44,6 +44,22 @@ describe('user register', () => {
     expect(res.statusCode).toBe(201);
   });
 
+  it('should register new user with invalid user type', async () => {
+    const reqBody = {
+      username: 'john_lnu',
+      firstName: 'John',
+      lastName: 'Lnu',
+      password: 'AnotherStrongPassword123!',
+      phone: '+201012345678',
+      address: 'some home address',
+      userType: 'invalid type',
+      shopName: 'offmarket'
+    };
+    const res = await req(app).post('/user/register').send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe('invalid user type');
+  });
+
   it('should register already existing user', async () => {
     const reqBody = {
       username: 'john_doe',
