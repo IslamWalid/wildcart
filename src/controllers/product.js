@@ -1,3 +1,4 @@
+const createResErr = require('../utils/get-err-info');
 const { listProducts, insertProduct } = require('../services/product');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 
@@ -6,7 +7,7 @@ const getAllProducts = async (req, res, next) => {
     const products = await listProducts();
     res.status(200).json({ products });
   } catch (err) {
-    next(err);
+    next(createResErr(err));
   }
 };
 
@@ -20,7 +21,7 @@ const createProduct = async (req, res, next) => {
     await insertProduct(req.body, req.user.id);
     res.sendStatus(201);
   } catch (err) {
-    next(err);
+    next(createResErr(err));
   }
 };
 

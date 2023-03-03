@@ -1,3 +1,4 @@
+const createResErr = require('../utils/get-err-info');
 const { createUser } = require('../services/user');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const passport = require('../configs/passport-config')(require('passport'));
@@ -12,7 +13,7 @@ const register = async (req, res, next) => {
     await createUser(req.body);
     res.sendStatus(201);
   } catch (err) {
-    next(err);
+    next(createResErr(err));
   }
 };
 
@@ -24,7 +25,7 @@ const login = (req, res, next) => {
 
   passport.authenticate('local', { session: true }, (err, user, info) => {
     if (err) {
-      return next(err);
+      return next(createResErr(err));
     }
 
     if (!user) {
@@ -33,7 +34,7 @@ const login = (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) {
-        return next(err);
+        return next(createResErr(err));
       }
 
       res.sendStatus(200);
@@ -44,7 +45,7 @@ const login = (req, res, next) => {
 const logout = (req, res, next) => {
   req.logout((err) => {
     if (err) {
-      return next(err);
+      return next(createResErr(err));
     }
 
     res.sendStatus(200);
