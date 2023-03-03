@@ -10,6 +10,8 @@
     "test": "NODE_ENV=test jest",
     "migrate:up": "npx sequelize-cli db:migrate",
     "migrate:down": "npx sequelize-cli db:migrate:undo",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:seed:undo": "npx sequelize-cli db:seed:undo",
     "lint": "eslint . --max-warnings 0"
   },
   "repository": {
