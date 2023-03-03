@@ -7,14 +7,13 @@ const { sequelize, User, Seller } = require('../../src/models/');
 const { insertProduct } = require('../../src/services/product');
 const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 
-let seller;
+const id = crypto.randomUUID();
 
 beforeAll(async () => {
-  const id = crypto.randomUUID();
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash('StrongPassword123!', salt);
 
-  seller = await User.create({
+  await User.create({
     id,
     username: 'john_doe',
     firstName: 'John',
@@ -23,7 +22,7 @@ beforeAll(async () => {
     address: 'some address',
     phone: '+201012345678',
     userType: 'seller',
-    Seller: { id, shopName: 'off market' }
+    Seller: { userId: id, shopName: 'off market' }
   },
   {
     include: Seller
@@ -42,7 +41,7 @@ describe('create product', () => {
         'men fashion'
       ]
     };
-    expect(insertProduct(productData, seller.id))
+    expect(insertProduct(productData, id))
       .resolves
       .toBeUndefined();
   });
@@ -58,7 +57,7 @@ describe('create product', () => {
         'men fashion'
       ]
     };
-    expect(insertProduct(productData, seller.id))
+    expect(insertProduct(productData, id))
       .rejects
       .toThrow(UniqueConstraintError);
   });
@@ -73,7 +72,7 @@ describe('create product', () => {
         'non-existing category'
       ]
     };
-    expect(insertProduct(productData, seller.id))
+    expect(insertProduct(productData, id))
       .rejects
       .toThrow(ForeignKeyConstraintError);
   });
