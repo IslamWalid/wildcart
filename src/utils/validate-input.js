@@ -14,10 +14,6 @@ function validateRegister(input) {
     return 'required fields are missing';
   }
 
-  // if (userType !== 'customer' && userType !== 'seller') {
-  //   return 'userType must be customer or seller only';
-  // }
-
   if (userType === 'seller' && !shopName) {
     return 'required fields are missing';
   }
