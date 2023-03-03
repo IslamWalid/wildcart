@@ -1,54 +1,60 @@
-const { UniqueConstraintError, ForeignKeyConstraintError, ValidationError } = require('sequelize');
+const { UniqueConstraintError, ForeignKeyConstraintError, DatabaseError } = require('sequelize');
+
+const DATA_TYPE_ERROR_CODE = '22P02';
 
 function getErrInfo(err) {
-  if (err instanceof ForeignKeyConstraintError || err instanceof UniqueConstraintError) {
-    return {
-      name: err.name,
-      sql: err.original.sql,
-      parameters: err.original.parameters,
-      message: err.original.detail,
-      constraint: err.original.constraint,
-      table: err.original.table
-    };
-  } else if (err instanceof ValidationError) {
-    const name = err.name;
-    err = err.errors[0];
-    return {
-      name,
-      message: err.message,
-      type: err.type,
-      field: err.path,
-      validatorKey: err.validatorKey,
-      validatorName: err.validatorName,
-      validatorArgs: err.validatorArgs
-    };
-  }
+  switch (true) {
+    case err instanceof UniqueConstraintError:
+      return {
+        name: err.name,
+        sql: err.parent.sql,
+        parameters: err.parent.parameters,
+        message: err.parent.detail,
+        constraint: err.parent.constraint,
+        table: err.parent.table
+      };
 
-  return err;
+    case err instanceof ForeignKeyConstraintError:
+      return {
+        name: err.name,
+        sql: err.original.sql,
+        parameters: err.original.parameters,
+        message: err.original.detail,
+        constraint: err.original.constraint,
+        table: err.original.table
+      };
+
+    case err instanceof DatabaseError:
+      return {
+        name: err.name,
+        sql: err.sql,
+        parameters: err.parameters,
+        message: err.message,
+        constraint: err.parent.code
+      };
+
+    default:
+      return err;
+  }
 }
 
 function createResErr(err) {
   const errInfo = getErrInfo(err);
 
-  if (err instanceof ForeignKeyConstraintError) {
-    if (errInfo.table === 'product_category') {
+  switch (errInfo.constraint) {
+    case DATA_TYPE_ERROR_CODE:
+      return { status: 400, message: 'invalid input data type', errInfo };
+    case 'product_category_category_name_fkey':
       return { status: 400, message: 'invalid categories', errInfo };
-    }
-  } else if (err instanceof UniqueConstraintError) {
-    if (errInfo.table === 'user') {
-      if (errInfo.constraint === 'user_username_key') {
-        return { status: 409, message: 'username already exists', errInfo };
-      } else if (errInfo.constraint === 'user_phone_key') {
-        return { status: 409, message: 'phone already exists', errInfo };
-      }
-    }
-  } else if (err instanceof ValidationError) {
-    if (errInfo.field === 'userType') {
-      return { status: 400, message: 'invalid user type', errInfo };
-    }
+    case 'user_phone_key':
+      return { status: 409, message: 'phone already exists', errInfo };
+    case 'user_username_key':
+      return { status: 409, message: 'username already exists', errInfo };
+    case 'product_name_seller_id_unique_constraint':
+      return { status: 409, message: 'product name already exists for this seller', errInfo };
   }
 
-  return { status: 500, message: 'unexpected error', err };
+  return { status: 500, message: 'unexpected error', errInfo };
 }
 
 module.exports = createResErr;
