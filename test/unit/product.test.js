@@ -7,9 +7,8 @@ const { sequelize, User, Seller } = require('../../src/models/');
 const { insertProduct } = require('../../src/services/product');
 const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 
-const id = crypto.randomUUID();
-
 beforeAll(async () => {
+  const id = crypto.randomUUID();
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash('StrongPassword123!', salt);
 
@@ -30,49 +29,47 @@ beforeAll(async () => {
 });
 
 describe('create product', () => {
-  it('should create product with existing category', () => {
+  it('should create product with existing category', async () => {
     const productData = {
       name: 'T-shirt',
       brand: 'POLO',
       quantity: 20,
       price: 100,
-      categories: [
-        'clothes',
-        'men fashion'
-      ]
+      categories: ['clothes', 'men fashion']
     };
-    expect(insertProduct(productData, id))
+    const user = await User.findOne({ where: { userType: 'seller' } });
+
+    expect(insertProduct(productData, user.id))
       .resolves
       .toBeUndefined();
   });
 
-  it('should create product with the same seller with existing product name', () => {
+  it('should create product with the same seller with existing product name', async () => {
     const productData = {
       name: 'T-shirt',
       brand: 'POLO',
       quantity: 20,
       price: 100,
-      categories: [
-        'clothes',
-        'men fashion'
-      ]
+      categories: ['clothes', 'men fashion']
     };
-    expect(insertProduct(productData, id))
+    const user = await User.findOne({ where: { userType: 'seller' } });
+
+    expect(insertProduct(productData, user.id))
       .rejects
       .toThrow(UniqueConstraintError);
   });
 
-  it('should create product with non-existing category', () => {
+  it('should create product with non-existing category', async () => {
     const productData = {
       name: 'shirt',
       brand: 'POLO',
       quantity: 20,
       price: 100,
-      categories: [
-        'non-existing category'
-      ]
+      categories: ['non-existing category']
     };
-    expect(insertProduct(productData, id))
+    const user = await User.findOne({ where: { userType: 'seller' } });
+
+    expect(insertProduct(productData, user.id))
       .rejects
       .toThrow(ForeignKeyConstraintError);
   });
