@@ -7,7 +7,7 @@ class Review extends Model {
         type: DataTypes.UUID,
         primaryKey: true,
         references: {
-          model: 'Customer',
+          model: 'customer',
           key: 'userId'
         },
         onDelete: 'CASCADE',
@@ -17,7 +17,7 @@ class Review extends Model {
         type: DataTypes.UUID,
         primaryKey: true,
         references: {
-          model: 'Product',
+          model: 'product',
           key: 'id'
         },
         onDelete: 'CASCADE',
@@ -38,6 +38,7 @@ class Review extends Model {
     },
     {
       sequelize,
+      modelName: 'review',
       tableName: 'review',
       underscored: true,
       timestamps: true,
@@ -47,8 +48,8 @@ class Review extends Model {
   }
 
   static associate() {
-    const Customer = this.sequelize.models.Customer;
-    const Product = this.sequelize.models.Product;
+    const Customer = this.sequelize.models.customer;
+    const Product = this.sequelize.models.product;
 
     this.belongsTo(Customer, { foreignKey: 'customerId' });
     this.belongsTo(Product, { foreignKey: 'productId' });

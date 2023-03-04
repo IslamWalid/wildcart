@@ -18,7 +18,7 @@ fs
   .map((file) => {
     const model = require(path.join(__dirname, file));
     model.init(sequelize);
-    db[model.name] = model;
+    db[model.name.charAt(0).toUpperCase() + model.name.slice(1)] = model;
 
     return model;
   })

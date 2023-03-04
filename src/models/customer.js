@@ -7,13 +7,14 @@ class Customer extends Model {
         type: DataTypes.UUID,
         primaryKey: true,
         references: {
-          model: 'User',
+          model: 'user',
           key: 'id'
         }
       }
     },
     {
       sequelize,
+      modelName: 'customer',
       tableName: 'customer',
       underscored: true,
       timestamps: false
@@ -21,9 +22,9 @@ class Customer extends Model {
   }
 
   static associate(models) {
-    const User = this.sequelize.models.User;
-    const Order = this.sequelize.models.Order;
-    const Review = this.sequelize.models.Review;
+    const User = this.sequelize.models.user;
+    const Order = this.sequelize.models.order;
+    const Review = this.sequelize.models.review;
 
     this.belongsTo(User, { foreignKey: 'userId' });
     this.hasMany(Order, { foreignKey: 'customerId' });

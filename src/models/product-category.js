@@ -7,7 +7,7 @@ class ProductCategory extends Model {
         type: DataTypes.UUID,
         primaryKey: true,
         references: {
-          model: 'Product',
+          model: 'product',
           key: 'id'
         },
         onDelete: 'CASCADE'
@@ -24,6 +24,7 @@ class ProductCategory extends Model {
     },
     {
       sequelize,
+      modelName: 'productCategory',
       tableName: 'product_category',
       underscored: true,
       timestamps: false
@@ -31,8 +32,8 @@ class ProductCategory extends Model {
   }
 
   static associate() {
-    const Product = this.sequelize.models.Product;
-    const Category = this.sequelize.models.Category;
+    const Product = this.sequelize.models.product;
+    const Category = this.sequelize.models.category;
 
     this.belongsTo(Product, { foreignKey: 'productId', as: 'categories' });
     this.belongsTo(Category, { foreignKey: 'categoryName' });

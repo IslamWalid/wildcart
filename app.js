@@ -11,7 +11,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const app = express();
 const sessionStore = new SequelizeStore({
   db: db.sequelize,
-  table: 'Session'
+  table: 'session'
 });
 
 app.use(session({
