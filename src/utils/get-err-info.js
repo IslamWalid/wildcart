@@ -1,3 +1,4 @@
+const log = require('../configs/log-config');
 const { UniqueConstraintError, ForeignKeyConstraintError, DatabaseError } = require('sequelize');
 
 const DATA_TYPE_ERROR_CODE = '22P02';
@@ -39,17 +40,19 @@ function getErrInfo(err) {
 }
 
 function createResErr(err) {
+  log.debug(err);
+
   const errInfo = getErrInfo(err);
 
   switch (errInfo.constraint) {
     case DATA_TYPE_ERROR_CODE:
-      return { status: 400, message: 'invalid input data type', errInfo };
+      return { status: 400, message: 'invalid input datatype', errInfo };
     case 'product_category_category_name_fkey':
       return { status: 400, message: 'invalid categories', errInfo };
-    case 'user_phone_key':
-      return { status: 409, message: 'phone already exists', errInfo };
     case 'user_username_key':
       return { status: 409, message: 'username already exists', errInfo };
+    case 'user_phone_key':
+      return { status: 409, message: 'phone already exists', errInfo };
     case 'product_name_seller_id_unique_constraint':
       return { status: 409, message: 'product name already exists for this seller', errInfo };
   }
