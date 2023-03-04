@@ -10,7 +10,7 @@ class Order extends Model {
       customerId: {
         type: DataTypes.UUID,
         references: {
-          model: 'Customer',
+          model: 'customer',
           key: 'userId'
         },
         onDelete: 'CASCADE',
@@ -48,6 +48,7 @@ class Order extends Model {
     },
     {
       sequelize,
+      modelName: 'order',
       tableName: 'order',
       underscored: true,
       timestamps: true,
@@ -57,8 +58,8 @@ class Order extends Model {
   }
 
   static associate() {
-    const Customer = this.sequelize.models.Customer;
-    const Product = this.sequelize.models.Product;
+    const Customer = this.sequelize.models.customer;
+    const Product = this.sequelize.models.product;
 
     this.belongsTo(Customer, { foreignKey: 'customerId' });
     this.belongsTo(Product, { foreignKey: 'productId' });

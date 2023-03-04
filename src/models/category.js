@@ -10,14 +10,15 @@ class Category extends Model {
     },
     {
       sequelize,
-      underscored: true,
+      modelName: 'category',
       tableName: 'category',
+      underscored: true,
       timestamps: false
     });
   }
 
   static associate() {
-    const ProductCategory = this.sequelize.models.ProductCategory;
+    const ProductCategory = this.sequelize.models.productCategory;
 
     this.hasMany(ProductCategory, { foreignKey: 'categoryName' });
   }

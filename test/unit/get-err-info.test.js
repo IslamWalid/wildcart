@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const { createUser } = require('../../src/services/user');
 const { insertProduct } = require('../../src/services/product');
-const { sequelize, User, Seller, Product } = require('../../src/models/');
+const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
 const createResErr = require('../../src/utils/get-err-info');
 
 beforeAll(async () => {
@@ -20,7 +20,7 @@ beforeAll(async () => {
     address: 'some address',
     phone: '+201012345678',
     userType: 'seller',
-    Seller: { userId, shopName: 'off market' }
+    seller: { userId, shopName: 'off market' }
   },
   {
     include: Seller
@@ -37,6 +37,12 @@ beforeAll(async () => {
       { productId, categoryName: 'clothes' },
       { productId, categoryName: 'men fashion' }
     ]
+  },
+  {
+    include: {
+      model: ProductCategory,
+      as: 'categories'
+    }
   });
 });
 

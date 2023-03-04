@@ -10,7 +10,7 @@ class Product extends Model {
       sellerId: {
         type: DataTypes.UUID,
         references: {
-          model: 'Seller',
+          model: 'seller',
           key: 'userId'
         },
         allowNull: false,
@@ -38,6 +38,7 @@ class Product extends Model {
     },
     {
       sequelize,
+      modelName: 'product',
       tableName: 'product',
       underscored: true,
       timestamps: false
@@ -45,10 +46,10 @@ class Product extends Model {
   }
 
   static associate() {
-    const Seller = this.sequelize.models.Seller;
-    const Order = this.sequelize.models.Order;
-    const Review = this.sequelize.models.Review;
-    const ProductCategory = this.sequelize.models.ProductCategory;
+    const Seller = this.sequelize.models.seller;
+    const Order = this.sequelize.models.order;
+    const Review = this.sequelize.models.review;
+    const ProductCategory = this.sequelize.models.productCategory;
 
     this.belongsTo(Seller, { foreignKey: 'sellerId' });
     this.hasMany(Order, { foreignKey: 'productId' });

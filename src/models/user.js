@@ -40,6 +40,7 @@ class User extends Model {
     },
     {
       sequelize,
+      modelName: 'user',
       tableName: 'user',
       underscored: true,
       timestamps: false
@@ -47,8 +48,8 @@ class User extends Model {
   }
 
   static associate(models) {
-    const Seller = this.sequelize.models.Seller;
-    const Customer = this.sequelize.models.Customer;
+    const Seller = this.sequelize.models.seller;
+    const Customer = this.sequelize.models.customer;
 
     this.hasOne(Seller, { foreignKey: 'userId' });
     this.hasOne(Customer, { foreignKey: 'userId' });
