@@ -57,7 +57,7 @@ describe('user register', () => {
     };
     const res = await req(app).post('/user/register').send(reqBody);
     expect(res.statusCode).toBe(400);
-    expect(res.body.message).toBe('invalid input data type');
+    expect(res.body.message).toBe('invalid input datatype');
   });
 
   it('should register already existing user', async () => {
