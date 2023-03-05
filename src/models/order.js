@@ -11,7 +11,7 @@ class Order extends Model {
         type: DataTypes.UUID,
         references: {
           model: 'customer',
-          key: 'userId'
+          key: 'id'
         },
         onDelete: 'CASCADE',
         allowNull: false

@@ -38,7 +38,7 @@ module.exports = {
     });
 
     await queryInterface.createTable('customer', {
-      user_id: {
+      id: {
         type: Sequelize.UUID,
         primaryKey: true,
         references: {
@@ -50,7 +50,7 @@ module.exports = {
     });
 
     await queryInterface.createTable('seller', {
-      user_id: {
+      id: {
         type: Sequelize.UUID,
         primaryKey: true,
         references: {
@@ -74,7 +74,7 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'seller',
-          key: 'user_id'
+          key: 'id'
         },
         allowNull: false,
         onDelete: 'CASCADE'
@@ -116,7 +116,7 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'customer',
-          key: 'user_id'
+          key: 'id'
         },
         onDelete: 'CASCADE',
         allowNull: false
@@ -162,7 +162,7 @@ module.exports = {
         primaryKey: true,
         references: {
           model: 'customer',
-          key: 'user_id'
+          key: 'id'
         },
         onDelete: 'CASCADE'
       },

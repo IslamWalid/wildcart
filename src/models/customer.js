@@ -3,7 +3,7 @@ const { Model, DataTypes } = require('sequelize');
 class Customer extends Model {
   static init(sequelize) {
     super.init({
-      userId: {
+      id: {
         type: DataTypes.UUID,
         primaryKey: true,
         references: {
@@ -26,7 +26,7 @@ class Customer extends Model {
     const Order = this.sequelize.models.order;
     const Review = this.sequelize.models.review;
 
-    this.belongsTo(User, { foreignKey: 'userId' });
+    this.belongsTo(User, { foreignKey: 'id' });
     this.hasMany(Order, { foreignKey: 'customerId' });
     this.hasMany(Review, { foreignKey: 'customerId' });
   }
