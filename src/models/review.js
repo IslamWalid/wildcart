@@ -8,7 +8,7 @@ class Review extends Model {
         primaryKey: true,
         references: {
           model: 'customer',
-          key: 'userId'
+          key: 'id'
         },
         onDelete: 'CASCADE',
         allowNull: false

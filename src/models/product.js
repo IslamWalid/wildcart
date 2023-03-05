@@ -11,7 +11,7 @@ class Product extends Model {
         type: DataTypes.UUID,
         references: {
           model: 'seller',
-          key: 'userId'
+          key: 'id'
         },
         allowNull: false,
         onDelete: 'CASCADE'

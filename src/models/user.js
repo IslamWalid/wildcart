@@ -51,8 +51,8 @@ class User extends Model {
     const Seller = this.sequelize.models.seller;
     const Customer = this.sequelize.models.customer;
 
-    this.hasOne(Seller, { foreignKey: 'userId' });
-    this.hasOne(Customer, { foreignKey: 'userId' });
+    this.hasOne(Seller, { foreignKey: 'id' });
+    this.hasOne(Customer, { foreignKey: 'id' });
   }
 }
 

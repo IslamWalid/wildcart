@@ -13,10 +13,10 @@ async function createUser(userData) {
 
   await sequelize.transaction(async (t) => {
     if (userData.userType === 'customer') {
-      userData.customer = { userId: id };
+      userData.customer = { id };
       await User.create(userData, { include: Customer, transaction: t });
     } else {
-      userData.seller = { userId: id, shopName: userData.shopName };
+      userData.seller = { id, shopName: userData.shopName };
       await User.create(userData, { include: Seller, transaction: t });
     }
   });

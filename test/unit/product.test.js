@@ -21,7 +21,7 @@ beforeAll(async () => {
     address: 'some address',
     phone: '+201012345678',
     userType: 'seller',
-    seller: { userId: id, shopName: 'off market' }
+    seller: { id, shopName: 'off market' }
   },
   {
     include: Seller
