@@ -1,5 +1,5 @@
-const createResErr = require('../utils/get-err-info');
 const { listProducts, insertProduct } = require('../services/product');
+const createResErr = require('../utils/create-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 
 const getAllProducts = async (req, res, next) => {
