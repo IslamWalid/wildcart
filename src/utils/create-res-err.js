@@ -7,44 +7,56 @@ function getErrInfo(err) {
   switch (true) {
     case err instanceof UniqueConstraintError:
       return {
-        name: err.name,
-        sql: err.parent.sql,
-        parameters: err.parent.parameters,
         message: err.parent.detail,
-        constraint: err.parent.constraint,
-        table: err.parent.table
+        meta: {
+          name: err.name,
+          sql: err.parent.sql,
+          parameters: err.parent.parameters,
+          constraint: err.parent.constraint,
+          table: err.parent.table
+        }
       };
 
     case err instanceof ForeignKeyConstraintError:
       return {
-        name: err.name,
-        sql: err.original.sql,
-        parameters: err.original.parameters,
         message: err.original.detail,
-        constraint: err.original.constraint,
-        table: err.original.table
+        meta: {
+          name: err.name,
+          sql: err.original.sql,
+          parameters: err.original.parameters,
+          constraint: err.original.constraint,
+          table: err.original.table
+        }
       };
 
     case err instanceof DatabaseError:
       return {
-        name: err.name,
-        sql: err.sql,
-        parameters: err.parameters,
         message: err.message,
-        constraint: err.parent.code
+        meta: {
+          name: err.name,
+          sql: err.sql,
+          parameters: err.parameters,
+          constraint: err.parent.code
+        }
       };
 
     default:
-      return err;
+      return {
+        message: 'unexpected error',
+        meta: err
+      };
   }
 }
 
 function createResErr(err) {
-  log.debug(err);
+  log.debug({
+    message: 'debug error before calling getErrInfo in createResErr',
+    meta: err
+  });
 
   const errInfo = getErrInfo(err);
 
-  switch (errInfo.constraint) {
+  switch (errInfo.meta.constraint) {
     case DATA_TYPE_ERROR_CODE:
       return { status: 400, message: 'invalid input datatype', errInfo };
     case 'product_category_category_name_fkey':
