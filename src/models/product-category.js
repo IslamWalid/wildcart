@@ -35,7 +35,7 @@ class ProductCategory extends Model {
     const Product = this.sequelize.models.product;
     const Category = this.sequelize.models.category;
 
-    this.belongsTo(Product, { foreignKey: 'productId', as: 'categories' });
+    this.belongsTo(Product, { foreignKey: 'productId' });
     this.belongsTo(Category, { foreignKey: 'categoryName' });
   }
 }
