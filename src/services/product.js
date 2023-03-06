@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+
 const { sequelize, User, Seller, Product, ProductCategory } = require('../models');
 
 async function listProducts() {

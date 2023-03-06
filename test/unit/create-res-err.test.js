@@ -1,9 +1,10 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+
 const { createUser } = require('../../src/services/user');
 const { insertProduct } = require('../../src/services/product');
-const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
 const createResErr = require('../../src/utils/create-res-err');
+const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
 
 beforeAll(async () => {
   const userId = crypto.randomUUID();

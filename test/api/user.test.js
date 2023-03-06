@@ -4,6 +4,7 @@ require('../../src/utils/check-env')();
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const req = require('supertest');
+
 const app = require('../../app');
 const { sequelize, User, Customer } = require('../../src/models/');
 

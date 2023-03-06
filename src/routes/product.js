@@ -1,4 +1,5 @@
 const express = require('express');
+
 const { authenticateSeller } = require('../middlewares/authenticate.js');
 const {
   getAllProducts,
