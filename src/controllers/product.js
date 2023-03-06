@@ -1,11 +1,11 @@
 const createResErr = require('../utils/create-res-err');
+const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
   listProducts,
   insertProduct,
   getProductById,
   listSellerProducts
 } = require('../services/product');
-const { validateInput, inputTypes } = require('../utils/validate-input');
 
 const getAllProducts = async (req, res, next) => {
   try {

@@ -1,7 +1,7 @@
 const createResErr = require('../utils/create-res-err');
+const passport = require('../configs/passport-config')(require('passport'));
 const { createUser } = require('../services/user');
 const { validateInput, inputTypes } = require('../utils/validate-input');
-const passport = require('../configs/passport-config')(require('passport'));
 
 const register = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.REGISTER);

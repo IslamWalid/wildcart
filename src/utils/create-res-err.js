@@ -1,5 +1,10 @@
+const {
+  UniqueConstraintError,
+  ForeignKeyConstraintError,
+  DatabaseError
+} = require('sequelize');
+
 const log = require('../configs/log-config');
-const { UniqueConstraintError, ForeignKeyConstraintError, DatabaseError } = require('sequelize');
 
 const DATA_TYPE_ERROR_CODE = '22P02';
 

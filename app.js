@@ -1,13 +1,14 @@
 const cors = require('cors');
 const express = require('express');
 const session = require('express-session');
-const db = require('./src/models/');
 const passport = require('passport');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+
+const db = require('./src/models/');
 const userRouter = require('./src/routes/user');
 const productRouter = require('./src/routes/product');
 const notFound = require('./src/middlewares/not-found');
 const errHandler = require('./src/middlewares/err-handler');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
 const sessionStore = new SequelizeStore({

@@ -3,9 +3,10 @@ require('../../src/utils/check-env')();
 
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
+
 const { sequelize, User, Seller } = require('../../src/models/');
 const { insertProduct } = require('../../src/services/product');
-const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 
 beforeAll(async () => {
   const id = crypto.randomUUID();
