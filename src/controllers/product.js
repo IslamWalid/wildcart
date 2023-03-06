@@ -1,5 +1,10 @@
-const { listProducts, insertProduct } = require('../services/product');
 const createResErr = require('../utils/create-res-err');
+const {
+  listProducts,
+  insertProduct,
+  getProductById,
+  listSellerProducts
+} = require('../services/product');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 
 const getAllProducts = async (req, res, next) => {
@@ -25,7 +30,30 @@ const createProduct = async (req, res, next) => {
   }
 };
 
+const getProduct = async (req, res, next) => {
+  try {
+    const product = await getProductById(req.params.productId);
+    if (!product) {
+      return res.status(404).json({ message: 'product not found' });
+    }
+
+    res.status(200).json({ product });
+  } catch (err) {
+    next(createResErr(err));
+  }
+};
+
+const getSellerProducts = async (req, res, next) => {
+  try {
+    res.status(200).json(await listSellerProducts(req.params.sellerId));
+  } catch (err) {
+    next(createResErr(err));
+  }
+};
+
 module.exports = {
+  createProduct,
+  getProduct,
   getAllProducts,
-  createProduct
+  getSellerProducts
 };
