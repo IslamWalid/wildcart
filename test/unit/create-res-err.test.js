@@ -39,10 +39,7 @@ beforeAll(async () => {
     ]
   },
   {
-    include: {
-      model: ProductCategory,
-      as: 'categories'
-    }
+    include: ProductCategory
   });
 });
 

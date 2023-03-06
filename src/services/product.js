@@ -26,7 +26,6 @@ async function insertProduct(productData, sellerId) {
       transaction: t,
       include: {
         model: ProductCategory,
-        as: 'categories'
       }
     });
   });
