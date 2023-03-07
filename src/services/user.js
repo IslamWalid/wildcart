@@ -23,6 +23,24 @@ async function createUser(userData) {
   });
 }
 
+async function getUserDetails(id) {
+  const details = await User.findByPk(id, {
+    attributes: {
+      include: [[sequelize.col('shop_name'), 'shopName']],
+      exclude: ['password']
+    },
+    include: {
+      model: Seller,
+      attributes: []
+    },
+    raw: true,
+    nest: true
+  });
+
+  return details;
+}
+
 module.exports = {
-  createUser
+  createUser,
+  getUserDetails
 };
