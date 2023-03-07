@@ -5,10 +5,10 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 
-const { sequelize, User, Seller } = require('../../src/models/');
-const { insertProduct } = require('../../src/services/product');
+const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
+const { insertProduct, listProducts, getProductById, listSellerProducts } = require('../../src/services/product');
 
-beforeAll(async () => {
+async function createUser() {
   const id = crypto.randomUUID();
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash('StrongPassword123!', salt);
@@ -27,9 +27,71 @@ beforeAll(async () => {
   {
     include: Seller
   });
-});
+
+  return id;
+}
+
+async function createProduct(sellerId) {
+  const id = crypto.randomUUID();
+
+  await Product.create({
+    id,
+    sellerId,
+    name: 'shirt',
+    brand: 'POLO',
+    quantity: 20,
+    price: 100,
+    productCategories: [
+      { productId: id, categoryName: 'clothes' },
+      { productId: id, categoryName: 'men fashion' }
+    ]
+  },
+  {
+    include: ProductCategory
+  });
+}
+
+async function bulkCreateProducts(sellerId) {
+  const idOne = crypto.randomUUID();
+  const idTwo = crypto.randomUUID();
+
+  await Product.bulkCreate([
+    {
+      id: idOne,
+      sellerId,
+      name: 'shirt',
+      brand: 'POLO',
+      quantity: 20,
+      price: 100,
+      productCategories: [
+        { productId: idOne, categoryName: 'clothes' },
+        { productId: idOne, categoryName: 'men fashion' }
+      ]
+    },
+    {
+      id: idTwo,
+      sellerId,
+      name: 'T-shirt',
+      brand: 'POLO',
+      quantity: 20,
+      price: 100,
+      productCategories: [
+        { productId: idTwo, categoryName: 'clothes' },
+        { productId: idTwo, categoryName: 'men fashion' }
+      ]
+    }
+  ],
+  {
+    include: ProductCategory
+  });
+}
 
 describe('create product', () => {
+  beforeEach(async () => {
+    const sellerId = await createUser();
+    await createProduct(sellerId);
+  });
+
   it('should create product with existing category', async () => {
     const productData = {
       name: 'T-shirt',
@@ -40,7 +102,7 @@ describe('create product', () => {
     };
     const user = await User.findOne({ where: { userType: 'seller' } });
 
-    expect(insertProduct(productData, user.id))
+    await expect(insertProduct(productData, user.id))
       .resolves
       .not
       .toBeUndefined();
@@ -48,7 +110,7 @@ describe('create product', () => {
 
   it('should create product with the same seller with existing product name', async () => {
     const productData = {
-      name: 'T-shirt',
+      name: 'shirt',
       brand: 'POLO',
       quantity: 20,
       price: 100,
@@ -56,14 +118,14 @@ describe('create product', () => {
     };
     const user = await User.findOne({ where: { userType: 'seller' } });
 
-    expect(insertProduct(productData, user.id))
+    await expect(insertProduct(productData, user.id))
       .rejects
       .toThrow(UniqueConstraintError);
   });
 
   it('should create product with non-existing category', async () => {
     const productData = {
-      name: 'shirt',
+      name: 'T-shirt',
       brand: 'POLO',
       quantity: 20,
       price: 100,
@@ -71,13 +133,69 @@ describe('create product', () => {
     };
     const user = await User.findOne({ where: { userType: 'seller' } });
 
-    expect(insertProduct(productData, user.id))
+    await expect(insertProduct(productData, user.id))
       .rejects
       .toThrow(ForeignKeyConstraintError);
+  });
+
+  afterEach(async () => {
+    await User.destroy({ where: { userType: 'seller' } });
+  });
+});
+
+describe('retrieve products', () => {
+  beforeAll(async () => {
+    const sellerId = await createUser();
+    await bulkCreateProducts(sellerId);
+  });
+
+  it('should list all products', async () => {
+    const products = await listProducts();
+
+    products.forEach((product) => {
+      expect(product).toHaveProperty('id');
+      expect(product).toHaveProperty('sellerId');
+      expect(product).toHaveProperty('name');
+      expect(product).toHaveProperty('price');
+      expect(product).toHaveProperty('quantity');
+      expect(product).toHaveProperty('shopName');
+      expect(product).toHaveProperty('categories');
+    });
+  });
+
+  it('should get product by its it', async () => {
+    const existingProduct = await Product.findOne();
+    const product = await getProductById(existingProduct.id);
+
+    expect(product).toHaveProperty('id');
+    expect(product).toHaveProperty('sellerId');
+    expect(product).toHaveProperty('name');
+    expect(product).toHaveProperty('price');
+    expect(product).toHaveProperty('quantity');
+    expect(product).toHaveProperty('shopName');
+    expect(product).toHaveProperty('categories');
+  });
+
+  it('should list seller products', async () => {
+    const seller = await User.findOne();
+    const products = await listSellerProducts(seller.id);
+
+    products.forEach((product) => {
+      expect(product).toHaveProperty('id');
+      expect(product).toHaveProperty('sellerId');
+      expect(product).toHaveProperty('name');
+      expect(product).toHaveProperty('price');
+      expect(product).toHaveProperty('quantity');
+      expect(product).toHaveProperty('shopName');
+      expect(product).toHaveProperty('categories');
+    });
+  });
+
+  afterAll(async () => {
+    await User.destroy({ where: { userType: 'seller' } });
   });
 });
 
 afterAll(async () => {
-  await sequelize.query('TRUNCATE TABLE "user" CASCADE');
   await sequelize.close();
 });
