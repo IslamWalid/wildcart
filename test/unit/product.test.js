@@ -42,6 +42,7 @@ describe('create product', () => {
 
     expect(insertProduct(productData, user.id))
       .resolves
+      .not
       .toBeUndefined();
   });
 

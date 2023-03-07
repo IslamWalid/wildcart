@@ -23,8 +23,8 @@ const createProduct = async (req, res, next) => {
   }
 
   try {
-    await insertProduct(req.body, req.user.id);
-    res.sendStatus(201);
+    const id = await insertProduct(req.body, req.user.id);
+    res.status(201).json({ id });
   } catch (err) {
     next(createResErr(err));
   }
@@ -45,7 +45,8 @@ const getProduct = async (req, res, next) => {
 
 const getSellerProducts = async (req, res, next) => {
   try {
-    res.status(200).json(await listSellerProducts(req.params.sellerId));
+    const products = await listSellerProducts(req.params.sellerId);
+    res.status(200).json({ products });
   } catch (err) {
     next(createResErr(err));
   }
