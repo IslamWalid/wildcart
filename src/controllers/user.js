@@ -1,6 +1,6 @@
 const createResErr = require('../utils/create-res-err');
 const passport = require('../configs/passport-config')(require('passport'));
-const { createUser } = require('../services/user');
+const { createUser, getUserDetails } = require('../services/user');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 
 const register = async (req, res, next) => {
@@ -42,6 +42,18 @@ const login = (req, res, next) => {
   })(req, res, next);
 };
 
+const userDetails = async (req, res, next) => {
+  try {
+    const details = await getUserDetails(req.params.id);
+    if (!details) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+    res.status(200).json(details);
+  } catch (err) {
+    next(createResErr(err));
+  }
+};
+
 const logout = (req, res, next) => {
   req.logout((err) => {
     if (err) {
@@ -55,5 +67,6 @@ const logout = (req, res, next) => {
 module.exports = {
   register,
   login,
+  userDetails,
   logout
 };
