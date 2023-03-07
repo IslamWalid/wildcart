@@ -16,6 +16,6 @@ router.post('/', authenticateSeller, createProduct);
 
 router.get('/:productId', getProduct);
 
-router.get('/seller/:sellerId', getSellerProducts);
+router.get('/sellers/:sellerId', getSellerProducts);
 
 module.exports = router;
