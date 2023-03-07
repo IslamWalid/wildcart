@@ -41,7 +41,7 @@ describe('user register', () => {
       userType: 'seller',
       shopName: 'offmarket'
     };
-    const res = await req(app).post('/user/register').send(reqBody);
+    const res = await req(app).post('/users/register').send(reqBody);
     expect(res.statusCode).toBe(201);
   });
 
@@ -56,7 +56,7 @@ describe('user register', () => {
       userType: 'invalid type',
       shopName: 'offmarket'
     };
-    const res = await req(app).post('/user/register').send(reqBody);
+    const res = await req(app).post('/users/register').send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toBe('invalid input datatype');
   });
@@ -71,7 +71,7 @@ describe('user register', () => {
       address: 'some home address',
       userType: 'customer'
     };
-    const res = await req(app).post('/user/register').send(reqBody);
+    const res = await req(app).post('/users/register').send(reqBody);
     expect(res.statusCode).toBe(409);
     expect(res.body.message).toBe('username already exists');
   });
@@ -87,7 +87,7 @@ describe('user register', () => {
       userType: 'seller',
       shopName: 'offmarket'
     };
-    const res = await req(app).post('/user/register').send(reqBody);
+    const res = await req(app).post('/users/register').send(reqBody);
     expect(res.statusCode).toBe(409);
     expect(res.body.message).toBe('phone already exists');
   });
@@ -99,7 +99,7 @@ describe('user login', () => {
       username: 'john_doe',
       password: 'StrongPassword123!'
     };
-    const res = await req(app).post('/user/login').send(reqBody);
+    const res = await req(app).post('/users/login').send(reqBody);
     expect(res.statusCode).toBe(200);
     expect(res.headers['set-cookie']).toBeDefined();
   });
@@ -109,7 +109,7 @@ describe('user login', () => {
       username: 'john_doe',
       password: 'incorrect password'
     };
-    const res = await req(app).post('/user/login').send(reqBody);
+    const res = await req(app).post('/users/login').send(reqBody);
     expect(res.statusCode).toBe(401);
     expect(res.body.message).toBe('incorrect password');
   });

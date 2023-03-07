@@ -36,8 +36,8 @@ app.use(cors({
   origin: process.env.ALLOWED_ORIGIN
 }));
 
-app.use('/user', userRouter);
-app.use('/product', productRouter);
+app.use('/users', userRouter);
+app.use('/products', productRouter);
 
 app.use(notFound);
 app.use(errHandler);
