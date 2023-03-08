@@ -32,8 +32,8 @@ class Product extends Model {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      image: {
-        type: DataTypes.BLOB
+      imageFilename: {
+        type: DataTypes.STRING
       }
     },
     {
