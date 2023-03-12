@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
-const { User } = require('../models/');
+const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+
+const { User } = require('../models/');
 
 const opts = {
   usernameField: 'username',
@@ -37,10 +39,8 @@ async function verify(username, password, done) {
   }
 }
 
-module.exports = (passport) => {
-  passport.serializeUser(serialize);
-  passport.deserializeUser(deserialize);
-  passport.use(new LocalStrategy(opts, verify));
+passport.serializeUser(serialize);
+passport.deserializeUser(deserialize);
+passport.use(new LocalStrategy(opts, verify));
 
-  return passport;
-};
+module.exports = passport;
