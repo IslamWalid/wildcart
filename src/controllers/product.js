@@ -1,4 +1,5 @@
 const createResErr = require('../utils/create-res-err');
+const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
   listProducts,
@@ -19,7 +20,7 @@ const getAllProducts = async (req, res, next) => {
 const createProduct = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.CREATE_PRODUCT);
   if (message) {
-    return res.status(400).json({ message });
+    return sendResErr(res, 400, message);
   }
 
   try {
@@ -34,7 +35,7 @@ const getProduct = async (req, res, next) => {
   try {
     const product = await getProductById(req.params.productId);
     if (!product) {
-      return res.status(404).json({ message: 'product not found' });
+      return sendResErr(res, 404, 'product not found');
     }
 
     res.status(200).json({ product });
