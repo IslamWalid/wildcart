@@ -2,6 +2,7 @@ require('dotenv').config();
 require('../../src/utils/check-env')();
 
 const crypto = require('crypto');
+
 const bcrypt = require('bcrypt');
 const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 

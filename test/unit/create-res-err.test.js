@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+
 const bcrypt = require('bcrypt');
 
 const { createUser } = require('../../src/services/user');

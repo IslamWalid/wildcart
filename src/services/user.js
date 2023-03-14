@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+
 const bcrypt = require('bcrypt');
 
 const { sequelize, User, Customer, Seller } = require('../models');
