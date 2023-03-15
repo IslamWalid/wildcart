@@ -1,4 +1,4 @@
-const log = require('../configs/log-config');
+const log = require('../configs/log');
 
 const errHandler = async (err, req, res, next) => {
   log.debug({ message: 'debug error in errHandler middleware', meta: err });

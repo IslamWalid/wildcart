@@ -4,7 +4,7 @@ const {
   DatabaseError
 } = require('sequelize');
 
-const log = require('../configs/log-config');
+const log = require('../configs/log');
 
 const DATA_TYPE_ERROR_CODE = '22P02';
 

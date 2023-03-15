@@ -1,4 +1,4 @@
-const log = require('../configs/log-config');
+const log = require('../configs/log');
 
 function sendResErr(res, status, message) {
   log.warn({ status, message, trace: new Error().stack });

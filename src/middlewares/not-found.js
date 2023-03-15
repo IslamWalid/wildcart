@@ -1,4 +1,4 @@
-const log = require('../configs/log-config');
+const log = require('../configs/log');
 
 const notFound = async (req, res, next) => {
   log.warn({
