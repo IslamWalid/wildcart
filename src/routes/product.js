@@ -5,7 +5,9 @@ const {
   getAllProducts,
   createProduct,
   getSellerProducts,
-  getProduct
+  getProduct,
+  uploadImage,
+  getProductImage
 } = require('../controllers/product');
 
 const router = express.Router();
@@ -15,6 +17,10 @@ router.get('/', getAllProducts);
 router.post('/', authenticateSeller, createProduct);
 
 router.get('/:productId', getProduct);
+
+router.post('/images/:productId', authenticateSeller, uploadImage);
+
+router.get('/images/:productId', getProductImage);
 
 router.get('/sellers/:sellerId', getSellerProducts);
 

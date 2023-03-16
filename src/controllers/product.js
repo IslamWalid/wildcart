@@ -1,11 +1,16 @@
+const path = require('path');
+
+const upload = require('../configs/multer');
 const createResErr = require('../utils/create-res-err');
 const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
   listProducts,
   insertProduct,
+  insertImage,
   getProductById,
-  listSellerProducts
+  listSellerProducts,
+  getProductImageFilename
 } = require('../services/product');
 
 const getAllProducts = async (req, res, next) => {
@@ -53,9 +58,42 @@ const getSellerProducts = async (req, res, next) => {
   }
 };
 
+const uploadImage = async (req, res, next) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return next(createResErr(err));
+    }
+
+    try {
+      const inserted = await insertImage(req.file.filename, req.params.productId);
+      if (!inserted) {
+        return sendResErr(res, 404, 'product does not exist');
+      }
+
+      res.sendStatus(201);
+    } catch (err) {
+      next(createResErr(err));
+    }
+  });
+};
+
+const getProductImage = async (req, res, next) => {
+  try {
+    const filename = await getProductImageFilename(req.params.productId);
+    if (!filename) {
+      return sendResErr(res, 404, 'product image does not exist');
+    }
+    res.sendFile(path.join(__dirname, '../../media', filename));
+  } catch (err) {
+    next(createResErr(err));
+  }
+};
+
 module.exports = {
   createProduct,
   getProduct,
   getAllProducts,
-  getSellerProducts
+  getSellerProducts,
+  uploadImage,
+  getProductImage
 };

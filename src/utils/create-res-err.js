@@ -1,3 +1,4 @@
+const { MulterError } = require('multer');
 const {
   UniqueConstraintError,
   ForeignKeyConstraintError,
@@ -85,17 +86,55 @@ function createDatabaseResErr(err) {
     case 'product_name_seller_id_unique_constraint':
       return { status: 409, message: 'product name already exists for this seller', errInfo };
     default:
+      log.debug({
+        message: 'unknown database error',
+        meta: err
+      });
       return null;
   }
 }
 
-function createResErr(err) {
+function createMulterResErr(err) {
   log.debug({
-    message: 'creating response error',
+    message: 'creating multer response error',
     meta: err
   });
 
-  const resErr = createDatabaseResErr(err);
+  if (err instanceof MulterError) {
+    switch (err.code) {
+      case 'LIMIT_PART_COUNT':
+        return { status: 400, message: 'too many parts', errInfo: err };
+      case 'LIMIT_FILE_SIZE':
+        return { status: 400, message: 'file too large', errInfo: err };
+      case 'LIMIT_FILE_COUNT':
+        return { status: 400, message: 'too many files', errInfo: err };
+      case 'LIMIT_FIELD_KEY':
+        return { status: 400, message: 'field name too long', errInfo: err };
+      case 'LIMIT_FIELD_VALUE':
+        return { status: 400, message: 'field value too long', errInfo: err };
+      case 'LIMIT_FIELD_COUNT':
+        return { status: 400, message: 'too many fields', errInfo: err };
+      case 'LIMIT_UNEXPECTED_FILE':
+        return { status: 400, message: 'unexpected fields', errInfo: err };
+      case 'MISSING_FIELD_NAME':
+        return { status: 400, message: 'field name missing', errInfo: err };
+    }
+  }
+
+  log.debug({
+    message: 'unknown multer error',
+    meta: err
+  });
+  return null;
+}
+
+function createResErr(err) {
+  let resErr = createDatabaseResErr(err);
+  if (resErr) {
+    return resErr;
+  }
+
+  resErr = createMulterResErr(err);
   if (resErr) {
     return resErr;
   }

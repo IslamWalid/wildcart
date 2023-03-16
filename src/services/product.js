@@ -9,7 +9,7 @@ async function listProducts() {
         [sequelize.col('seller.shop_name'), 'shopName'],
         [sequelize.fn('array_agg', sequelize.col('category_name')), 'categories']
       ],
-      exclude: ['image']
+      exclude: ['imageFilename']
     },
     include: [
       {
@@ -57,6 +57,13 @@ async function insertProduct(productData, sellerId) {
   return id;
 }
 
+async function insertImage(filename, productId) {
+  const result = await Product.update({ imageFilename: filename }, { where: { id: productId } });
+  const affectedRows = result[0];
+
+  return affectedRows > 0;
+}
+
 async function getProductById(productId) {
   return await Product.findByPk(productId, {
     attributes: {
@@ -64,7 +71,7 @@ async function getProductById(productId) {
         [sequelize.col('shop_name'), 'shopName'],
         [sequelize.fn('array_agg', sequelize.col('category_name')), 'categories']
       ],
-      exclude: ['image']
+      exclude: ['imageFilename']
     },
     include: [
       {
@@ -82,6 +89,19 @@ async function getProductById(productId) {
   });
 }
 
+async function getProductImageFilename(productId) {
+  const product = await Product.findByPk(productId, {
+    attributes: ['imageFilename'],
+    raw: true
+  });
+
+  if (!product) {
+    return null;
+  }
+
+  return product.imageFilename;
+}
+
 async function listSellerProducts(sellerId) {
   const products = await Product.findAll({
     where: {
@@ -92,7 +112,7 @@ async function listSellerProducts(sellerId) {
         [sequelize.col('shop_name'), 'shopName'],
         [sequelize.fn('array_agg', sequelize.col('category_name')), 'categories']
       ],
-      exclude: ['image']
+      exclude: ['imageFilename']
     },
     include: [
       {
@@ -116,5 +136,7 @@ module.exports = {
   insertProduct,
   listProducts,
   getProductById,
-  listSellerProducts
+  getProductImageFilename,
+  listSellerProducts,
+  insertImage
 };
