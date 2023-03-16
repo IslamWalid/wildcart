@@ -1,20 +1,18 @@
 const log = require('../configs/log');
+const { sendResErr } = require('../utils/err-handler');
 
 const errHandler = async (err, req, res, next) => {
-  log.debug({ message: 'debug error in errHandler middleware', meta: err });
+  log.debug('handling error in errHandler middleware');
 
   if (!err.status) {
-    log.error({ message: 'unexpected error', meta: err });
-    return res.status(500).json({ message: 'unexpected error' });
+    return sendResErr(res, {
+      status: 500,
+      message: 'unexpected error',
+      errInfo: err
+    });
   }
 
-  if (err.status === 500) {
-    log.error(err.errInfo);
-  } else {
-    log.warn(err.errInfo);
-  }
-
-  res.status(err.status).json({ message: err.message });
+  sendResErr(res, err);
 };
 
 module.exports = errHandler;

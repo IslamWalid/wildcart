@@ -1,11 +1,11 @@
-const sendResErr = require('../utils/send-res-err');
+const { sendResErr } = require('../utils/err-handler');
 
 const authenticateUser = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
 
-  sendResErr(res, 401, 'unauthorized user');
+  sendResErr(res, { status: 401, message: 'unauthorized user' });
 };
 
 const authenticateCustomer = (req, res, next) => {
@@ -13,7 +13,7 @@ const authenticateCustomer = (req, res, next) => {
     return next();
   }
 
-  sendResErr(res, 401, 'unauthorized user');
+  sendResErr(res, { status: 401, message: 'unauthorized user' });
 };
 
 const authenticateSeller = (req, res, next) => {
@@ -21,7 +21,7 @@ const authenticateSeller = (req, res, next) => {
     return next();
   }
 
-  sendResErr(res, 401, 'unauthorized user');
+  sendResErr(res, { status: 401, message: 'unauthorized user' });
 };
 
 module.exports = {

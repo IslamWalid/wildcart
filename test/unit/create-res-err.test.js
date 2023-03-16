@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const { createUser } = require('../../src/services/user');
 const { insertProduct } = require('../../src/services/product');
-const createResErr = require('../../src/utils/create-res-err');
+const { createResErr } = require('../../src/utils/err-handler');
 const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
 
 beforeAll(async () => {
@@ -61,6 +61,7 @@ it('should get already existing username error info', async () => {
 
     expect(status).toBe(409);
     expect(message).toBe('username already exists');
+    expect(errInfo.stack).not.toBeUndefined();
     expect(errInfo.message).toBe('Key (username)=(john_doe) already exists.');
     expect(errInfo.meta.table).toBe('user');
     expect(errInfo.meta.name).toBe('SequelizeUniqueConstraintError');
@@ -84,6 +85,7 @@ it('should get already existing phone error info', async () => {
 
     expect(status).toBe(409);
     expect(message).toBe('phone already exists');
+    expect(errInfo.stack).not.toBeUndefined();
     expect(errInfo.message).toBe('Key (phone)=(+201012345678) already exists.');
     expect(errInfo.meta.table).toBe('user');
     expect(errInfo.meta.name).toBe('SequelizeUniqueConstraintError');
@@ -107,6 +109,7 @@ it('should get wrong datatype error info', async () => {
 
     expect(status).toBe(400);
     expect(message).toBe('invalid input datatype');
+    expect(errInfo.stack).not.toBeUndefined();
     expect(errInfo.message).toBe('invalid input value for enum enum_user_user_type: "invalid enum value"');
     expect(errInfo.meta.name).toBe('SequelizeDatabaseError');
     expect(errInfo.meta.constraint).toBe('22P02');
@@ -130,6 +133,7 @@ it('should get invalid categories error info', async () => {
 
     expect(status).toBe(400);
     expect(message).toBe('invalid categories');
+    expect(errInfo.stack).not.toBeUndefined();
     expect(errInfo.message).toBe('Key (category_name)=(non-existing category) is not present in table "category".');
     expect(errInfo.meta.table).toBe('product_category');
     expect(errInfo.meta.name).toBe('SequelizeForeignKeyConstraintError');
@@ -154,6 +158,7 @@ it('should get already existing product name for the same seller error info', as
 
     expect(status).toBe(409);
     expect(message).toBe('product name already exists for this seller');
+    expect(errInfo.stack).not.toBeUndefined();
     expect(errInfo.message).toContain('Key (name, seller_id)');
     expect(errInfo.meta.table).toBe('product');
     expect(errInfo.meta.name).toBe('SequelizeUniqueConstraintError');

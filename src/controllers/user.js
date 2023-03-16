@@ -1,13 +1,12 @@
-const createResErr = require('../utils/create-res-err');
 const passport = require('../configs/passport');
 const { createUser, getUserDetails } = require('../services/user');
 const { validateInput, inputTypes } = require('../utils/validate-input');
-const sendResErr = require('../utils/send-res-err');
+const { sendResErr, createResErr } = require('../utils/err-handler');
 
 const register = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.REGISTER);
   if (message) {
-    return sendResErr(res, 400, message);
+    return sendResErr(res, { status: 400, message });
   }
 
   try {
@@ -21,7 +20,7 @@ const register = async (req, res, next) => {
 const login = (req, res, next) => {
   const message = validateInput(req.body, inputTypes.LOGIN);
   if (message) {
-    return sendResErr(res, 400, message);
+    return sendResErr(res, { status: 400, message });
   }
 
   passport.authenticate('local', { session: true }, (err, user, info) => {
@@ -30,7 +29,7 @@ const login = (req, res, next) => {
     }
 
     if (!user) {
-      return sendResErr(res, 401, info.message);
+      return sendResErr(res, { status: 401, message: info.message });
     }
 
     req.login(user, (err) => {
@@ -47,7 +46,7 @@ const userDetails = async (req, res, next) => {
   try {
     const details = await getUserDetails(req.params.id);
     if (!details) {
-      return sendResErr(res, 404, 'user not found');
+      return sendResErr(res, { status: 404, message: 'user not found' });
     }
     res.status(200).json(details);
   } catch (err) {

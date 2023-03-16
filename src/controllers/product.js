@@ -1,8 +1,7 @@
 const path = require('path');
 
 const upload = require('../configs/multer');
-const createResErr = require('../utils/create-res-err');
-const sendResErr = require('../utils/send-res-err');
+const { sendResErr, createResErr } = require('../utils/err-handler');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
   listProducts,
@@ -25,7 +24,7 @@ const getAllProducts = async (req, res, next) => {
 const createProduct = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.CREATE_PRODUCT);
   if (message) {
-    return sendResErr(res, 400, message);
+    return sendResErr(res, { status: 400, message });
   }
 
   try {
@@ -40,7 +39,7 @@ const getProduct = async (req, res, next) => {
   try {
     const product = await getProductById(req.params.productId);
     if (!product) {
-      return sendResErr(res, 404, 'product not found');
+      return sendResErr(res, { status: 404, message: 'product not found' });
     }
 
     res.status(200).json({ product });
@@ -67,7 +66,7 @@ const uploadImage = async (req, res, next) => {
     try {
       const inserted = await insertImage(req.file.filename, req.params.productId);
       if (!inserted) {
-        return sendResErr(res, 404, 'product does not exist');
+        return sendResErr(res, { status: 404, message: 'product does not exist' });
       }
 
       res.sendStatus(201);
@@ -81,7 +80,7 @@ const getProductImage = async (req, res, next) => {
   try {
     const filename = await getProductImageFilename(req.params.productId);
     if (!filename) {
-      return sendResErr(res, 404, 'product image does not exist');
+      return sendResErr(res, { status: 404, message: 'product image does not exist' });
     }
     res.sendFile(path.join(__dirname, '../../media', filename));
   } catch (err) {
