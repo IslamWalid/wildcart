@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const fs = require('fs/promises');
+const path = require('path');
 
 const { sequelize, Seller, Product, ProductCategory } = require('../models');
 
@@ -57,11 +59,19 @@ async function insertProduct(productData, sellerId) {
   return id;
 }
 
-async function insertImage(filename, productId) {
-  const result = await Product.update({ imageFilename: filename }, { where: { id: productId } });
-  const affectedRows = result[0];
+async function setImage(filename, productId) {
+  const product = await Product.findByPk(productId);
+  if (!product) {
+    return null;
+  }
 
-  return affectedRows > 0;
+  if (product.imageFilename) {
+    await fs.unlink(path.join(__dirname, '../../media/') + product.imageFilename);
+  }
+
+  product.imageFilename = filename;
+
+  return await product.save();
 }
 
 async function getProductById(productId) {
@@ -138,5 +148,5 @@ module.exports = {
   getProductById,
   getProductImageFilename,
   listSellerProducts,
-  insertImage
+  setImage
 };

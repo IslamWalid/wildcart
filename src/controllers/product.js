@@ -6,7 +6,7 @@ const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
   listProducts,
   insertProduct,
-  insertImage,
+  setImage,
   getProductById,
   listSellerProducts,
   getProductImageFilename
@@ -64,7 +64,7 @@ const uploadImage = async (req, res, next) => {
     }
 
     try {
-      const inserted = await insertImage(req.file.filename, req.params.productId);
+      const inserted = await setImage(req.file.filename, req.params.productId);
       if (!inserted) {
         return sendResErr(res, { status: 404, message: 'product does not exist' });
       }
