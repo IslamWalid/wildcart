@@ -20,6 +20,8 @@ router.get('/:productId', getProduct);
 
 router.post('/images/:productId', authenticateSeller, uploadImage);
 
+router.patch('/images/:productId', authenticateSeller, uploadImage);
+
 router.get('/images/:productId', getProductImage);
 
 router.get('/sellers/:sellerId', getSellerProducts);
