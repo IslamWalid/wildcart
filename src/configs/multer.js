@@ -20,8 +20,11 @@ const upload = multer({
   storage: diskStorage,
   limits: {
     files: 1,
+    parts: 2,
+    fieldNameSize: 50,
     fields: 0,
-    fileSize: 1024 * 1024 * 10 // 10MG
+    fileSize: 1024 * 1024, // 1MG
+    fieldSize: 1024 * 1024 // 1MG
   }
 }).single('image');
 
