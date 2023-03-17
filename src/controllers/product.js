@@ -1,7 +1,7 @@
 const path = require('path');
 
 const upload = require('../configs/multer');
-const { sendResErr, createResErr } = require('../utils/err-handler');
+const { sendResErr } = require('../utils/err-handler');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
   listProducts,
@@ -17,7 +17,7 @@ const getAllProducts = async (req, res, next) => {
     const products = await listProducts();
     res.status(200).json({ products });
   } catch (err) {
-    next(createResErr(err));
+    next(err);
   }
 };
 
@@ -31,7 +31,7 @@ const createProduct = async (req, res, next) => {
     const id = await insertProduct(req.body, req.user.id);
     res.status(201).json({ id });
   } catch (err) {
-    next(createResErr(err));
+    next(err);
   }
 };
 
@@ -44,7 +44,7 @@ const getProduct = async (req, res, next) => {
 
     res.status(200).json({ product });
   } catch (err) {
-    next(createResErr(err));
+    next(err);
   }
 };
 
@@ -53,14 +53,14 @@ const getSellerProducts = async (req, res, next) => {
     const products = await listSellerProducts(req.params.sellerId);
     res.status(200).json({ products });
   } catch (err) {
-    next(createResErr(err));
+    next(err);
   }
 };
 
 const uploadImage = async (req, res, next) => {
   upload(req, res, async (err) => {
     if (err) {
-      return next(createResErr(err));
+      return next(err);
     }
 
     try {
@@ -71,7 +71,7 @@ const uploadImage = async (req, res, next) => {
 
       res.sendStatus(201);
     } catch (err) {
-      next(createResErr(err));
+      next(err);
     }
   });
 };
@@ -84,7 +84,7 @@ const getProductImage = async (req, res, next) => {
     }
     res.sendFile(path.join(__dirname, '../../media', filename));
   } catch (err) {
-    next(createResErr(err));
+    next(err);
   }
 };
 
