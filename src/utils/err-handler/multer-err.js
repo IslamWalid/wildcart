@@ -15,22 +15,24 @@ function multerResErr(err) {
     const errInfo = multerErrInfo(err);
 
     switch (errInfo.code) {
-      case 'LIMIT_PART_COUNT':
-        return { status: 400, message: 'too many parts', errInfo };
-      case 'LIMIT_FILE_SIZE':
-        return { status: 400, message: 'file too large', errInfo };
-      case 'LIMIT_FILE_COUNT':
-        return { status: 400, message: 'too many files', errInfo };
-      case 'LIMIT_FIELD_KEY':
-        return { status: 400, message: 'field name too long', errInfo };
-      case 'LIMIT_FIELD_VALUE':
-        return { status: 400, message: 'field value too long', errInfo };
-      case 'LIMIT_FIELD_COUNT':
-        return { status: 400, message: 'too many fields', errInfo };
-      case 'LIMIT_UNEXPECTED_FILE':
-        return { status: 400, message: 'unexpected fields', errInfo };
+      case 'FILE_FILTER':
+        return { status: 400, message: errInfo.message, errInfo };
       case 'MISSING_FIELD_NAME':
-        return { status: 400, message: 'field name missing', errInfo };
+        return { status: 400, message: errInfo.message, errInfo };
+      case 'LIMIT_PART_COUNT':
+        return { status: 400, message: errInfo.message, errInfo };
+      case 'LIMIT_FILE_SIZE':
+        return { status: 400, message: errInfo.message, errInfo };
+      case 'LIMIT_FILE_COUNT':
+        return { status: 400, message: errInfo.message, errInfo };
+      case 'LIMIT_FIELD_KEY':
+        return { status: 400, message: errInfo.message, errInfo };
+      case 'LIMIT_FIELD_VALUE':
+        return { status: 400, message: errInfo.message, errInfo };
+      case 'LIMIT_FIELD_COUNT':
+        return { status: 400, message: errInfo.message, errInfo };
+      case 'LIMIT_UNEXPECTED_FILE':
+        return { status: 400, message: errInfo.message, errInfo };
     }
   }
 

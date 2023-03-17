@@ -1,4 +1,5 @@
 const multer = require('multer');
+const { MulterError } = require('multer');
 
 const diskStorage = multer.diskStorage({
   destination: 'media/',
@@ -9,7 +10,11 @@ const diskStorage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
   if (!file.mimetype.includes('image/')) {
-    return cb(new Error('only image files are allowed'));
+    const multerError = new MulterError('FILE_FILTER', file.filename);
+    multerError.message = 'Only image files are allowed';
+    multerError.file = file;
+
+    return cb(multerError);
   }
 
   cb(null, true);
