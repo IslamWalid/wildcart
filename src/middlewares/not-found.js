@@ -1,4 +1,4 @@
-const { sendResErr } = require('../utils/err-handler');
+const sendResErr = require('../utils/send-res-err');
 
 const notFound = async (req, res, next) => {
   sendResErr(res, {

@@ -1,5 +1,6 @@
 const log = require('../configs/log');
-const { sendResErr, createResErr } = require('../utils/err-handler');
+const sendResErr = require('../utils/send-res-err');
+const createResErr = require('../utils/res-err-creator');
 
 const errHandler = async (err, req, res, next) => {
   log.debug('handling error in errHandler middleware');

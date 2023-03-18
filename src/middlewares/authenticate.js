@@ -1,4 +1,4 @@
-const { sendResErr } = require('../utils/err-handler');
+const sendResErr = require('../utils/send-res-err');
 
 const authenticateUser = (req, res, next) => {
   if (req.isAuthenticated()) {

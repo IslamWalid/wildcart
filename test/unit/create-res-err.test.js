@@ -2,9 +2,9 @@ const crypto = require('crypto');
 
 const bcrypt = require('bcrypt');
 
+const createResErr = require('../../src/utils/res-err-creator');
 const { createUser } = require('../../src/services/user');
 const { insertProduct } = require('../../src/services/product');
-const { createResErr } = require('../../src/utils/err-handler');
 const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
 
 beforeAll(async () => {

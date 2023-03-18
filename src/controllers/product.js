@@ -1,7 +1,7 @@
 const path = require('path');
 
 const upload = require('../configs/multer');
-const { sendResErr } = require('../utils/err-handler');
+const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
   listProducts,

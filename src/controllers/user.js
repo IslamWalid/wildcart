@@ -1,5 +1,5 @@
 const passport = require('../configs/passport');
-const { sendResErr } = require('../utils/err-handler');
+const sendResErr = require('../utils/send-res-err');
 const { createUser, getUserDetails } = require('../services/user');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 
