@@ -3,7 +3,7 @@ const validator = require('validator');
 const inputTypes = {
   LOGIN: 0,
   REGISTER: 1,
-  CREATE_PRODUCT: 2
+  POST_PRODUCT: 2
 };
 
 function validateRegister(input) {
@@ -39,7 +39,7 @@ function validateLogin(input) {
   return null;
 }
 
-function validateCreateProduct(input) {
+function validatePostProduct(input) {
   const { name, brand, quantity, price, categories } = input;
 
   if (!name || !brand || !quantity || !price || !categories) {
@@ -57,8 +57,8 @@ function validateInput(input, inputType) {
     case inputTypes.LOGIN:
       return validateLogin(input);
 
-    case inputTypes.CREATE_PRODUCT:
-      return validateCreateProduct(input);
+    case inputTypes.POST_PRODUCT:
+      return validatePostProduct(input);
   }
 }
 

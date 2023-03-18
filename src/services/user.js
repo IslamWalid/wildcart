@@ -24,7 +24,7 @@ async function createUser(userData) {
   });
 }
 
-async function getUserDetails(id) {
+async function retrieveUserDetailsById(id) {
   const details = await User.findByPk(id, {
     attributes: {
       include: [[sequelize.col('shop_name'), 'shopName']],
@@ -43,5 +43,5 @@ async function getUserDetails(id) {
 
 module.exports = {
   createUser,
-  getUserDetails
+  retrieveUserDetailsById
 };

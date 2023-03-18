@@ -1,7 +1,7 @@
 const passport = require('../configs/passport');
 const sendResErr = require('../utils/send-res-err');
-const { createUser, getUserDetails } = require('../services/user');
 const { validateInput, inputTypes } = require('../utils/validate-input');
+const { createUser, retrieveUserDetailsById } = require('../services/user');
 
 const register = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.REGISTER);
@@ -42,9 +42,9 @@ const login = (req, res, next) => {
   })(req, res, next);
 };
 
-const userDetails = async (req, res, next) => {
+const getUserDetails = async (req, res, next) => {
   try {
-    const details = await getUserDetails(req.params.id);
+    const details = await retrieveUserDetailsById(req.params.id);
     if (!details) {
       return sendResErr(res, { status: 404, message: 'user not found' });
     }
@@ -67,6 +67,6 @@ const logout = (req, res, next) => {
 module.exports = {
   register,
   login,
-  userDetails,
+  getUserDetails,
   logout
 };

@@ -3,7 +3,7 @@ const express = require('express');
 const { authenticateSeller } = require('../middlewares/authenticate.js');
 const {
   getAllProducts,
-  createProduct,
+  postProduct,
   getSellerProducts,
   getProduct,
   uploadImage,
@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get('/', getAllProducts);
 
-router.post('/', authenticateSeller, createProduct);
+router.post('/', authenticateSeller, postProduct);
 
 router.get('/:productId', getProduct);
 
