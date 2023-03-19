@@ -23,10 +23,9 @@ fs
 
     return model;
   })
+  .filter((model) => model.associate)
   .forEach((model) => {
-    if (model.associate) {
-      model.associate();
-    }
+    model.associate();
   });
 
 db.sequelize = sequelize;
