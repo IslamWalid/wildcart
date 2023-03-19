@@ -3,6 +3,7 @@ const path = require('path');
 const upload = require('../configs/multer');
 const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
+const { OK, CREATED, BAD_REQUEST, NOT_FOUND } = require('../utils/http-status');
 const {
   createProduct,
   updateProductImage,
@@ -15,12 +16,12 @@ const {
 const postProduct = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.POST_PRODUCT);
   if (message) {
-    return sendResErr(res, { status: 400, message });
+    return sendResErr(res, { status: BAD_REQUEST, message });
   }
 
   try {
     const id = await createProduct(req.body, req.user.id);
-    res.status(201).json({ id });
+    res.status(CREATED).json({ id });
   } catch (err) {
     next(err);
   }
@@ -34,7 +35,7 @@ const uploadImage = async (req, res, next) => {
 
     if (!req.file) {
       return sendResErr(res, {
-        status: 400,
+        status: BAD_REQUEST,
         message: 'missing required fields'
       });
     }
@@ -42,10 +43,10 @@ const uploadImage = async (req, res, next) => {
     try {
       const inserted = await updateProductImage(req.file.filename, req.params.productId);
       if (!inserted) {
-        return sendResErr(res, { status: 404, message: 'product not found' });
+        return sendResErr(res, { status: NOT_FOUND, message: 'product not found' });
       }
 
-      res.sendStatus(201);
+      res.sendStatus(CREATED);
     } catch (err) {
       next(err);
     }
@@ -55,7 +56,7 @@ const uploadImage = async (req, res, next) => {
 const getAllProducts = async (req, res, next) => {
   try {
     const products = await retrieveAllProducts();
-    res.status(200).json({ products });
+    res.status(OK).json({ products });
   } catch (err) {
     next(err);
   }
@@ -65,10 +66,10 @@ const getProduct = async (req, res, next) => {
   try {
     const product = await retrieveProductById(req.params.productId);
     if (!product) {
-      return sendResErr(res, { status: 404, message: 'product not found' });
+      return sendResErr(res, { status: NOT_FOUND, message: 'product not found' });
     }
 
-    res.status(200).json({ product });
+    res.status(OK).json({ product });
   } catch (err) {
     next(err);
   }
@@ -77,7 +78,7 @@ const getProduct = async (req, res, next) => {
 const getSellerProducts = async (req, res, next) => {
   try {
     const products = await retrieveProductsBySellerId(req.params.sellerId);
-    res.status(200).json({ products });
+    res.status(OK).json({ products });
   } catch (err) {
     next(err);
   }
@@ -87,7 +88,7 @@ const getProductImage = async (req, res, next) => {
   try {
     const filename = await retrieveProductImageFilename(req.params.productId);
     if (!filename) {
-      return sendResErr(res, { status: 404, message: 'product image does not exist' });
+      return sendResErr(res, { status: NOT_FOUND, message: 'product image does not exist' });
     }
     res.sendFile(path.join(__dirname, '../../media', filename));
   } catch (err) {

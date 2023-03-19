@@ -1,8 +1,9 @@
 const sendResErr = require('../utils/send-res-err');
+const { NOT_FOUND } = require('../utils/http-status');
 
 const notFound = async (req, res, next) => {
   sendResErr(res, {
-    status: 404,
+    status: NOT_FOUND,
     message: 'resource not found',
     errInfo: {
       method: req.method,

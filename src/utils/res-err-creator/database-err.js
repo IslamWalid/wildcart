@@ -5,6 +5,7 @@ const {
 } = require('sequelize');
 
 const log = require('../../configs/log');
+const { BAD_REQUEST, NOT_FOUND, CONFLICT } = require('../http-status');
 
 const DATA_TYPE_ERROR_CODE = '22P02';
 
@@ -65,19 +66,19 @@ function databaseResErr(err) {
 
   switch (errInfo.meta.constraint) {
     case DATA_TYPE_ERROR_CODE:
-      return { status: 400, message: 'invalid input datatype', errInfo };
+      return { status: BAD_REQUEST, message: 'invalid input datatype', errInfo };
     case 'product_category_category_name_fkey':
-      return { status: 400, message: 'invalid categories', errInfo };
+      return { status: BAD_REQUEST, message: 'invalid categories', errInfo };
     case 'image_product_id_fkey':
-      return { status: 404, message: 'product does not exist', errInfo };
+      return { status: NOT_FOUND, message: 'product does not exist', errInfo };
     case 'image_pkey':
-      return { status: 409, message: 'product already has an image', errInfo };
+      return { status: CONFLICT, message: 'product already has an image', errInfo };
     case 'user_username_key':
-      return { status: 409, message: 'username already exists', errInfo };
+      return { status: CONFLICT, message: 'username already exists', errInfo };
     case 'user_phone_key':
-      return { status: 409, message: 'phone already exists', errInfo };
+      return { status: CONFLICT, message: 'phone already exists', errInfo };
     case 'product_name_seller_id_unique_constraint':
-      return { status: 409, message: 'product name already exists for this seller', errInfo };
+      return { status: CONFLICT, message: 'product name already exists for this seller', errInfo };
     default:
       log.debug('error does not match any defined database error type');
       return null;

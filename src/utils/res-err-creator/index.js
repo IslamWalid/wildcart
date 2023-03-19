@@ -1,6 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 
+const { INTERNAL_SERVER_ERROR } = require('../http-status');
+
 const basename = path.basename(__filename);
 
 const resErrCreators = [];
@@ -23,7 +25,7 @@ function createResErr(err) {
     return aggregated || creator(err);
   }, null);
 
-  return resErr || { status: 500, message: 'unexpected error', errInfo: err };
+  return resErr || { status: INTERNAL_SERVER_ERROR, message: 'unexpected error', errInfo: err };
 }
 
 module.exports = createResErr;
