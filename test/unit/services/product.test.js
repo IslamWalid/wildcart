@@ -1,20 +1,20 @@
 require('dotenv').config();
-require('../../src/utils/check-env')();
+require('../../../src/utils/check-env')();
 
 const crypto = require('crypto');
 
 const bcrypt = require('bcrypt');
 const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 
-const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
+const { sequelize, User, Seller, Product, ProductCategory } = require('../../../src/models/');
 const {
   createProduct,
   retrieveAllProducts,
   retrieveProductById,
   retrieveProductsBySellerId
-} = require('../../src/services/product');
+} = require('../../../src/services/product');
 
-async function createTestUser() {
+async function createTestSeller() {
   const id = crypto.randomUUID();
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash('StrongPassword123!', salt);
@@ -94,7 +94,7 @@ async function bulkCreateTestProducts(sellerId) {
 
 describe('create product', () => {
   beforeEach(async () => {
-    const sellerId = await createTestUser();
+    const sellerId = await createTestSeller();
     await createTestProduct(sellerId);
   });
 
@@ -151,7 +151,7 @@ describe('create product', () => {
 
 describe('retrieve products', () => {
   beforeAll(async () => {
-    const sellerId = await createTestUser();
+    const sellerId = await createTestSeller();
     await bulkCreateTestProducts(sellerId);
   });
 

@@ -2,10 +2,16 @@ const crypto = require('crypto');
 
 const bcrypt = require('bcrypt');
 
-const createResErr = require('../../src/utils/res-err-creator');
-const { createUser } = require('../../src/services/user');
-const { createProduct } = require('../../src/services/product');
-const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
+const createResErr = require('../../../src/utils/res-err-creator');
+const { createUser } = require('../../../src/services/user');
+const { createProduct } = require('../../../src/services/product');
+const {
+  sequelize,
+  User,
+  Seller,
+  Product,
+  ProductCategory
+} = require('../../../src/models/');
 
 beforeAll(async () => {
   const userId = crypto.randomUUID();

@@ -1,4 +1,4 @@
-const { validateInput, inputTypes } = require('../../src/utils/validate-input');
+const { validateInput, inputTypes } = require('../../../src/utils/validate-input');
 
 describe('validate register input', () => {
   it('should pass valid input', () => {
