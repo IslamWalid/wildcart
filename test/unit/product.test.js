@@ -7,9 +7,14 @@ const bcrypt = require('bcrypt');
 const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 
 const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
-const { insertProduct, listProducts, getProductById, listSellerProducts } = require('../../src/services/product');
+const {
+  createProduct,
+  retrieveAllProducts,
+  retrieveProductById,
+  retrieveProductsBySellerId
+} = require('../../src/services/product');
 
-async function createUser() {
+async function createTestUser() {
   const id = crypto.randomUUID();
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash('StrongPassword123!', salt);
@@ -32,7 +37,7 @@ async function createUser() {
   return id;
 }
 
-async function createProduct(sellerId) {
+async function createTestProduct(sellerId) {
   const id = crypto.randomUUID();
 
   await Product.create({
@@ -52,7 +57,7 @@ async function createProduct(sellerId) {
   });
 }
 
-async function bulkCreateProducts(sellerId) {
+async function bulkCreateTestProducts(sellerId) {
   const idOne = crypto.randomUUID();
   const idTwo = crypto.randomUUID();
 
@@ -89,8 +94,8 @@ async function bulkCreateProducts(sellerId) {
 
 describe('create product', () => {
   beforeEach(async () => {
-    const sellerId = await createUser();
-    await createProduct(sellerId);
+    const sellerId = await createTestUser();
+    await createTestProduct(sellerId);
   });
 
   it('should create product with existing category', async () => {
@@ -103,7 +108,7 @@ describe('create product', () => {
     };
     const user = await User.findOne({ where: { userType: 'seller' } });
 
-    await expect(insertProduct(productData, user.id))
+    await expect(createProduct(productData, user.id))
       .resolves
       .not
       .toBeUndefined();
@@ -119,7 +124,7 @@ describe('create product', () => {
     };
     const user = await User.findOne({ where: { userType: 'seller' } });
 
-    await expect(insertProduct(productData, user.id))
+    await expect(createProduct(productData, user.id))
       .rejects
       .toThrow(UniqueConstraintError);
   });
@@ -134,7 +139,7 @@ describe('create product', () => {
     };
     const user = await User.findOne({ where: { userType: 'seller' } });
 
-    await expect(insertProduct(productData, user.id))
+    await expect(createProduct(productData, user.id))
       .rejects
       .toThrow(ForeignKeyConstraintError);
   });
@@ -146,12 +151,12 @@ describe('create product', () => {
 
 describe('retrieve products', () => {
   beforeAll(async () => {
-    const sellerId = await createUser();
-    await bulkCreateProducts(sellerId);
+    const sellerId = await createTestUser();
+    await bulkCreateTestProducts(sellerId);
   });
 
   it('should list all products', async () => {
-    const products = await listProducts();
+    const products = await retrieveAllProducts();
 
     products.forEach((product) => {
       expect(product).toHaveProperty('id');
@@ -166,7 +171,7 @@ describe('retrieve products', () => {
 
   it('should get product by its it', async () => {
     const existingProduct = await Product.findOne();
-    const product = await getProductById(existingProduct.id);
+    const product = await retrieveProductById(existingProduct.id);
 
     expect(product).toHaveProperty('id');
     expect(product).toHaveProperty('sellerId');
@@ -179,7 +184,7 @@ describe('retrieve products', () => {
 
   it('should list seller products', async () => {
     const seller = await User.findOne();
-    const products = await listSellerProducts(seller.id);
+    const products = await retrieveProductsBySellerId(seller.id);
 
     products.forEach((product) => {
       expect(product).toHaveProperty('id');

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const createResErr = require('../../src/utils/res-err-creator');
 const { createUser } = require('../../src/services/user');
-const { insertProduct } = require('../../src/services/product');
+const { createProduct } = require('../../src/services/product');
 const { sequelize, User, Seller, Product, ProductCategory } = require('../../src/models/');
 
 beforeAll(async () => {
@@ -127,7 +127,7 @@ it('should get invalid categories error info', async () => {
   const user = await User.findOne({ where: { userType: 'seller' } });
 
   try {
-    await insertProduct(productData, user.id);
+    await createProduct(productData, user.id);
   } catch (err) {
     const { status, message, errInfo } = createResErr(err);
 
@@ -152,7 +152,7 @@ it('should get already existing product name for the same seller error info', as
   const user = await User.findOne({ where: { userType: 'seller' } });
 
   try {
-    await insertProduct(productData, user.id);
+    await createProduct(productData, user.id);
   } catch (err) {
     const { status, message, errInfo } = createResErr(err);
 
