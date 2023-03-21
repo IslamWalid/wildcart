@@ -70,7 +70,7 @@ async function retrieveAllProducts() {
   });
 }
 
-async function retrieveProductById(productId) {
+async function retrieveProduct(productId) {
   return await Product.findByPk(productId, {
     attributes: {
       include: [
@@ -102,7 +102,20 @@ async function retrieveProductById(productId) {
   });
 }
 
-async function retrieveProductsBySellerId(sellerId) {
+async function updateProduct(sellerId, productId, product) {
+  const { name, brand, quantity, price } = product;
+
+  const result = await Product.update({ name, brand, quantity, price }, {
+    where: {
+      sellerId,
+      id: productId
+    }
+  });
+
+  return result[0] > 0;
+}
+
+async function retrieveSellerProducts(sellerId) {
   const products = await Product.findAll({
     where: {
       sellerId
@@ -171,8 +184,9 @@ async function updateProductImage(filename, productId) {
 module.exports = {
   createProduct,
   retrieveAllProducts,
-  retrieveProductById,
-  retrieveProductsBySellerId,
+  retrieveProduct,
+  updateProduct,
+  retrieveSellerProducts,
   retrieveProductImageFilename,
   updateProductImage
 };

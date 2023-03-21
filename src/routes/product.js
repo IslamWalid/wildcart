@@ -6,6 +6,7 @@ const {
   postProduct,
   getSellerProducts,
   getProduct,
+  patchProduct,
   uploadImage,
   getProductImage
 } = require('../controllers/product');
@@ -17,6 +18,8 @@ router.get('/', getAllProducts);
 router.post('/', authenticateSeller, postProduct);
 
 router.get('/:productId', getProduct);
+
+router.patch('/:productId', authenticateSeller, patchProduct);
 
 router.post('/images/:productId', authenticateSeller, uploadImage);
 

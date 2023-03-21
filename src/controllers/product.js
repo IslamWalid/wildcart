@@ -8,8 +8,9 @@ const {
   createProduct,
   updateProductImage,
   retrieveAllProducts,
-  retrieveProductById,
-  retrieveProductsBySellerId,
+  retrieveProduct,
+  updateProduct,
+  retrieveSellerProducts,
   retrieveProductImageFilename
 } = require('../services/product');
 
@@ -64,7 +65,7 @@ const getAllProducts = async (req, res, next) => {
 
 const getProduct = async (req, res, next) => {
   try {
-    const product = await retrieveProductById(req.params.productId);
+    const product = await retrieveProduct(req.params.productId);
     if (!product) {
       return sendResErr(res, { status: NOT_FOUND, message: 'product not found' });
     }
@@ -75,9 +76,27 @@ const getProduct = async (req, res, next) => {
   }
 };
 
+const patchProduct = async (req, res, next) => {
+  const message = validateInput(req.body, inputTypes.PATCH_PRODUCT);
+  if (message) {
+    return sendResErr(res, { status: BAD_REQUEST, message });
+  }
+
+  try {
+    const updated = await updateProduct(req.user.id, req.params.productId, req.body);
+    if (!updated) {
+      return sendResErr(res, { status: NOT_FOUND, message: 'product not found' });
+    }
+
+    res.sendStatus(OK);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getSellerProducts = async (req, res, next) => {
   try {
-    const products = await retrieveProductsBySellerId(req.params.sellerId);
+    const products = await retrieveSellerProducts(req.params.sellerId);
     res.status(OK).json({ products });
   } catch (err) {
     next(err);
@@ -100,6 +119,7 @@ module.exports = {
   postProduct,
   uploadImage,
   getProduct,
+  patchProduct,
   getAllProducts,
   getSellerProducts,
   getProductImage

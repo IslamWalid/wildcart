@@ -93,6 +93,15 @@ describe('validate create product input', () => {
   });
 });
 
+describe('validate patch product input', () => {
+  it('should pass input with empty input object', async () => {
+    const input = {};
+
+    expect(validateInput(input, inputTypes.PATCH_PRODUCT))
+      .toBe('provide at least one field');
+  });
+});
+
 describe('validate create review input', () => {
   it('should pass input with missing fields', async () => {
     const input = {};

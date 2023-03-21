@@ -4,8 +4,9 @@ const inputTypes = {
   LOGIN: 0,
   REGISTER: 1,
   POST_PRODUCT: 2,
-  POST_REVIEW: 3,
-  PATCH_REVIEW: 4
+  PATCH_PRODUCT: 3,
+  POST_REVIEW: 4,
+  PATCH_REVIEW: 5
 };
 
 function validateRegister(input) {
@@ -42,10 +43,20 @@ function validateLogin(input) {
 }
 
 function validatePostProduct(input) {
+  const { name, brand, quantity, price } = input;
+
+  if (!name || !brand || !quantity || !price) {
+    return 'required fields are missing';
+  }
+
+  return null;
+}
+
+function validatePatchProduct(input) {
   const { name, brand, quantity, price, categories } = input;
 
-  if (!name || !brand || !quantity || !price || !categories) {
-    return 'required fields are missing';
+  if (!name && !brand && !quantity && !price && !categories) {
+    return 'provide at least one field';
   }
 
   return null;
@@ -81,6 +92,9 @@ function validateInput(input, inputType) {
 
     case inputTypes.POST_PRODUCT:
       return validatePostProduct(input);
+
+    case inputTypes.PATCH_PRODUCT:
+      return validatePatchProduct(input);
 
     case inputTypes.POST_REVIEW:
       return validatePostReview(input);
