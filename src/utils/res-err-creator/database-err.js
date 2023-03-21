@@ -70,15 +70,18 @@ function databaseResErr(err) {
     case 'product_category_category_name_fkey':
       return { status: BAD_REQUEST, message: 'invalid categories', errInfo };
     case 'image_product_id_fkey':
-      return { status: NOT_FOUND, message: 'product does not exist', errInfo };
-    case 'image_pkey':
-      return { status: CONFLICT, message: 'product already has an image', errInfo };
+    case 'review_product_id_fkey':
+      return { status: NOT_FOUND, message: 'product not found', errInfo };
     case 'user_username_key':
       return { status: CONFLICT, message: 'username already exists', errInfo };
     case 'user_phone_key':
       return { status: CONFLICT, message: 'phone already exists', errInfo };
     case 'product_name_seller_id_unique_constraint':
       return { status: CONFLICT, message: 'product name already exists for this seller', errInfo };
+    case 'review_pkey':
+      return { status: CONFLICT, message: 'user have already reviewed this product', errInfo };
+    case 'image_pkey':
+      return { status: CONFLICT, message: 'product already has an image', errInfo };
     default:
       log.debug('error does not match any defined database error type');
       return null;

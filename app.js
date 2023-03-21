@@ -7,6 +7,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./src/models/');
 const userRouter = require('./src/routes/user');
 const productRouter = require('./src/routes/product');
+const reviewRouter = require('./src/routes/review');
 const notFound = require('./src/middlewares/not-found');
 const errHandler = require('./src/middlewares/err-handler');
 
@@ -38,6 +39,7 @@ app.use(cors({
 
 app.use('/users', userRouter);
 app.use('/products', productRouter);
+app.use('/reviews', reviewRouter);
 
 app.use(notFound);
 app.use(errHandler);

@@ -3,7 +3,8 @@ const validator = require('validator');
 const inputTypes = {
   LOGIN: 0,
   REGISTER: 1,
-  POST_PRODUCT: 2
+  POST_PRODUCT: 2,
+  POST_REVIEW: 3
 };
 
 function validateRegister(input) {
@@ -49,6 +50,16 @@ function validatePostProduct(input) {
   return null;
 }
 
+function validatePostReview(input) {
+  const { rate, comment } = input;
+
+  if (!rate || !comment) {
+    return 'required fields are missing';
+  }
+
+  return null;
+}
+
 function validateInput(input, inputType) {
   switch (inputType) {
     case inputTypes.REGISTER:
@@ -59,6 +70,9 @@ function validateInput(input, inputType) {
 
     case inputTypes.POST_PRODUCT:
       return validatePostProduct(input);
+
+    case inputTypes.POST_REVIEW:
+      return validatePostReview(input);
   }
 }
 
