@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const fs = require('fs/promises');
 const path = require('path');
 
-const { sequelize, Seller, Product, ProductCategory } = require('../models');
+const { sequelize, Seller, Product, Review, ProductCategory } = require('../models');
 
 async function createProduct(productData, sellerId) {
   const id = crypto.randomUUID();
@@ -39,7 +39,11 @@ async function retrieveAllProducts() {
     attributes: {
       include: [
         [sequelize.col('seller.shop_name'), 'shopName'],
-        [sequelize.fn('array_agg', sequelize.col('category_name')), 'categories']
+        [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
+        [sequelize.cast(
+          sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
+          'NUMERIC(3, 2)'),
+        'avgRate']
       ],
       exclude: ['imageFilename']
     },
@@ -51,9 +55,16 @@ async function retrieveAllProducts() {
       {
         model: ProductCategory,
         attributes: []
+      },
+      {
+        model: Review,
+        attributes: []
       }
     ],
-    group: ['product.id', 'shop_name'],
+    group: [
+      'product.id',
+      'shop_name'
+    ],
     raw: true,
     nest: true
   });
@@ -76,11 +87,18 @@ async function retrieveProductById(productId) {
       {
         model: ProductCategory,
         attributes: []
+      },
+      {
+        model: Review,
+        attributes: ['rate', 'comment', 'createdAt']
       }
     ],
-    group: ['product.id', 'shop_name'],
-    raw: true,
-    nest: true
+    group: [
+      'product.id',
+      'shop_name',
+      'reviews.product_id',
+      'reviews.customer_id'
+    ]
   });
 }
 
@@ -92,7 +110,11 @@ async function retrieveProductsBySellerId(sellerId) {
     attributes: {
       include: [
         [sequelize.col('shop_name'), 'shopName'],
-        [sequelize.fn('array_agg', sequelize.col('category_name')), 'categories']
+        [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
+        [sequelize.cast(
+          sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
+          'NUMERIC(3, 2)'),
+        'avgRate']
       ],
       exclude: ['imageFilename']
     },
@@ -103,6 +125,10 @@ async function retrieveProductsBySellerId(sellerId) {
       },
       {
         model: ProductCategory,
+        attributes: []
+      },
+      {
+        model: Review,
         attributes: []
       }
     ],

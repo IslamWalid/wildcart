@@ -166,12 +166,14 @@ describe('retrieve products', () => {
       expect(product).toHaveProperty('quantity');
       expect(product).toHaveProperty('shopName');
       expect(product).toHaveProperty('categories');
+      expect(product).toHaveProperty('avgRate');
     });
   });
 
-  it('should get product by its it', async () => {
+  it('should get product by its id', async () => {
     const existingProduct = await Product.findOne();
-    const product = await retrieveProductById(existingProduct.id);
+    let product = await retrieveProductById(existingProduct.id);
+    product = product.get({ plain: true });
 
     expect(product).toHaveProperty('id');
     expect(product).toHaveProperty('sellerId');
@@ -194,6 +196,7 @@ describe('retrieve products', () => {
       expect(product).toHaveProperty('quantity');
       expect(product).toHaveProperty('shopName');
       expect(product).toHaveProperty('categories');
+      expect(product).toHaveProperty('avgRate');
     });
   });
 

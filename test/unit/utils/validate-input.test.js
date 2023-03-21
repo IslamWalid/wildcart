@@ -76,7 +76,7 @@ describe('validate create product input', () => {
         'menFashion'
       ]
     };
-    expect(validateInput(input, inputTypes.CREATE_PRODUCT)).toBeNull();
+    expect(validateInput(input, inputTypes.POST_PRODUCT)).toBeNull();
   });
 
   it('should pass input with missing fields', async () => {
@@ -88,7 +88,7 @@ describe('validate create product input', () => {
         'menFashion'
       ]
     };
-    expect(validateInput(input, inputTypes.CREATE_PRODUCT))
+    expect(validateInput(input, inputTypes.POST_PRODUCT))
       .toBe('required fields are missing');
   });
 });
