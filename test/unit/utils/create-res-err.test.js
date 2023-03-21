@@ -11,8 +11,10 @@ const {
   Seller,
   Customer,
   Product,
+  Review,
   ProductCategory
 } = require('../../../src/models/');
+const { createReview } = require('../../../src/services/review');
 
 async function createTestUser(userData) {
   const id = crypto.randomUUID();
@@ -54,6 +56,15 @@ async function createTestProduct(sellerId) {
   });
 
   return id;
+}
+
+async function createTestReview(customerId, productId) {
+  await Review.create({
+    customerId,
+    productId,
+    comment: 'review',
+    rate: 5
+  });
 }
 
 describe('register user errors', () => {
@@ -211,10 +222,76 @@ describe('create product errors', () => {
   });
 });
 
+describe('create review errors', () => {
+  beforeAll(async () => {
+    const sellerId = await createTestUser({
+      username: 'john_doe',
       firstName: 'John',
+      lastName: 'Doe',
+      phone: '+201012345678',
+      userType: 'seller'
     });
 
+    const customerId = await createTestUser({
+      username: 'jane_doe',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      phone: '+201087654321',
+      userType: 'customer'
+    });
 
+    const productId = await createTestProduct(sellerId);
+
+    await createTestReview(customerId, productId);
+  });
+
+  it('should get review to a non-existing product error info', async () => {
+    const nonExistingId = crypto.randomUUID();
+    const customer = await User.findOne({ where: { userType: 'customer' } });
+
+    try {
+      await createReview(customer.id, nonExistingId, {
+        comment: 'good review',
+        rate: 5
+      });
+    } catch (err) {
+      const { status, message, errInfo } = createResErr(err);
+
+      expect(status).toBe(404);
+      expect(message).toBe('product not found');
+      expect(errInfo.stack).not.toBeUndefined();
+      expect(errInfo.message).toBe(`Key (product_id)=(${nonExistingId}) is not present in table "product".`);
+      expect(errInfo.meta.table).toBe('review');
+      expect(errInfo.meta.name).toBe('SequelizeForeignKeyConstraintError');
+      expect(errInfo.meta.constraint).toBe('review_product_id_fkey');
+    }
+  });
+
+  it('should get customer already reviewed this product error info', async () => {
+    const product = await Product.findOne();
+    const customer = await User.findOne({ where: { userType: 'customer' } });
+
+    try {
+      await createReview(customer.id, product.id, {
+        comment: 'good review',
+        rate: 5
+      });
+    } catch (err) {
+      const { status, message, errInfo } = createResErr(err);
+
+      expect(status).toBe(409);
+      expect(message).toBe('user have already reviewed this product');
+      expect(errInfo.stack).not.toBeUndefined();
+      expect(errInfo.message).toBe(`Key (customer_id, product_id)=(${customer.id}, ${product.id}) already exists.`);
+      expect(errInfo.meta.table).toBe('review');
+      expect(errInfo.meta.name).toBe('SequelizeUniqueConstraintError');
+      expect(errInfo.meta.constraint).toBe('review_pkey');
+    }
+  });
+
+  afterAll(async () => {
+    await sequelize.query('TRUNCATE TABLE "user" CASCADE');
+  });
 });
 
 afterAll(async () => {

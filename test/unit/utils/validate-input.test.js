@@ -92,3 +92,12 @@ describe('validate create product input', () => {
       .toBe('required fields are missing');
   });
 });
+
+describe('validate create review input', () => {
+  it('should pass input with missing fields', async () => {
+    const input = {};
+
+    expect(validateInput(input, inputTypes.POST_REVIEW))
+      .toBe('required fields are missing');
+  });
+});
