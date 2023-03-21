@@ -101,3 +101,12 @@ describe('validate create review input', () => {
       .toBe('required fields are missing');
   });
 });
+
+describe('validate patch review input', () => {
+  it('should pass input with empty input object', async () => {
+    const input = {};
+
+    expect(validateInput(input, inputTypes.PATCH_REVIEW))
+      .toBe('provide at least one field');
+  });
+});

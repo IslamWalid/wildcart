@@ -4,7 +4,8 @@ const inputTypes = {
   LOGIN: 0,
   REGISTER: 1,
   POST_PRODUCT: 2,
-  POST_REVIEW: 3
+  POST_REVIEW: 3,
+  PATCH_REVIEW: 4
 };
 
 function validateRegister(input) {
@@ -60,6 +61,16 @@ function validatePostReview(input) {
   return null;
 }
 
+function validatePatchReview(input) {
+  const { rate, comment } = input;
+
+  if (!rate && !comment) {
+    return 'provide at least one field';
+  }
+
+  return null;
+}
+
 function validateInput(input, inputType) {
   switch (inputType) {
     case inputTypes.REGISTER:
@@ -73,6 +84,9 @@ function validateInput(input, inputType) {
 
     case inputTypes.POST_REVIEW:
       return validatePostReview(input);
+
+    case inputTypes.PATCH_REVIEW:
+      return validatePatchReview(input);
   }
 }
 
