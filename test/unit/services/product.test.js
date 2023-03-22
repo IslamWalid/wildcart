@@ -10,8 +10,8 @@ const { sequelize, User, Seller, Product, ProductCategory } = require('../../../
 const {
   createProduct,
   retrieveAllProducts,
-  retrieveProductById,
-  retrieveProductsBySellerId
+  retrieveProduct,
+  retrieveSellerProducts
 } = require('../../../src/services/product');
 
 async function createTestSeller() {
@@ -172,7 +172,7 @@ describe('retrieve products', () => {
 
   it('should get product by its id', async () => {
     const existingProduct = await Product.findOne();
-    let product = await retrieveProductById(existingProduct.id);
+    let product = await retrieveProduct(existingProduct.id);
     product = product.get({ plain: true });
 
     expect(product).toHaveProperty('id');
@@ -186,9 +186,11 @@ describe('retrieve products', () => {
 
   it('should list seller products', async () => {
     const seller = await User.findOne();
-    const products = await retrieveProductsBySellerId(seller.id);
+    const products = await retrieveSellerProducts(seller.id);
 
     products.forEach((product) => {
+      product = product.get({ plain: true });
+
       expect(product).toHaveProperty('id');
       expect(product).toHaveProperty('sellerId');
       expect(product).toHaveProperty('name');
