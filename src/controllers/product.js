@@ -97,6 +97,10 @@ const patchProduct = async (req, res, next) => {
 const getSellerProducts = async (req, res, next) => {
   try {
     const products = await retrieveSellerProducts(req.params.sellerId);
+    if (!products) {
+      return sendResErr(res, { status: NOT_FOUND, message: 'seller not found' });
+    }
+
     res.status(OK).json({ products });
   } catch (err) {
     next(err);

@@ -40,10 +40,12 @@ async function retrieveAllProducts() {
       include: [
         [sequelize.col('seller.shop_name'), 'shopName'],
         [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
-        [sequelize.cast(
-          sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
-          'NUMERIC(3, 2)'),
-        'avgRate']
+        [
+          sequelize.cast(
+            sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
+            'NUMERIC(3, 2)'),
+          'avgRate'
+        ]
       ],
       exclude: ['imageFilename']
     },
@@ -116,41 +118,38 @@ async function updateProduct(sellerId, productId, product) {
 }
 
 async function retrieveSellerProducts(sellerId) {
-  const products = await Product.findAll({
-    where: {
-      sellerId
-    },
-    attributes: {
+  const seller = await Seller.findByPk(sellerId, {
+    attributes: [],
+    include: {
+      model: Product,
+      attributes: {
+        include: [
+          [sequelize.literal('seller.shop_name'), 'shopName'],
+          [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
+          [
+            sequelize.cast(
+              sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
+              'NUMERIC(3, 2)'),
+            'avgRate'
+          ]
+        ],
+        exclude: ['imageFilename']
+      },
       include: [
-        [sequelize.col('shop_name'), 'shopName'],
-        [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
-        [sequelize.cast(
-          sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
-          'NUMERIC(3, 2)'),
-        'avgRate']
-      ],
-      exclude: ['imageFilename']
+        {
+          model: ProductCategory,
+          attributes: []
+        },
+        {
+          model: Review,
+          attributes: []
+        }
+      ]
     },
-    include: [
-      {
-        model: Seller,
-        attributes: []
-      },
-      {
-        model: ProductCategory,
-        attributes: []
-      },
-      {
-        model: Review,
-        attributes: []
-      }
-    ],
-    group: ['product.id', 'shop_name'],
-    raw: true,
-    nest: true
+    group: ['seller.id', 'products.id']
   });
 
-  return products;
+  return seller ? seller.products : null;
 }
 
 async function retrieveProductImageFilename(productId) {
