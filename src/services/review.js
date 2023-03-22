@@ -1,4 +1,4 @@
-const { Review } = require('../models');
+const { Product, Review } = require('../models');
 
 async function createReview(customerId, productId, review) {
   await Review.create({
@@ -9,12 +9,17 @@ async function createReview(customerId, productId, review) {
 }
 
 async function retrieveProductReviews(productId) {
-  return await Review.findAll({
-    attributes: {
-      exclude: ['productId']
-    },
-    where: { productId }
+  const product = await Product.findByPk(productId, {
+    attributes: [],
+    include: {
+      model: Review,
+      attributes: {
+        exclude: ['productId']
+      }
+    }
   });
+
+  return product ? product.reviews : null;
 }
 
 async function updateProductReview(customerId, productId, review) {

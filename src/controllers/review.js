@@ -1,4 +1,4 @@
-const { OK, CREATED, BAD_REQUEST } = require('../utils/http-status');
+const { OK, CREATED, BAD_REQUEST, NOT_FOUND } = require('../utils/http-status');
 const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
@@ -25,6 +25,10 @@ const postReview = async (req, res, next) => {
 const getReview = async (req, res, next) => {
   try {
     const reviews = await retrieveProductReviews(req.params.productId);
+    if (!reviews) {
+      return sendResErr(res, { status: NOT_FOUND, message: 'product not found' });
+    }
+
     res.status(OK).json({ reviews });
   } catch (err) {
     next(err);
