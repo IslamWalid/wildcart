@@ -165,8 +165,8 @@ async function retrieveProductImageFilename(productId) {
   return product.imageFilename;
 }
 
-async function updateProductImage(filename, productId) {
-  const product = await Product.findByPk(productId);
+async function updateProductImage(sellerId, productId, filename) {
+  const product = await Product.findByPk(productId, { where: { sellerId } });
   if (!product) {
     return null;
   }

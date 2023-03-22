@@ -42,7 +42,7 @@ const uploadImage = async (req, res, next) => {
     }
 
     try {
-      const inserted = await updateProductImage(req.file.filename, req.params.productId);
+      const inserted = await updateProductImage(req.user.id, req.params.productId, req.file.filename);
       if (!inserted) {
         return sendResErr(res, { status: NOT_FOUND, message: 'product not found' });
       }
