@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const { ForeignKeyConstraintError, UniqueConstraintError } = require('sequelize');
 
-const { createReview } = require('../../../src/services/review');
+const { createReview, retrieveProductReviews } = require('../../../src/services/review');
 const {
   sequelize,
   User,
@@ -137,6 +137,27 @@ describe('create review', () => {
 
   afterAll(async () => {
     await Review.destroy({ truncate: true });
+  });
+});
+
+describe('get product reviews', () => {
+  it('should get reviews of an existing product', async () => {
+    const product = await Product.findOne();
+    const reviews = await retrieveProductReviews(product.id);
+
+    reviews.forEach((review) => {
+      expect(review).toHaveProperty('customerId');
+      expect(review).toHaveProperty('rate');
+      expect(review).toHaveProperty('comment');
+      expect(review).toHaveProperty('createdAt');
+    });
+  });
+
+  it('should get reviews of a non-existing product', async () => {
+    const nonExistingId = crypto.randomUUID();
+    const reviews = await retrieveProductReviews(nonExistingId);
+
+    expect(reviews).toBeNull();
   });
 });
 
