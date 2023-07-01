@@ -6,7 +6,8 @@ const inputTypes = {
   POST_PRODUCT: 2,
   PATCH_PRODUCT: 3,
   POST_REVIEW: 4,
-  PATCH_REVIEW: 5
+  PATCH_REVIEW: 5,
+  POST_ORDER: 6
 };
 
 function validateRegister(input) {
@@ -82,6 +83,16 @@ function validatePatchReview(input) {
   return null;
 }
 
+function validatePostOrder(input) {
+  const { quantity } = input;
+
+  if (!quantity) {
+    return 'required fields are missing';
+  }
+
+  return null;
+}
+
 function validateInput(input, inputType) {
   switch (inputType) {
     case inputTypes.REGISTER:
@@ -101,6 +112,9 @@ function validateInput(input, inputType) {
 
     case inputTypes.PATCH_REVIEW:
       return validatePatchReview(input);
+
+    case inputTypes.POST_ORDER:
+      return validatePostOrder(input);
   }
 }
 

@@ -25,7 +25,7 @@ class Seller extends Model {
     });
   }
 
-  static associate(models) {
+  static associate() {
     const User = this.sequelize.models.user;
     const Product = this.sequelize.models.product;
 
