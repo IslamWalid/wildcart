@@ -79,7 +79,7 @@ describe('validate create product input', () => {
     expect(validateInput(input, inputTypes.POST_PRODUCT)).toBeNull();
   });
 
-  it('should pass input with missing fields', async () => {
+  it('should pass input with missing fields', () => {
     const input = {
       name: 'T-shirt',
       quantity: 20,
@@ -94,7 +94,7 @@ describe('validate create product input', () => {
 });
 
 describe('validate patch product input', () => {
-  it('should pass input with empty input object', async () => {
+  it('should pass input with empty input object', () => {
     const input = {};
 
     expect(validateInput(input, inputTypes.PATCH_PRODUCT))
@@ -102,8 +102,8 @@ describe('validate patch product input', () => {
   });
 });
 
-describe('validate create review input', () => {
-  it('should pass input with missing fields', async () => {
+describe('validate post review input', () => {
+  it('should pass input with missing fields', () => {
     const input = {};
 
     expect(validateInput(input, inputTypes.POST_REVIEW))
@@ -112,10 +112,19 @@ describe('validate create review input', () => {
 });
 
 describe('validate patch review input', () => {
-  it('should pass input with empty input object', async () => {
+  it('should pass input with empty input object', () => {
     const input = {};
 
     expect(validateInput(input, inputTypes.PATCH_REVIEW))
       .toBe('provide at least one field');
+  });
+});
+
+describe('validate post order input', () => {
+  it('should pass input with missing fields', () => {
+    const input = {};
+
+    expect(validateInput(input, inputTypes.POST_ORDER))
+      .toBe('required fields are missing');
   });
 });
