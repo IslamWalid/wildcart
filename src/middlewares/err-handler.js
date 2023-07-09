@@ -1,17 +1,14 @@
-const log = require('../configs/log');
 const sendResErr = require('../utils/send-res-err');
 const createResErr = require('../utils/res-err-creator');
-const { INTERNAL_SERVER_ERROR } = require('../utils/http-status');
+const { HttpStatus, Messages } = require('../utils/enums');
 
 const errHandler = async (err, req, res, next) => {
-  log.debug('handling error in errHandler middleware');
-
   const resErr = createResErr(err);
 
   if (!resErr.status) {
     return sendResErr(res, {
-      status: INTERNAL_SERVER_ERROR,
-      message: 'unexpected error',
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: Messages.UNEXPECTED_ERROR,
       errInfo: err
     });
   }

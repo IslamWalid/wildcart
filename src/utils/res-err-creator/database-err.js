@@ -4,14 +4,11 @@ const {
   DatabaseError
 } = require('sequelize');
 
-const log = require('../../configs/log');
-const { BAD_REQUEST, NOT_FOUND, CONFLICT } = require('../http-status');
+const { HttpStatus, Messages } = require('../enums');
 
 const DATA_TYPE_ERROR_CODE = '22P02';
 
 function databaseErrInfo(err) {
-  log.debug('parsing database error info');
-
   switch (true) {
     case err instanceof UniqueConstraintError:
       return {
@@ -57,8 +54,6 @@ function databaseErrInfo(err) {
 }
 
 function databaseResErr(err) {
-  log.debug('creating database response error');
-
   const errInfo = databaseErrInfo(err);
   if (!errInfo) {
     return null;
@@ -66,24 +61,23 @@ function databaseResErr(err) {
 
   switch (errInfo.meta.constraint) {
     case DATA_TYPE_ERROR_CODE:
-      return { status: BAD_REQUEST, message: 'invalid input datatype', errInfo };
+      return { status: HttpStatus.BAD_REQUEST, message: Messages.INVALID_DATATYPE, errInfo };
     case 'product_category_category_name_fkey':
-      return { status: BAD_REQUEST, message: 'invalid categories', errInfo };
+      return { status: HttpStatus.BAD_REQUEST, message: Messages.INVALID_CATEGORY, errInfo };
     case 'image_product_id_fkey':
     case 'review_product_id_fkey':
-      return { status: NOT_FOUND, message: 'product not found', errInfo };
+      return { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND, errInfo };
     case 'user_username_key':
-      return { status: CONFLICT, message: 'username already exists', errInfo };
+      return { status: HttpStatus.CONFLICT, message: Messages.USERNAME_ALREADY_EXISTS, errInfo };
     case 'user_phone_key':
-      return { status: CONFLICT, message: 'phone already exists', errInfo };
+      return { status: HttpStatus.CONFLICT, message: Messages.PHONE_ALREADY_EXISTS, errInfo };
     case 'product_name_seller_id_unique_constraint':
-      return { status: CONFLICT, message: 'product name already exists for this seller', errInfo };
+      return { status: HttpStatus.CONFLICT, message: Messages.PRODUCT_NAME_ALREADY_EXISTS, errInfo };
     case 'review_pkey':
-      return { status: CONFLICT, message: 'user have already reviewed this product', errInfo };
+      return { status: HttpStatus.CONFLICT, message: Messages.REVIEW_ALREADY_EXISTS, errInfo };
     case 'image_pkey':
-      return { status: CONFLICT, message: 'product already has an image', errInfo };
+      return { status: HttpStatus.CONFLICT, message: 'product already has an image', errInfo };
     default:
-      log.debug('error does not match any defined database error type');
       return null;
   }
 }

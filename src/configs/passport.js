@@ -3,6 +3,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const { User } = require('../models/');
+const { Messages } = require('../utils/enums');
 
 const opts = {
   usernameField: 'username',
@@ -26,11 +27,11 @@ async function verify(username, password, done) {
   try {
     const user = await User.findOne({ where: { username } });
     if (!user) {
-      return done(null, false, { message: 'incorrect username' });
+      return done(null, false, { message: Messages.INVALID_USERNAME });
     }
 
     if (!await bcrypt.compare(password, user.password)) {
-      return done(null, false, { message: 'incorrect password' });
+      return done(null, false, { message: Messages.INVALID_PASSWORD });
     }
 
     done(null, user);

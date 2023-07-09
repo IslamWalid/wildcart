@@ -2,17 +2,17 @@ const passport = require('../configs/passport');
 const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const { createUser, retrieveUserDetailsById } = require('../services/user');
-const { OK, CREATED, BAD_REQUEST, UNAUTHORIZED, NOT_FOUND } = require('../utils/http-status');
+const { HttpStatus, Messages } = require('../utils/enums');
 
 const register = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.REGISTER);
   if (message) {
-    return sendResErr(res, { status: BAD_REQUEST, message });
+    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
   }
 
   try {
     await createUser(req.body);
-    res.sendStatus(CREATED);
+    res.sendStatus(HttpStatus.CREATED);
   } catch (err) {
     next(err);
   }
@@ -21,7 +21,7 @@ const register = async (req, res, next) => {
 const login = (req, res, next) => {
   const message = validateInput(req.body, inputTypes.LOGIN);
   if (message) {
-    return sendResErr(res, { status: BAD_REQUEST, message });
+    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
   }
 
   passport.authenticate('local', { session: true }, (err, user, info) => {
@@ -30,7 +30,7 @@ const login = (req, res, next) => {
     }
 
     if (!user) {
-      return sendResErr(res, { status: UNAUTHORIZED, message: info.message });
+      return sendResErr(res, { status: HttpStatus.UNAUTHORIZED, message: info.message });
     }
 
     req.login(user, (err) => {
@@ -38,7 +38,7 @@ const login = (req, res, next) => {
         return next(err);
       }
 
-      res.sendStatus(OK);
+      res.sendStatus(HttpStatus.OK);
     });
   })(req, res, next);
 };
@@ -47,7 +47,7 @@ const getUserDetails = async (req, res, next) => {
   try {
     const details = await retrieveUserDetailsById(req.params.id);
     if (!details) {
-      return sendResErr(res, { status: NOT_FOUND, message: 'user not found' });
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
     res.status(200).json(details);
   } catch (err) {
@@ -61,7 +61,7 @@ const logout = (req, res, next) => {
       return next(err);
     }
 
-    res.sendStatus(OK);
+    res.sendStatus(HttpStatus.OK);
   });
 };
 

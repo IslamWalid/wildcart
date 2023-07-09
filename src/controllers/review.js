@@ -1,4 +1,4 @@
-const { OK, CREATED, BAD_REQUEST, NOT_FOUND } = require('../utils/http-status');
+const { HttpStatus, Messages } = require('../utils/enums');
 const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const {
@@ -11,12 +11,12 @@ const {
 const postReview = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.POST_REVIEW);
   if (message) {
-    return sendResErr(res, { status: BAD_REQUEST, message });
+    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
   }
 
   try {
     await createReview(req.user.id, req.params.productId, req.body);
-    res.sendStatus(CREATED);
+    res.sendStatus(HttpStatus.CREATED);
   } catch (err) {
     next(err);
   }
@@ -26,10 +26,10 @@ const getReview = async (req, res, next) => {
   try {
     const reviews = await retrieveProductReviews(req.params.productId);
     if (!reviews) {
-      return sendResErr(res, { status: NOT_FOUND, message: 'product not found' });
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    res.status(OK).json({ reviews });
+    res.status(HttpStatus.OK).json({ reviews });
   } catch (err) {
     next(err);
   }
@@ -38,16 +38,16 @@ const getReview = async (req, res, next) => {
 const patchReview = async (req, res, next) => {
   const message = validateInput(req.body, inputTypes.PATCH_REVIEW);
   if (message) {
-    return sendResErr(res, { status: BAD_REQUEST, message });
+    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
   }
 
   try {
     const updated = await updateProductReview(req.user.id, req.params.productId, req.body);
     if (!updated) {
-      return sendResErr(res, { status: 404, message: 'product review not found' });
+      return sendResErr(res, { status: 404, message: Messages.NOT_FOUND });
     }
 
-    res.sendStatus(OK);
+    res.sendStatus(HttpStatus.OK);
   } catch (err) {
     next(err);
   }
@@ -57,10 +57,10 @@ const deleteReview = async (req, res, next) => {
   try {
     const deleted = await deleteProductReview(req.user.id, req.params.productId);
     if (!deleted) {
-      return sendResErr(res, { status: 404, message: 'product review not found' });
+      return sendResErr(res, { status: 404, message: Messages.NOT_FOUND });
     }
 
-    res.sendStatus(OK);
+    res.sendStatus(HttpStatus.OK);
   } catch (err) {
     next(err);
   }
