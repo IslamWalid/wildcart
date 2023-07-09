@@ -33,7 +33,7 @@ jobs:
     - name: create database tables
       run: |
         npm run migrate:up
-        npm run db:seed
+        npm run seed:up
       env:
         NODE_ENV: test
 
