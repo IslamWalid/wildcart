@@ -7,9 +7,10 @@ const {
   getSellerProducts,
   getProduct,
   patchProduct,
-  uploadImage,
+  patchImage,
   getProductImage
 } = require('../controllers/product');
+const upload = require('../middlewares/upload.js');
 
 const router = express.Router();
 
@@ -21,9 +22,7 @@ router.get('/:productId', getProduct);
 
 router.patch('/:productId', authenticateSeller, patchProduct);
 
-router.post('/images/:productId', authenticateSeller, uploadImage);
-
-router.patch('/images/:productId', authenticateSeller, uploadImage);
+router.patch('/images/:productId', authenticateSeller, upload, patchImage);
 
 router.get('/images/:productId', getProductImage);
 

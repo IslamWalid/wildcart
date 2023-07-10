@@ -1,6 +1,5 @@
 const path = require('path');
 
-const upload = require('../configs/multer');
 const sendResErr = require('../utils/send-res-err');
 const { validateInput, inputTypes } = require('../utils/validate-input');
 const { HttpStatus, Messages } = require('../utils/enums');
@@ -28,30 +27,24 @@ const postProduct = async (req, res, next) => {
   }
 };
 
-const uploadImage = async (req, res, next) => {
-  upload(req, res, async (err) => {
-    if (err) {
-      return next(err);
+const patchImage = async (req, res, next) => {
+  if (!req.file) {
+    return sendResErr(res, {
+      status: HttpStatus.BAD_REQUEST,
+      message: Messages.MISSING_FIELDS
+    });
+  }
+
+  try {
+    const inserted = await updateProductImage(req.user.id, req.params.productId, req.file.filename);
+    if (!inserted) {
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    if (!req.file) {
-      return sendResErr(res, {
-        status: HttpStatus.BAD_REQUEST,
-        message: Messages.MISSING_FIELDS
-      });
-    }
-
-    try {
-      const inserted = await updateProductImage(req.user.id, req.params.productId, req.file.filename);
-      if (!inserted) {
-        return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
-      }
-
-      res.sendStatus(HttpStatus.CREATED);
-    } catch (err) {
-      next(err);
-    }
-  });
+    res.sendStatus(HttpStatus.CREATED);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const getAllProducts = async (req, res, next) => {
@@ -121,7 +114,7 @@ const getProductImage = async (req, res, next) => {
 
 module.exports = {
   postProduct,
-  uploadImage,
+  patchImage,
   getProduct,
   patchProduct,
   getAllProducts,
