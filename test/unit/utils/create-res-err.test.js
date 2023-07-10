@@ -15,6 +15,7 @@ const {
   ProductCategory
 } = require('../../../src/models/');
 const { createReview } = require('../../../src/services/review');
+const { Roles } = require('../../../src/utils/enums');
 
 async function createTestUser(userData) {
   const id = crypto.randomUUID();
@@ -25,7 +26,7 @@ async function createTestUser(userData) {
   userData.password = hash;
   userData.address = 'some address';
 
-  if (userData.userType === 'customer') {
+  if (userData.role === Roles.CUSTOMER) {
     userData.customer = { id };
     await User.create(userData, { include: Customer });
   } else {
@@ -74,7 +75,7 @@ describe('register user errors', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+201012345678',
-      userType: 'seller'
+      role: 'seller'
     });
   });
 
@@ -87,7 +88,7 @@ describe('register user errors', () => {
         password: 'StrongPassword123!',
         phone: '+201087654321',
         address: 'address',
-        userType: 'customer'
+        role: Roles.CUSTOMER
       });
     } catch (err) {
       const { status, message, errInfo } = createResErr(err);
@@ -111,7 +112,7 @@ describe('register user errors', () => {
         password: 'StrongPassword123!',
         phone: '+201012345678',
         address: 'address',
-        userType: 'customer'
+        role: Roles.CUSTOMER
       });
     } catch (err) {
       const { status, message, errInfo } = createResErr(err);
@@ -135,7 +136,7 @@ describe('register user errors', () => {
         password: 'StrongPassword123!',
         phone: '+201087654321',
         address: 'address',
-        userType: 'invalid enum value'
+        role: 'invalid enum value'
       });
     } catch (err) {
       const { status, message, errInfo } = createResErr(err);
@@ -161,7 +162,7 @@ describe('create product errors', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+201012345678',
-      userType: 'seller'
+      role: 'seller'
     });
 
     await createTestProduct(sellerId);
@@ -175,7 +176,7 @@ describe('create product errors', () => {
       price: 100,
       categories: ['non-existing category']
     };
-    const user = await User.findOne({ where: { userType: 'seller' } });
+    const user = await User.findOne({ where: { role: 'seller' } });
 
     try {
       await createProduct(productData, user.id);
@@ -200,7 +201,7 @@ describe('create product errors', () => {
       price: 100,
       categories: ['clothes']
     };
-    const user = await User.findOne({ where: { userType: 'seller' } });
+    const user = await User.findOne({ where: { role: 'seller' } });
 
     try {
       await createProduct(productData, user.id);
@@ -229,7 +230,7 @@ describe('create review errors', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+201012345678',
-      userType: 'seller'
+      role: 'seller'
     });
 
     const customerId = await createTestUser({
@@ -237,7 +238,7 @@ describe('create review errors', () => {
       firstName: 'Jane',
       lastName: 'Doe',
       phone: '+201087654321',
-      userType: 'customer'
+      role: Roles.CUSTOMER
     });
 
     const productId = await createTestProduct(sellerId);
@@ -247,7 +248,7 @@ describe('create review errors', () => {
 
   it('should get review to a non-existing product error info', async () => {
     const nonExistingId = crypto.randomUUID();
-    const customer = await User.findOne({ where: { userType: 'customer' } });
+    const customer = await User.findOne({ where: { role: Roles.CUSTOMER } });
 
     try {
       await createReview(customer.id, nonExistingId, {
@@ -269,7 +270,7 @@ describe('create review errors', () => {
 
   it('should get customer already reviewed this product error info', async () => {
     const product = await Product.findOne();
-    const customer = await User.findOne({ where: { userType: 'customer' } });
+    const customer = await User.findOne({ where: { role: Roles.CUSTOMER } });
 
     try {
       await createReview(customer.id, product.id, {

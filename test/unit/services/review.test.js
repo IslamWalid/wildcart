@@ -13,6 +13,7 @@ const {
   Review,
   ProductCategory
 } = require('../../../src/models/');
+const { Roles } = require('../../../src/utils/enums');
 
 async function createTestUser(userData) {
   const id = crypto.randomUUID();
@@ -23,7 +24,7 @@ async function createTestUser(userData) {
   userData.password = hash;
   userData.address = 'some address';
 
-  if (userData.userType === 'customer') {
+  if (userData.role === Roles.CUSTOMER) {
     userData.customer = { id };
     await User.create(userData, { include: Customer });
   } else {
@@ -74,7 +75,7 @@ beforeAll(async () => {
     firstName: 'John',
     lastName: 'Lnu',
     phone: '+201012345678',
-    userType: 'seller'
+    role: 'seller'
   });
 
   await createTestUser({
@@ -82,7 +83,7 @@ beforeAll(async () => {
     firstName: 'John',
     lastName: 'Doe',
     phone: '+201087654321',
-    userType: 'customer'
+    role: Roles.CUSTOMER
   });
 
   await createTestUser({
@@ -90,7 +91,7 @@ beforeAll(async () => {
     firstName: 'Jane',
     lastName: 'Doe',
     phone: '+201098765432',
-    userType: 'customer'
+    role: Roles.CUSTOMER
   });
 
   await createTestProduct(sellerId);

@@ -12,13 +12,13 @@ const inputTypes = {
 
 function validateRegister(input) {
   const { username, firstName, lastName, password } = input;
-  const { phone, address, shopName, userType } = input;
+  const { phone, address, shopName, role } = input;
 
-  if (!username || !firstName || !lastName || !password || !phone || !address || !userType) {
+  if (!username || !firstName || !lastName || !password || !phone || !address || !role) {
     return 'required fields are missing';
   }
 
-  if (userType === 'seller' && !shopName) {
+  if (role === 'seller' && !shopName) {
     return 'required fields are missing';
   }
 

@@ -27,7 +27,7 @@ async function createTestSeller() {
     password: hash,
     address: 'some address',
     phone: '+201012345678',
-    userType: 'seller',
+    role: 'seller',
     seller: { id, shopName: 'off market' }
   },
   {
@@ -106,7 +106,7 @@ describe('create product', () => {
       price: 100,
       categories: ['clothes', 'men fashion']
     };
-    const user = await User.findOne({ where: { userType: 'seller' } });
+    const user = await User.findOne({ where: { role: 'seller' } });
 
     await expect(createProduct(productData, user.id))
       .resolves
@@ -122,7 +122,7 @@ describe('create product', () => {
       price: 100,
       categories: ['clothes', 'men fashion']
     };
-    const user = await User.findOne({ where: { userType: 'seller' } });
+    const user = await User.findOne({ where: { role: 'seller' } });
 
     await expect(createProduct(productData, user.id))
       .rejects
@@ -137,7 +137,7 @@ describe('create product', () => {
       price: 100,
       categories: ['non-existing category']
     };
-    const user = await User.findOne({ where: { userType: 'seller' } });
+    const user = await User.findOne({ where: { role: 'seller' } });
 
     await expect(createProduct(productData, user.id))
       .rejects
@@ -145,7 +145,7 @@ describe('create product', () => {
   });
 
   afterEach(async () => {
-    await User.destroy({ where: { userType: 'seller' } });
+    await User.destroy({ where: { role: 'seller' } });
   });
 });
 
@@ -203,7 +203,7 @@ describe('retrieve products', () => {
   });
 
   afterAll(async () => {
-    await User.destroy({ where: { userType: 'seller' } });
+    await User.destroy({ where: { role: 'seller' } });
   });
 });
 

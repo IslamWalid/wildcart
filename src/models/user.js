@@ -33,7 +33,7 @@ class User extends Model {
         unique: true,
         allowNull: false
       },
-      userType: {
+      role: {
         type: DataTypes.ENUM(['customer', 'seller']),
         defaultValue: 'customer'
       }

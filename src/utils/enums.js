@@ -24,7 +24,13 @@ const Messages = {
   UNEXPECTED_ERROR: 'unexpected error'
 };
 
+const Roles = {
+  CUSTOMER: 'customer',
+  SELLER: 'seller'
+};
+
 module.exports = {
   HttpStatus,
-  Messages
+  Messages,
+  Roles
 };

@@ -1,5 +1,5 @@
 const sendResErr = require('../utils/send-res-err');
-const { HttpStatus, Messages } = require('../utils/enums');
+const { HttpStatus, Messages, Roles } = require('../utils/enums');
 
 const authenticateUser = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -10,7 +10,7 @@ const authenticateUser = (req, res, next) => {
 };
 
 const authenticateCustomer = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.userType === 'customer') {
+  if (req.isAuthenticated() && req.user.role === Roles.CUSTOMER) {
     return next();
   }
 
@@ -18,7 +18,7 @@ const authenticateCustomer = (req, res, next) => {
 };
 
 const authenticateSeller = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.userType === 'seller') {
+  if (req.isAuthenticated() && req.user.role === 'seller') {
     return next();
   }
 

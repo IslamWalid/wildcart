@@ -8,6 +8,7 @@ const req = require('supertest');
 
 const app = require('../../app');
 const { sequelize, User, Customer } = require('../../src/models/');
+const { Roles } = require('../../src/utils/enums');
 
 beforeAll(async () => {
   const id = crypto.randomUUID();
@@ -22,7 +23,7 @@ beforeAll(async () => {
     password: hash,
     address: 'some address',
     phone: '+201012345678',
-    userType: 'customer',
+    role: Roles.CUSTOMER,
     customer: { id }
   },
   {
@@ -39,7 +40,7 @@ describe('user register', () => {
       password: 'AnotherStrongPassword123!',
       phone: '+201087654321',
       address: 'some home address',
-      userType: 'seller',
+      role: 'seller',
       shopName: 'offmarket'
     };
     const res = await req(app).post('/users/register').send(reqBody);
@@ -54,7 +55,7 @@ describe('user register', () => {
       password: 'AnotherStrongPassword123!',
       phone: '+201012345678',
       address: 'some home address',
-      userType: 'invalid type',
+      role: 'invalid type',
       shopName: 'offmarket'
     };
     const res = await req(app).post('/users/register').send(reqBody);
@@ -70,7 +71,7 @@ describe('user register', () => {
       password: 'StrongPassword123!',
       phone: '+201012345678',
       address: 'some home address',
-      userType: 'customer'
+      role: Roles.CUSTOMER
     };
     const res = await req(app).post('/users/register').send(reqBody);
     expect(res.statusCode).toBe(409);
@@ -85,7 +86,7 @@ describe('user register', () => {
       password: 'AnotherStrongPassword123!',
       phone: '+201012345678',
       address: 'some home address',
-      userType: 'seller',
+      role: 'seller',
       shopName: 'offmarket'
     };
     const res = await req(app).post('/users/register').send(reqBody);

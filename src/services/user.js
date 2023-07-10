@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 
 const { sequelize, User, Customer, Seller } = require('../models');
+const { Roles } = require('../utils/enums');
 
 async function createUser(userData) {
   const id = crypto.randomUUID();
@@ -14,7 +15,7 @@ async function createUser(userData) {
   userData.password = hash;
 
   await sequelize.transaction(async (t) => {
-    if (userData.userType === 'customer') {
+    if (userData.role === Roles.CUSTOMER) {
       userData.customer = { id };
       await User.create(userData, { include: Customer, transaction: t });
     } else {

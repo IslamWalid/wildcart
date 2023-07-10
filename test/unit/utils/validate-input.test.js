@@ -1,3 +1,4 @@
+const { Roles } = require('../../../src/utils/enums');
 const { validateInput, inputTypes } = require('../../../src/utils/validate-input');
 
 describe('validate register input', () => {
@@ -9,7 +10,7 @@ describe('validate register input', () => {
       password: 'StrongPassword123!',
       address: 'some address',
       phone: '+201012345678',
-      userType: 'customer'
+      role: Roles.CUSTOMER
     };
     expect(validateInput(input, inputTypes.REGISTER)).toBeNull();
   });
@@ -33,7 +34,7 @@ describe('validate register input', () => {
       password: '123',
       address: 'some address',
       phone: '+201012345678',
-      userType: 'customer'
+      role: Roles.CUSTOMER
     };
     expect(validateInput(input, inputTypes.REGISTER))
       .toBe('weak password');
@@ -47,7 +48,7 @@ describe('validate register input', () => {
       password: 'StrongPassword123!',
       address: 'some address',
       phone: '123',
-      userType: 'customer'
+      role: Roles.CUSTOMER
     };
     expect(validateInput(input, inputTypes.REGISTER))
       .toBe('invalid phone number');
