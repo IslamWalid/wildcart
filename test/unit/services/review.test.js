@@ -75,7 +75,7 @@ beforeAll(async () => {
     firstName: 'John',
     lastName: 'Lnu',
     phone: '+201012345678',
-    role: 'seller'
+    role: Roles.SELLER
   });
 
   await createTestUser({

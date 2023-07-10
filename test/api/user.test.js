@@ -40,7 +40,7 @@ describe('user register', () => {
       password: 'AnotherStrongPassword123!',
       phone: '+201087654321',
       address: 'some home address',
-      role: 'seller',
+      role: Roles.SELLER,
       shopName: 'offmarket'
     };
     const res = await req(app).post('/users/register').send(reqBody);
@@ -86,7 +86,7 @@ describe('user register', () => {
       password: 'AnotherStrongPassword123!',
       phone: '+201012345678',
       address: 'some home address',
-      role: 'seller',
+      role: Roles.SELLER,
       shopName: 'offmarket'
     };
     const res = await req(app).post('/users/register').send(reqBody);

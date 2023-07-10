@@ -18,7 +18,7 @@ const authenticateCustomer = (req, res, next) => {
 };
 
 const authenticateSeller = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role === 'seller') {
+  if (req.isAuthenticated() && req.user.role === Roles.SELLER) {
     return next();
   }
 

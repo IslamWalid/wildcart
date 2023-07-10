@@ -75,7 +75,7 @@ describe('register user errors', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+201012345678',
-      role: 'seller'
+      role: Roles.SELLER
     });
   });
 
@@ -162,7 +162,7 @@ describe('create product errors', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+201012345678',
-      role: 'seller'
+      role: Roles.SELLER
     });
 
     await createTestProduct(sellerId);
@@ -176,7 +176,7 @@ describe('create product errors', () => {
       price: 100,
       categories: ['non-existing category']
     };
-    const user = await User.findOne({ where: { role: 'seller' } });
+    const user = await User.findOne({ where: { role: Roles.SELLER } });
 
     try {
       await createProduct(productData, user.id);
@@ -201,7 +201,7 @@ describe('create product errors', () => {
       price: 100,
       categories: ['clothes']
     };
-    const user = await User.findOne({ where: { role: 'seller' } });
+    const user = await User.findOne({ where: { role: Roles.SELLER } });
 
     try {
       await createProduct(productData, user.id);
@@ -230,7 +230,7 @@ describe('create review errors', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+201012345678',
-      role: 'seller'
+      role: Roles.SELLER
     });
 
     const customerId = await createTestUser({

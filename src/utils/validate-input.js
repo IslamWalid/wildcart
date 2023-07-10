@@ -1,5 +1,7 @@
 const validator = require('validator');
 
+const { Roles } = require('./enums');
+
 const inputTypes = {
   LOGIN: 0,
   REGISTER: 1,
@@ -18,7 +20,7 @@ function validateRegister(input) {
     return 'required fields are missing';
   }
 
-  if (role === 'seller' && !shopName) {
+  if (role === Roles.SELLER && !shopName) {
     return 'required fields are missing';
   }
 

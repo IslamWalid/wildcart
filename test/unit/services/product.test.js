@@ -13,6 +13,7 @@ const {
   retrieveProduct,
   retrieveSellerProducts
 } = require('../../../src/services/product');
+const { Roles } = require('../../../src/utils/enums');
 
 async function createTestSeller() {
   const id = crypto.randomUUID();
@@ -27,7 +28,7 @@ async function createTestSeller() {
     password: hash,
     address: 'some address',
     phone: '+201012345678',
-    role: 'seller',
+    role: Roles.SELLER,
     seller: { id, shopName: 'off market' }
   },
   {
@@ -106,7 +107,7 @@ describe('create product', () => {
       price: 100,
       categories: ['clothes', 'men fashion']
     };
-    const user = await User.findOne({ where: { role: 'seller' } });
+    const user = await User.findOne({ where: { role: Roles.SELLER } });
 
     await expect(createProduct(productData, user.id))
       .resolves
@@ -122,7 +123,7 @@ describe('create product', () => {
       price: 100,
       categories: ['clothes', 'men fashion']
     };
-    const user = await User.findOne({ where: { role: 'seller' } });
+    const user = await User.findOne({ where: { role: Roles.SELLER } });
 
     await expect(createProduct(productData, user.id))
       .rejects
@@ -137,7 +138,7 @@ describe('create product', () => {
       price: 100,
       categories: ['non-existing category']
     };
-    const user = await User.findOne({ where: { role: 'seller' } });
+    const user = await User.findOne({ where: { role: Roles.SELLER } });
 
     await expect(createProduct(productData, user.id))
       .rejects
@@ -145,7 +146,7 @@ describe('create product', () => {
   });
 
   afterEach(async () => {
-    await User.destroy({ where: { role: 'seller' } });
+    await User.destroy({ where: { role: Roles.SELLER } });
   });
 });
 
@@ -203,7 +204,7 @@ describe('retrieve products', () => {
   });
 
   afterAll(async () => {
-    await User.destroy({ where: { role: 'seller' } });
+    await User.destroy({ where: { role: Roles.SELLER } });
   });
 });
 
