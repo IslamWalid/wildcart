@@ -1,30 +1,24 @@
 const express = require('express');
 
-const authenticate = require('../middlewares/authenticate');
-const {
-  postOrder,
-  getUserOrders,
-  getOrder,
-  patchOrder,
-  deleteOrder
-} = require('../controllers/order');
+const controllers = require('../controllers/order');
 const authorize = require('../middlewares/authorize');
+const authenticate = require('../middlewares/authenticate');
 const { Roles } = require('../utils/enums');
 
 const router = express.Router();
 
 router.use(authenticate);
 
-router.get('/', getUserOrders);
+router.get('/', controllers.getUserOrders);
 
-router.get('/:orderId', getOrder);
+router.get('/:orderId', controllers.getOrder);
 
-router.patch('/:orderId', patchOrder);
+router.patch('/:orderId', controllers.patchOrder);
 
 router.use(authorize(Roles.CUSTOMER));
 
-router.post('/:productId', postOrder);
+router.post('/:productId', controllers.postOrder);
 
-router.delete('/:orderId', deleteOrder);
+router.delete('/:orderId', controllers.deleteOrder);
 
 module.exports = router;

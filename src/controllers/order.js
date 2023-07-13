@@ -1,7 +1,7 @@
-const { createOrder } = require('../services/order');
-const { HttpStatus, InputTypes } = require('../utils/enums');
+const services = require('../services/order');
 const sendResErr = require('../utils/send-res-err');
 const validateInput = require('../utils/validate-input');
+const { HttpStatus, InputTypes } = require('../utils/enums');
 
 const postOrder = async (req, res, next) => {
   const message = validateInput(req.body, InputTypes.POST_ORDER);
@@ -10,7 +10,7 @@ const postOrder = async (req, res, next) => {
   }
 
   try {
-    await createOrder(req.user.id, req.params.productId, req.body);
+    await services.createOrder(req.user.id, req.params.productId, req.body);
     res.sendStatus(HttpStatus.CREATED);
   } catch (err) {
     next(err);

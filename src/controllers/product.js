@@ -1,17 +1,9 @@
 const path = require('path');
 
+const services = require('../services/product');
 const sendResErr = require('../utils/send-res-err');
 const validateInput = require('../utils/validate-input');
 const { HttpStatus, Messages, InputTypes } = require('../utils/enums');
-const {
-  createProduct,
-  updateProductImage,
-  retrieveAllProducts,
-  retrieveProduct,
-  updateProduct,
-  retrieveSellerProducts,
-  retrieveProductImageFilename
-} = require('../services/product');
 
 const postProduct = async (req, res, next) => {
   const message = validateInput(req.body, InputTypes.POST_PRODUCT);
@@ -20,7 +12,7 @@ const postProduct = async (req, res, next) => {
   }
 
   try {
-    const id = await createProduct(req.body, req.user.id);
+    const id = await services.createProduct(req.body, req.user.id);
     res.status(HttpStatus.CREATED).json({ id });
   } catch (err) {
     next(err);
@@ -36,7 +28,7 @@ const patchImage = async (req, res, next) => {
   }
 
   try {
-    const inserted = await updateProductImage(req.user.id, req.params.productId, req.file.filename);
+    const inserted = await services.updateProductImage(req.user.id, req.params.productId, req.file.filename);
     if (!inserted) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
@@ -49,7 +41,7 @@ const patchImage = async (req, res, next) => {
 
 const getAllProducts = async (req, res, next) => {
   try {
-    const products = await retrieveAllProducts();
+    const products = await services.retrieveAllProducts();
     res.status(HttpStatus.OK).json({ products });
   } catch (err) {
     next(err);
@@ -58,7 +50,7 @@ const getAllProducts = async (req, res, next) => {
 
 const getProduct = async (req, res, next) => {
   try {
-    const product = await retrieveProduct(req.params.productId);
+    const product = await services.retrieveProduct(req.params.productId);
     if (!product) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
@@ -76,7 +68,7 @@ const patchProduct = async (req, res, next) => {
   }
 
   try {
-    const updated = await updateProduct(req.user.id, req.params.productId, req.body);
+    const updated = await services.updateProduct(req.user.id, req.params.productId, req.body);
     if (!updated) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
@@ -89,7 +81,7 @@ const patchProduct = async (req, res, next) => {
 
 const getSellerProducts = async (req, res, next) => {
   try {
-    const products = await retrieveSellerProducts(req.params.sellerId);
+    const products = await services.retrieveSellerProducts(req.params.sellerId);
     if (!products) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
@@ -102,7 +94,7 @@ const getSellerProducts = async (req, res, next) => {
 
 const getProductImage = async (req, res, next) => {
   try {
-    const filename = await retrieveProductImageFilename(req.params.productId);
+    const filename = await services.retrieveProductImageFilename(req.params.productId);
     if (!filename) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }

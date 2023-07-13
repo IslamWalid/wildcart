@@ -1,5 +1,5 @@
-const { HttpStatus, Messages } = require('../utils/enums');
 const sendResErr = require('../utils/send-res-err');
+const { HttpStatus, Messages } = require('../utils/enums');
 
 const authorize = (role) => {
   return (req, res, next) => {

@@ -1,7 +1,7 @@
+const services = require('../services/user');
 const passport = require('../configs/passport');
 const sendResErr = require('../utils/send-res-err');
 const validateInput = require('../utils/validate-input');
-const { createUser, retrieveUserDetailsById } = require('../services/user');
 const { HttpStatus, Messages, InputTypes } = require('../utils/enums');
 
 const register = async (req, res, next) => {
@@ -11,7 +11,7 @@ const register = async (req, res, next) => {
   }
 
   try {
-    await createUser(req.body);
+    await services.createUser(req.body);
     res.sendStatus(HttpStatus.CREATED);
   } catch (err) {
     next(err);
@@ -40,7 +40,7 @@ const login = async (req, res, next) => {
 
 const getUserDetails = async (req, res, next) => {
   try {
-    const details = await retrieveUserDetailsById(req.params.id);
+    const details = await services.retrieveUserDetailsById(req.params.id);
     if (!details) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }

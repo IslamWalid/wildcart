@@ -1,12 +1,7 @@
-const { HttpStatus, Messages, InputTypes } = require('../utils/enums');
+const services = require('../services/review');
 const sendResErr = require('../utils/send-res-err');
 const validateInput = require('../utils/validate-input');
-const {
-  createReview,
-  retrieveProductReviews,
-  updateProductReview,
-  deleteProductReview
-} = require('../services/review');
+const { HttpStatus, Messages, InputTypes } = require('../utils/enums');
 
 const postReview = async (req, res, next) => {
   const message = validateInput(req.body, InputTypes.POST_REVIEW);
@@ -15,7 +10,7 @@ const postReview = async (req, res, next) => {
   }
 
   try {
-    await createReview(req.user.id, req.params.productId, req.body);
+    await services.createReview(req.user.id, req.params.productId, req.body);
     res.sendStatus(HttpStatus.CREATED);
   } catch (err) {
     next(err);
@@ -24,7 +19,7 @@ const postReview = async (req, res, next) => {
 
 const getReview = async (req, res, next) => {
   try {
-    const reviews = await retrieveProductReviews(req.params.productId);
+    const reviews = await services.retrieveProductReviews(req.params.productId);
     if (!reviews) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
@@ -42,7 +37,7 @@ const patchReview = async (req, res, next) => {
   }
 
   try {
-    const updated = await updateProductReview(req.user.id, req.params.productId, req.body);
+    const updated = await services.updateProductReview(req.user.id, req.params.productId, req.body);
     if (!updated) {
       return sendResErr(res, { status: 404, message: Messages.NOT_FOUND });
     }
@@ -55,7 +50,7 @@ const patchReview = async (req, res, next) => {
 
 const deleteReview = async (req, res, next) => {
   try {
-    const deleted = await deleteProductReview(req.user.id, req.params.productId);
+    const deleted = await services.deleteProductReview(req.user.id, req.params.productId);
     if (!deleted) {
       return sendResErr(res, { status: 404, message: Messages.NOT_FOUND });
     }
