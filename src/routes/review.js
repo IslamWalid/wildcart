@@ -1,21 +1,20 @@
 const express = require('express');
 
-const { authenticateCustomer } = require('../middlewares/authenticate');
-const {
-  postReview,
-  getReview,
-  patchReview,
-  deleteReview
-} = require('../controllers/review');
+const authenticate = require('../middlewares/authenticate');
+const authorize = require('../middlewares/authorize');
+const { Roles } = require('../utils/enums');
+const { postReview, getReview, patchReview, deleteReview } = require('../controllers/review');
 
 const router = express.Router();
 
-router.post('/:productId', authenticateCustomer, postReview);
-
 router.get('/:productId', getReview);
 
-router.patch('/:productId', authenticateCustomer, patchReview);
+router.use(authenticate, authorize(Roles.CUSTOMER));
 
-router.delete('/:productId', authenticateCustomer, deleteReview);
+router.post('/:productId', postReview);
+
+router.patch('/:productId', patchReview);
+
+router.delete('/:productId', deleteReview);
 
 module.exports = router;

@@ -18,12 +18,7 @@ const register = async (req, res, next) => {
   }
 };
 
-const login = (req, res, next) => {
-  const message = validateInput(req.body, inputTypes.LOGIN);
-  if (message) {
-    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
-  }
-
+const login = async (req, res, next) => {
   passport.authenticate('local', { session: true }, (err, user, info) => {
     if (err) {
       return next(err);

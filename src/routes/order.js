@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { authenticateCustomer, authenticateUser } = require('../middlewares/authenticate');
+const authenticate = require('../middlewares/authenticate');
 const {
   postOrder,
   getUserOrders,
@@ -8,17 +8,23 @@ const {
   patchOrder,
   deleteOrder
 } = require('../controllers/order');
+const authorize = require('../middlewares/authorize');
+const { Roles } = require('../utils/enums');
 
 const router = express.Router();
 
-router.post('/:productId', authenticateCustomer, postOrder);
+router.use(authenticate);
 
-router.get('/', authenticateUser, getUserOrders);
+router.get('/', getUserOrders);
 
-router.get('/:orderId', authenticateUser, getOrder);
+router.get('/:orderId', getOrder);
 
-router.patch('/:orderId', authenticateUser, patchOrder);
+router.patch('/:orderId', patchOrder);
 
-router.delete('/:orderId', authenticateCustomer, deleteOrder);
+router.use(authorize(Roles.CUSTOMER));
+
+router.post('/:productId', postOrder);
+
+router.delete('/:orderId', deleteOrder);
 
 module.exports = router;

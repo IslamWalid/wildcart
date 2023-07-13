@@ -1,6 +1,7 @@
 const express = require('express');
 
-const { authenticateSeller } = require('../middlewares/authenticate.js');
+const authenticate = require('../middlewares/authenticate');
+const upload = require('../middlewares/upload.js');
 const {
   getAllProducts,
   postProduct,
@@ -10,22 +11,25 @@ const {
   patchImage,
   getProductImage
 } = require('../controllers/product');
-const upload = require('../middlewares/upload.js');
+const authorize = require('../middlewares/authorize');
+const { Roles } = require('../utils/enums');
 
 const router = express.Router();
 
 router.get('/', getAllProducts);
 
-router.post('/', authenticateSeller, postProduct);
-
-router.get('/:productId', getProduct);
-
-router.patch('/:productId', authenticateSeller, patchProduct);
-
-router.patch('/images/:productId', authenticateSeller, upload, patchImage);
-
 router.get('/images/:productId', getProductImage);
 
 router.get('/sellers/:sellerId', getSellerProducts);
+
+router.get('/:productId', getProduct);
+
+router.use(authenticate, authorize(Roles.SELLER));
+
+router.post('/', postProduct);
+
+router.patch('/:productId', patchProduct);
+
+router.patch('/images/:productId', upload, patchImage);
 
 module.exports = router;

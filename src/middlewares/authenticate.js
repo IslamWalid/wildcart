@@ -1,32 +1,12 @@
 const sendResErr = require('../utils/send-res-err');
-const { HttpStatus, Messages, Roles } = require('../utils/enums');
+const { HttpStatus, Messages } = require('../utils/enums');
 
-const authenticateUser = (req, res, next) => {
+const authenticate = (req, res, next) => {
   if (req.isAuthenticated()) {
-    return next();
+    return sendResErr(res, { status: HttpStatus.UNAUTHORIZED, message: Messages.UNAUTHORIZED });
   }
 
-  sendResErr(res, { status: HttpStatus.UNAUTHORIZED, message: Messages.UNAUTHORIZED });
+  next();
 };
 
-const authenticateCustomer = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role === Roles.CUSTOMER) {
-    return next();
-  }
-
-  sendResErr(res, { status: HttpStatus.UNAUTHORIZED, message: Messages.UNAUTHORIZED });
-};
-
-const authenticateSeller = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role === Roles.SELLER) {
-    return next();
-  }
-
-  sendResErr(res, { status: HttpStatus.UNAUTHORIZED, message: Messages.UNAUTHORIZED });
-};
-
-module.exports = {
-  authenticateUser,
-  authenticateSeller,
-  authenticateCustomer
-};
+module.exports = authenticate;
