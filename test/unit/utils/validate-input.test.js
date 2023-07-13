@@ -1,5 +1,5 @@
-const { Roles } = require('../../../src/utils/enums');
-const { validateInput, inputTypes } = require('../../../src/utils/validate-input');
+const { Roles, InputTypes } = require('../../../src/utils/enums');
+const validateInput = require('../../../src/utils/validate-input');
 
 describe('validate register input', () => {
   it('should pass valid input', () => {
@@ -12,7 +12,7 @@ describe('validate register input', () => {
       phone: '+201012345678',
       role: Roles.CUSTOMER
     };
-    expect(validateInput(input, inputTypes.REGISTER)).toBeNull();
+    expect(validateInput(input, InputTypes.REGISTER)).toBeNull();
   });
 
   it('should pass input with missing fields', () => {
@@ -22,7 +22,7 @@ describe('validate register input', () => {
       lastName: 'Doe',
       phone: '+201012345678'
     };
-    expect(validateInput(input, inputTypes.REGISTER))
+    expect(validateInput(input, InputTypes.REGISTER))
       .toBe('required fields are missing');
   });
 
@@ -36,7 +36,7 @@ describe('validate register input', () => {
       phone: '+201012345678',
       role: Roles.CUSTOMER
     };
-    expect(validateInput(input, inputTypes.REGISTER))
+    expect(validateInput(input, InputTypes.REGISTER))
       .toBe('weak password');
   });
 
@@ -50,18 +50,8 @@ describe('validate register input', () => {
       phone: '123',
       role: Roles.CUSTOMER
     };
-    expect(validateInput(input, inputTypes.REGISTER))
+    expect(validateInput(input, InputTypes.REGISTER))
       .toBe('invalid phone number');
-  });
-});
-
-describe('validate login input', () => {
-  it('should pass input with missing fields', () => {
-    const input = {
-      username: 'john_doe'
-    };
-    expect(validateInput(input, inputTypes.REGISTER))
-      .toBe('required fields are missing');
   });
 });
 
@@ -77,7 +67,7 @@ describe('validate create product input', () => {
         'menFashion'
       ]
     };
-    expect(validateInput(input, inputTypes.POST_PRODUCT)).toBeNull();
+    expect(validateInput(input, InputTypes.POST_PRODUCT)).toBeNull();
   });
 
   it('should pass input with missing fields', () => {
@@ -89,7 +79,7 @@ describe('validate create product input', () => {
         'menFashion'
       ]
     };
-    expect(validateInput(input, inputTypes.POST_PRODUCT))
+    expect(validateInput(input, InputTypes.POST_PRODUCT))
       .toBe('required fields are missing');
   });
 });
@@ -98,7 +88,7 @@ describe('validate patch product input', () => {
   it('should pass input with empty input object', () => {
     const input = {};
 
-    expect(validateInput(input, inputTypes.PATCH_PRODUCT))
+    expect(validateInput(input, InputTypes.PATCH_PRODUCT))
       .toBe('provide at least one field');
   });
 });
@@ -107,7 +97,7 @@ describe('validate post review input', () => {
   it('should pass input with missing fields', () => {
     const input = {};
 
-    expect(validateInput(input, inputTypes.POST_REVIEW))
+    expect(validateInput(input, InputTypes.POST_REVIEW))
       .toBe('required fields are missing');
   });
 });
@@ -116,7 +106,7 @@ describe('validate patch review input', () => {
   it('should pass input with empty input object', () => {
     const input = {};
 
-    expect(validateInput(input, inputTypes.PATCH_REVIEW))
+    expect(validateInput(input, InputTypes.PATCH_REVIEW))
       .toBe('provide at least one field');
   });
 });
@@ -125,7 +115,7 @@ describe('validate post order input', () => {
   it('should pass input with missing fields', () => {
     const input = {};
 
-    expect(validateInput(input, inputTypes.POST_ORDER))
+    expect(validateInput(input, InputTypes.POST_ORDER))
       .toBe('required fields are missing');
   });
 });

@@ -1,3 +1,17 @@
+const Roles = {
+  CUSTOMER: 'customer',
+  SELLER: 'seller'
+};
+
+const InputTypes = {
+  REGISTER: 0,
+  POST_PRODUCT: 1,
+  PATCH_PRODUCT: 2,
+  POST_REVIEW: 3,
+  PATCH_REVIEW: 4,
+  POST_ORDER: 5
+};
+
 const HttpStatus = {
   OK: 200,
   CREATED: 201,
@@ -26,13 +40,9 @@ const Messages = {
   UNEXPECTED_ERROR: 'unexpected error'
 };
 
-const Roles = {
-  CUSTOMER: 'customer',
-  SELLER: 'seller'
-};
-
 module.exports = {
+  Roles,
+  InputTypes,
   HttpStatus,
-  Messages,
-  Roles
+  Messages
 };

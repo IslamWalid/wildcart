@@ -1,6 +1,6 @@
-const { HttpStatus, Messages } = require('../utils/enums');
+const { HttpStatus, Messages, InputTypes } = require('../utils/enums');
 const sendResErr = require('../utils/send-res-err');
-const { validateInput, inputTypes } = require('../utils/validate-input');
+const validateInput = require('../utils/validate-input');
 const {
   createReview,
   retrieveProductReviews,
@@ -9,7 +9,7 @@ const {
 } = require('../services/review');
 
 const postReview = async (req, res, next) => {
-  const message = validateInput(req.body, inputTypes.POST_REVIEW);
+  const message = validateInput(req.body, InputTypes.POST_REVIEW);
   if (message) {
     return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
   }
@@ -36,7 +36,7 @@ const getReview = async (req, res, next) => {
 };
 
 const patchReview = async (req, res, next) => {
-  const message = validateInput(req.body, inputTypes.PATCH_REVIEW);
+  const message = validateInput(req.body, InputTypes.PATCH_REVIEW);
   if (message) {
     return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
   }

@@ -1,15 +1,6 @@
 const validator = require('validator');
 
-const { Roles, Messages } = require('./enums');
-
-const inputTypes = {
-  REGISTER: 0,
-  POST_PRODUCT: 1,
-  PATCH_PRODUCT: 2,
-  POST_REVIEW: 3,
-  PATCH_REVIEW: 4,
-  POST_ORDER: 5
-};
+const { Roles, Messages, InputTypes } = require('./enums');
 
 function validateRegister(input) {
   const { username, firstName, lastName, password } = input;
@@ -86,27 +77,24 @@ function validatePostOrder(input) {
 
 function validateInput(input, inputType) {
   switch (inputType) {
-    case inputTypes.REGISTER:
+    case InputTypes.REGISTER:
       return validateRegister(input);
 
-    case inputTypes.POST_PRODUCT:
+    case InputTypes.POST_PRODUCT:
       return validatePostProduct(input);
 
-    case inputTypes.PATCH_PRODUCT:
+    case InputTypes.PATCH_PRODUCT:
       return validatePatchProduct(input);
 
-    case inputTypes.POST_REVIEW:
+    case InputTypes.POST_REVIEW:
       return validatePostReview(input);
 
-    case inputTypes.PATCH_REVIEW:
+    case InputTypes.PATCH_REVIEW:
       return validatePatchReview(input);
 
-    case inputTypes.POST_ORDER:
+    case InputTypes.POST_ORDER:
       return validatePostOrder(input);
   }
 }
 
-module.exports = {
-  inputTypes,
-  validateInput
-};
+module.exports = validateInput;

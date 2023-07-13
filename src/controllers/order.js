@@ -1,10 +1,10 @@
 const { createOrder } = require('../services/order');
-const { HttpStatus } = require('../utils/enums');
+const { HttpStatus, InputTypes } = require('../utils/enums');
 const sendResErr = require('../utils/send-res-err');
-const { validateInput, inputTypes } = require('../utils/validate-input');
+const validateInput = require('../utils/validate-input');
 
 const postOrder = async (req, res, next) => {
-  const message = validateInput(req.body, inputTypes.POST_ORDER);
+  const message = validateInput(req.body, InputTypes.POST_ORDER);
   if (message) {
     return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
   }
