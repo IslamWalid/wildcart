@@ -10,8 +10,6 @@ const router = express.Router();
 
 router.get('/', controllers.getAllProducts);
 
-router.get('/images/:productId', controllers.getProductImage);
-
 router.get('/sellers/:sellerId', controllers.getSellerProducts);
 
 router.get('/:productId', controllers.getProduct);

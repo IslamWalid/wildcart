@@ -1,5 +1,3 @@
-const path = require('path');
-
 const services = require('../services/product');
 const sendResErr = require('../utils/send-res-err');
 const validateInput = require('../utils/validate-input');
@@ -28,12 +26,9 @@ const patchImage = async (req, res, next) => {
   }
 
   try {
-    const inserted = await services.updateProductImage(req.user.id, req.params.productId, req.file.filename);
-    if (!inserted) {
-      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
-    }
-
-    res.sendStatus(HttpStatus.CREATED);
+    const imageURL = `${req.headers.host}/${req.file.filename}`;
+    await services.updateProductImage(req.user.id, req.params.productId, imageURL);
+    res.sendStatus(HttpStatus.OK);
   } catch (err) {
     next(err);
   }
@@ -92,24 +87,11 @@ const getSellerProducts = async (req, res, next) => {
   }
 };
 
-const getProductImage = async (req, res, next) => {
-  try {
-    const filename = await services.retrieveProductImageFilename(req.params.productId);
-    if (!filename) {
-      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
-    }
-    res.sendFile(path.join(__dirname, '../../media', filename));
-  } catch (err) {
-    next(err);
-  }
-};
-
 module.exports = {
   postProduct,
   patchImage,
   getProduct,
   patchProduct,
   getAllProducts,
-  getSellerProducts,
-  getProductImage
+  getSellerProducts
 };

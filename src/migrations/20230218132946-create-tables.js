@@ -95,8 +95,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      image: {
-        type: Sequelize.BLOB
+      image_url: {
+        type: Sequelize.STRING
       }
     });
 

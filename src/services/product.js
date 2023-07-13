@@ -1,6 +1,4 @@
 const crypto = require('crypto');
-const fs = require('fs/promises');
-const path = require('path');
 
 const { sequelize, Seller, Product, Review, ProductCategory } = require('../models');
 
@@ -38,6 +36,7 @@ async function retrieveAllProducts() {
   return await Product.findAll({
     attributes: {
       include: [
+        'imageURL',
         [sequelize.col('seller.shop_name'), 'shopName'],
         [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
         [
@@ -46,8 +45,7 @@ async function retrieveAllProducts() {
             'NUMERIC(3, 2)'),
           'avgRate'
         ]
-      ],
-      exclude: ['imageFilename']
+      ]
     },
     include: [
       {
@@ -76,10 +74,10 @@ async function retrieveProduct(productId) {
   return await Product.findByPk(productId, {
     attributes: {
       include: [
+        'imageURL',
         [sequelize.col('shop_name'), 'shopName'],
         [sequelize.fn('array_agg', sequelize.col('category_name')), 'categories']
-      ],
-      exclude: ['imageFilename']
+      ]
     },
     include: [
       {
@@ -105,13 +103,9 @@ async function retrieveProduct(productId) {
 }
 
 async function updateProduct(sellerId, productId, product) {
-  const { name, brand, quantity, price } = product;
-
-  const result = await Product.update({ name, brand, quantity, price }, {
-    where: {
-      sellerId,
-      id: productId
-    }
+  const result = await Product.update(product, {
+    where: { sellerId, id: productId },
+    fields: ['name', 'brand', 'quantity', 'price']
   });
 
   return result[0] > 0;
@@ -124,6 +118,7 @@ async function retrieveSellerProducts(sellerId) {
       model: Product,
       attributes: {
         include: [
+          'imageURL',
           [sequelize.literal('seller.shop_name'), 'shopName'],
           [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
           [
@@ -132,8 +127,7 @@ async function retrieveSellerProducts(sellerId) {
               'NUMERIC(3, 2)'),
             'avgRate'
           ]
-        ],
-        exclude: ['imageFilename']
+        ]
       },
       include: [
         {
@@ -152,32 +146,12 @@ async function retrieveSellerProducts(sellerId) {
   return seller ? seller.products : null;
 }
 
-async function retrieveProductImageFilename(productId) {
-  const product = await Product.findByPk(productId, {
-    attributes: ['imageFilename'],
-    raw: true
+async function updateProductImage(sellerId, productId, imageURL) {
+  const result = await Product.update({ imageURL }, {
+    where: { sellerId, id: productId }
   });
 
-  if (!product) {
-    return null;
-  }
-
-  return product.imageFilename;
-}
-
-async function updateProductImage(sellerId, productId, filename) {
-  const product = await Product.findByPk(productId, { where: { sellerId } });
-  if (!product) {
-    return null;
-  }
-
-  if (product.imageFilename) {
-    await fs.unlink(path.join(__dirname, '../../media/') + product.imageFilename);
-  }
-
-  product.imageFilename = filename;
-
-  return await product.save();
+  return result[0] > 0;
 }
 
 module.exports = {
@@ -186,6 +160,5 @@ module.exports = {
   retrieveProduct,
   updateProduct,
   retrieveSellerProducts,
-  retrieveProductImageFilename,
   updateProductImage
 };

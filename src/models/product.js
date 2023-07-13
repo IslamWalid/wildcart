@@ -32,8 +32,9 @@ class Product extends Model {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      imageFilename: {
-        type: DataTypes.STRING
+      imageURL: {
+        type: DataTypes.STRING,
+        field: 'image_url'
       }
     },
     {
