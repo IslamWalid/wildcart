@@ -1,4 +1,5 @@
 const express = require('express');
+const paginate = require('express-paginate');
 
 const controllers = require('../controllers/product');
 const upload = require('../middlewares/upload.js');
@@ -8,9 +9,12 @@ const { Roles } = require('../utils/enums');
 
 const router = express.Router();
 
-router.get('/', controllers.getAllProducts);
+const DEFAULT_LIMIT = 4;
+const MAX_LIMIT = 10;
 
-router.get('/sellers/:sellerId', controllers.getSellerProducts);
+router.get('/', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getAllProducts);
+
+router.get('/sellers/:sellerId', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getSellerProducts);
 
 router.get('/:productId', controllers.getProduct);
 

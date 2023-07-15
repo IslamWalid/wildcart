@@ -32,8 +32,8 @@ async function createProduct(productData, sellerId) {
   return id;
 }
 
-async function retrieveAllProducts() {
-  return await Product.findAll({
+async function retrieveAllProducts(skip, limit) {
+  const { rows, count } = await Product.findAndCountAll({
     attributes: {
       include: [
         'imageURL',
@@ -65,9 +65,16 @@ async function retrieveAllProducts() {
       'product.id',
       'shop_name'
     ],
+    offset: skip,
+    limit,
     raw: true,
     nest: true
   });
+
+  return {
+    products: rows,
+    pageCount: Math.ceil(count / limit)
+  };
 }
 
 async function retrieveProduct(productId) {
@@ -111,39 +118,39 @@ async function updateProduct(sellerId, productId, product) {
   return result[0] > 0;
 }
 
-async function retrieveSellerProducts(sellerId) {
-  const seller = await Seller.findByPk(sellerId, {
-    attributes: [],
-    include: {
-      model: Product,
-      attributes: {
-        include: [
-          'imageURL',
-          [sequelize.literal('seller.shop_name'), 'shopName'],
-          [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
-          [
-            sequelize.cast(
-              sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
-              'NUMERIC(3, 2)'),
-            'avgRate'
-          ]
-        ]
-      },
-      include: [
-        {
-          model: ProductCategory,
-          attributes: []
-        },
-        {
-          model: Review,
-          attributes: []
-        }
+async function retrieveSellerProducts(sellerId, skip, limit) {
+  const { rows, count } = await Product.findAndCountAll({
+    where: { sellerId },
+    attributes: [
+      'imageURL',
+      [sequelize.literal('seller.shop_name'), 'shopName'],
+      [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
+      [
+        sequelize.cast(
+          sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
+          'NUMERIC(3, 2)'),
+        'avgRate'
       ]
-    },
+    ],
+    include: [
+      {
+        model: ProductCategory,
+        attributes: []
+      },
+      {
+        model: Review,
+        attributes: []
+      }
+    ],
+    offset: skip,
+    limit,
     group: ['seller.id', 'products.id']
   });
 
-  return seller ? seller.products : null;
+  return {
+    products: rows,
+    pageCount: Math.ceil(count / limit)
+  };
 }
 
 async function updateProductImage(sellerId, productId, imageURL) {

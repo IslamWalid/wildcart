@@ -27,7 +27,11 @@ const patchImage = async (req, res, next) => {
 
   try {
     const imageURL = `${req.headers.host}/${req.file.filename}`;
-    await services.updateProductImage(req.user.id, req.params.productId, imageURL);
+    const isUpdated = await services.updateProductImage(req.user.id, req.params.productId, imageURL);
+    if (!isUpdated) {
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
+    }
+
     res.sendStatus(HttpStatus.OK);
   } catch (err) {
     next(err);
@@ -36,8 +40,15 @@ const patchImage = async (req, res, next) => {
 
 const getAllProducts = async (req, res, next) => {
   try {
-    const products = await services.retrieveAllProducts();
-    res.status(HttpStatus.OK).json({ products });
+    const { products, pageCount } = await services.retrieveAllProducts(req.skip, req.query.limit);
+    const next = res.locals.paginate.hasNextPages(pageCount)
+      ? res.locals.paginate.href()
+      : null;
+    const prev = res.locals.paginate.hasPreviousPages
+      ? res.locals.paginate.href(true)
+      : null;
+
+    res.status(HttpStatus.OK).json({ products, next, prev, pageCount });
   } catch (err) {
     next(err);
   }
@@ -76,12 +87,19 @@ const patchProduct = async (req, res, next) => {
 
 const getSellerProducts = async (req, res, next) => {
   try {
-    const products = await services.retrieveSellerProducts(req.params.sellerId);
+    const { products, pageCount } = await services.retrieveSellerProducts(req.params.sellerId, req.skip, req.query.limit);
     if (!products) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    res.status(HttpStatus.OK).json({ products });
+    const next = res.locals.paginate.hasNextPages(pageCount)
+      ? res.locals.paginate.href()
+      : null;
+    const prev = res.locals.paginate.hasPreviousPages
+      ? res.locals.paginate.href(true)
+      : null;
+
+    res.status(HttpStatus.OK).json({ products, next, prev, pageCount });
   } catch (err) {
     next(err);
   }
