@@ -1,6 +1,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addConstraint('product', {
+    await queryInterface.addConstraint('products', {
       type: 'unique',
       fields: ['name', 'seller_id'],
       name: 'product_name_seller_id_unique_constraint'
@@ -8,6 +8,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint('product', 'product_name_seller_id_unique_constraint');
+    await queryInterface.removeConstraint('products', 'product_name_seller_id_unique_constraint');
   }
 };

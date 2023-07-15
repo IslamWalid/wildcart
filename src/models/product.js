@@ -40,7 +40,7 @@ class Product extends Model {
     {
       sequelize,
       modelName: 'product',
-      tableName: 'product',
+      tableName: 'products',
       underscored: true,
       timestamps: false
     });

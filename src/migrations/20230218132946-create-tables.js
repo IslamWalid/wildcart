@@ -1,6 +1,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('users', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true
@@ -37,24 +37,24 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('customer', {
+    await queryInterface.createTable('customers', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
         references: {
-          model: 'user',
+          model: 'users',
           key: 'id'
         },
         onDelete: 'CASCADE'
       }
     });
 
-    await queryInterface.createTable('seller', {
+    await queryInterface.createTable('sellers', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
         references: {
-          model: 'user',
+          model: 'users',
           key: 'id'
         },
         onDelete: 'CASCADE'
@@ -65,7 +65,7 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('product', {
+    await queryInterface.createTable('products', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true
@@ -73,7 +73,7 @@ module.exports = {
       seller_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'seller',
+          model: 'sellers',
           key: 'id'
         },
         allowNull: false,
@@ -100,14 +100,14 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('category', {
+    await queryInterface.createTable('categories', {
       name: {
         type: Sequelize.STRING,
         primaryKey: true
       }
     });
 
-    await queryInterface.createTable('order', {
+    await queryInterface.createTable('orders', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true
@@ -115,7 +115,7 @@ module.exports = {
       customer_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'customer',
+          model: 'customers',
           key: 'id'
         },
         onDelete: 'CASCADE',
@@ -124,7 +124,7 @@ module.exports = {
       product_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'product',
+          model: 'products',
           key: 'id'
         },
         onDelete: 'CASCADE',
@@ -156,12 +156,12 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('review', {
+    await queryInterface.createTable('reviews', {
       customer_id: {
         type: Sequelize.UUID,
         primaryKey: true,
         references: {
-          model: 'customer',
+          model: 'customers',
           key: 'id'
         },
         onDelete: 'CASCADE'
@@ -170,7 +170,7 @@ module.exports = {
         type: Sequelize.UUID,
         primaryKey: true,
         references: {
-          model: 'product',
+          model: 'products',
           key: 'id'
         },
         onDelete: 'CASCADE',
@@ -194,12 +194,12 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('product_category', {
+    await queryInterface.createTable('products_categories', {
       product_id: {
         type: Sequelize.UUID,
         primaryKey: true,
         references: {
-          model: 'product',
+          model: 'products',
           key: 'id'
         },
         onDelete: 'CASCADE'
@@ -208,7 +208,7 @@ module.exports = {
         type: Sequelize.STRING,
         primaryKey: true,
         references: {
-          model: 'category',
+          model: 'categories',
           key: 'name'
         },
         onDelete: 'CASCADE'
@@ -216,13 +216,13 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('user', { cascade: true });
-    await queryInterface.dropTable('customer', { cascade: true });
-    await queryInterface.dropTable('seller', { cascade: true });
-    await queryInterface.dropTable('product', { cascade: true });
-    await queryInterface.dropTable('category', { cascade: true });
-    await queryInterface.dropTable('order', { cascade: true });
-    await queryInterface.dropTable('review', { cascade: true });
-    await queryInterface.dropTable('product_category', { cascade: true });
+    await queryInterface.dropTable('users', { cascade: true });
+    await queryInterface.dropTable('customers', { cascade: true });
+    await queryInterface.dropTable('sellers', { cascade: true });
+    await queryInterface.dropTable('products', { cascade: true });
+    await queryInterface.dropTable('categorys', { cascade: true });
+    await queryInterface.dropTable('orders', { cascade: true });
+    await queryInterface.dropTable('reviews', { cascade: true });
+    await queryInterface.dropTable('products_categories', { cascade: true });
   }
 };

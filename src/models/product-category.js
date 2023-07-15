@@ -25,7 +25,7 @@ class ProductCategory extends Model {
     {
       sequelize,
       modelName: 'productCategory',
-      tableName: 'product_category',
+      tableName: 'products_categories',
       underscored: true,
       timestamps: false
     });

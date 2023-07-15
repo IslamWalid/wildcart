@@ -19,7 +19,7 @@ class Seller extends Model {
     {
       sequelize,
       modelName: 'seller',
-      tableName: 'seller',
+      tableName: 'sellers',
       underscored: true,
       timestamps: false
     });

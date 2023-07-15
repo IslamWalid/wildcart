@@ -13,7 +13,7 @@ class Session extends Model {
     {
       sequelize,
       modelName: 'session',
-      tableName: 'session',
+      tableName: 'sessions',
       underscored: true,
       timestamps: false
     });

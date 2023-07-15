@@ -15,7 +15,7 @@ class Customer extends Model {
     {
       sequelize,
       modelName: 'customer',
-      tableName: 'customer',
+      tableName: 'customers',
       underscored: true,
       timestamps: false
     });

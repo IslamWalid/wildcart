@@ -1,6 +1,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('session', {
+    await queryInterface.createTable('sessions', {
       sid: {
         type: Sequelize.STRING,
         primaryKey: true
@@ -11,6 +11,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('session', { cascade: true });
+    await queryInterface.dropTable('sessions', { cascade: true });
   }
 };
