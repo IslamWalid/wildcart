@@ -13,10 +13,10 @@ module.exports = {
       { name: 'women fashion' }
     ];
 
-    await queryInterface.bulkInsert('category', categories);
+    await queryInterface.bulkInsert('categories', categories);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('category', null, {});
+    await queryInterface.bulkDelete('categories');
   }
 };
