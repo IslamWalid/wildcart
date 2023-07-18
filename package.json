@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/IslamWalid/wildcart#readme",
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "dotenv": "^16.0.3",
     "eslint": "^8.34.0",
     "eslint-config-standard": "^17.0.0",
