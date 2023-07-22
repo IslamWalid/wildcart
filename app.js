@@ -15,7 +15,7 @@ const errHandler = require('./src/middlewares/err-handler');
 const app = express();
 const sessionStore = new SequelizeStore({
   db: db.sequelize,
-  table: 'sessions'
+  table: 'session'
 });
 
 app.use(session({
