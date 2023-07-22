@@ -38,6 +38,8 @@ app.use(cors({
   origin: process.env.ALLOWED_ORIGIN
 }));
 
+app.use(express.static('media'));
+
 app.use('/users', userRouter);
 app.use('/products', productRouter);
 app.use('/reviews', reviewRouter);
