@@ -2,6 +2,16 @@ const crypto = require('crypto');
 
 const { sequelize, Seller, Product, Review, ProductCategory } = require('../models');
 
+const productAttributes = [
+  'id',
+  'name',
+  'imageURL',
+  'sellerId',
+  [sequelize.col('seller.shop_name'), 'shopName'],
+  [sequelize.fn('COALESCE', sequelize.fn('AVG', sequelize.col('rate')), 0), 'avgRate'],
+  [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories']
+];
+
 async function createProduct(productData, sellerId) {
   const id = crypto.randomUUID();
 
@@ -34,19 +44,38 @@ async function createProduct(productData, sellerId) {
 
 async function retrieveAllProducts(skip, limit) {
   const { rows, count } = await Product.findAndCountAll({
-    attributes: {
-      include: [
-        'imageURL',
-        [sequelize.col('seller.shop_name'), 'shopName'],
-        [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
-        [
-          sequelize.cast(
-            sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
-            'NUMERIC(3, 2)'),
-          'avgRate'
-        ]
-      ]
-    },
+    attributes: productAttributes,
+    include: [
+      {
+        model: Seller,
+        attributes: []
+      },
+      {
+        model: Review,
+        attributes: []
+      },
+      {
+        model: ProductCategory,
+        attributes: []
+      }
+    ],
+    group: ['product.id', 'seller.shop_name'],
+    subQuery: false,
+    offset: skip,
+    limit,
+    raw: true,
+    nest: true
+  });
+
+  return {
+    products: rows,
+    pageCount: Math.ceil(count.length / limit)
+  };
+}
+
+async function retrieveProduct(productId) {
+  return await Product.findByPk(productId, {
+    attributes: productAttributes,
     include: [
       {
         model: Seller,
@@ -64,47 +93,6 @@ async function retrieveAllProducts(skip, limit) {
     group: [
       'product.id',
       'shop_name'
-    ],
-    offset: skip,
-    limit,
-    raw: true,
-    nest: true
-  });
-
-  return {
-    products: rows,
-    pageCount: Math.ceil(count / limit)
-  };
-}
-
-async function retrieveProduct(productId) {
-  return await Product.findByPk(productId, {
-    attributes: {
-      include: [
-        'imageURL',
-        [sequelize.col('shop_name'), 'shopName'],
-        [sequelize.fn('array_agg', sequelize.col('category_name')), 'categories']
-      ]
-    },
-    include: [
-      {
-        model: Seller,
-        attributes: []
-      },
-      {
-        model: ProductCategory,
-        attributes: []
-      },
-      {
-        model: Review,
-        attributes: ['rate', 'comment', 'createdAt']
-      }
-    ],
-    group: [
-      'product.id',
-      'shop_name',
-      'reviews.product_id',
-      'reviews.customer_id'
     ]
   });
 }
@@ -121,18 +109,12 @@ async function updateProduct(sellerId, productId, product) {
 async function retrieveSellerProducts(sellerId, skip, limit) {
   const { rows, count } = await Product.findAndCountAll({
     where: { sellerId },
-    attributes: [
-      'imageURL',
-      [sequelize.literal('seller.shop_name'), 'shopName'],
-      [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories'],
-      [
-        sequelize.cast(
-          sequelize.fn('coalesce', sequelize.fn('avg', sequelize.col('rate')), 0),
-          'NUMERIC(3, 2)'),
-        'avgRate'
-      ]
-    ],
+    attributes: productAttributes,
     include: [
+      {
+        model: Seller,
+        attributes: []
+      },
       {
         model: ProductCategory,
         attributes: []
@@ -142,14 +124,15 @@ async function retrieveSellerProducts(sellerId, skip, limit) {
         attributes: []
       }
     ],
+    group: ['product.id', 'seller.id'],
+    subQuery: false,
     offset: skip,
-    limit,
-    group: ['seller.id', 'products.id']
+    limit
   });
 
   return {
     products: rows,
-    pageCount: Math.ceil(count / limit)
+    pageCount: Math.ceil(count.length / limit)
   };
 }
 

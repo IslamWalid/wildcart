@@ -61,7 +61,7 @@ const getProduct = async (req, res, next) => {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    res.status(HttpStatus.OK).json({ product });
+    res.status(HttpStatus.OK).json(product);
   } catch (err) {
     next(err);
   }
@@ -87,7 +87,8 @@ const patchProduct = async (req, res, next) => {
 
 const getSellerProducts = async (req, res, next) => {
   try {
-    const { products, pageCount } = await services.retrieveSellerProducts(req.params.sellerId, req.skip, req.query.limit);
+    const { products, pageCount } =
+      await services.retrieveSellerProducts(req.params.sellerId, req.skip, req.query.limit);
     if (!products) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
