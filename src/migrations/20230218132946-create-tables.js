@@ -220,7 +220,7 @@ module.exports = {
     await queryInterface.dropTable('customers', { cascade: true });
     await queryInterface.dropTable('sellers', { cascade: true });
     await queryInterface.dropTable('products', { cascade: true });
-    await queryInterface.dropTable('categorys', { cascade: true });
+    await queryInterface.dropTable('categories', { cascade: true });
     await queryInterface.dropTable('orders', { cascade: true });
     await queryInterface.dropTable('reviews', { cascade: true });
     await queryInterface.dropTable('products_categories', { cascade: true });
