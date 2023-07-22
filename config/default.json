@@ -5,7 +5,8 @@
     "port": 5432,
     "database": "wildcart_dev",
     "username": "postgres",
-    "password": "secret"
+    "password": "secret",
+    "migrationStorageTableName": "sequelize_meta"
   },
   "server": {
     "port": 8080
