@@ -41,7 +41,7 @@ class Order extends Model {
     {
       sequelize,
       modelName: 'order',
-      tableName: 'order',
+      tableName: 'orders',
       underscored: true,
       timestamps: true,
       updatedAt: false,
