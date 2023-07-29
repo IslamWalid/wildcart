@@ -3,6 +3,12 @@ const Roles = {
   SELLER: 'seller'
 };
 
+const OrderStatus = {
+  PENDING: 'pending',
+  SHIPPED: 'shipped',
+  ARRIVED: 'arrived'
+};
+
 const InputTypes = {
   REGISTER: 0,
   POST_PRODUCT: 1,
@@ -27,6 +33,7 @@ const Messages = {
   INVALID_PASSWORD: 'invalid password',
   INVALID_DATATYPE: 'invalid input datatype error',
   INVALID_CATEGORY: 'invalid product categories',
+  INVALID_QUANTITY: 'order quantity greater than available products',
   INVALID_PHONE: 'invalid phone number',
   WEAK_PASSWORD: 'weak password',
   MISSING_FIELDS: 'required fields are missing',
@@ -42,6 +49,7 @@ const Messages = {
 
 module.exports = {
   Roles,
+  OrderStatus,
   InputTypes,
   HttpStatus,
   Messages
