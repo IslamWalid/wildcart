@@ -34,14 +34,6 @@ class Order extends Model {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      unitPrice: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-      },
-      totalPrice: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-      },
       arrivalDate: {
         type: DataTypes.DATE
       }

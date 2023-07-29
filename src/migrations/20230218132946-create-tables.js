@@ -139,14 +139,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      unit_price: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      total_price: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
       order_date: {
         type: Sequelize.DATE,
         allowNull: false
