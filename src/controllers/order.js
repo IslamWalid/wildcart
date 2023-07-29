@@ -1,7 +1,8 @@
 const services = require('../services/order');
 const sendResErr = require('../utils/send-res-err');
 const validateInput = require('../utils/validate-input');
-const { HttpStatus, InputTypes } = require('../utils/enums');
+const { retrieveProduct } = require('../services/product');
+const { HttpStatus, InputTypes, Messages } = require('../utils/enums');
 
 const postOrder = async (req, res, next) => {
   const message = validateInput(req.body, InputTypes.POST_ORDER);
@@ -10,14 +11,23 @@ const postOrder = async (req, res, next) => {
   }
 
   try {
-    await services.createOrder(req.user.id, req.params.productId, req.body);
+    const product = await retrieveProduct(req.params.id);
+    if (!product) {
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
+    }
+
+    const isCreated = await services.createOrder(req.user.id, product, req.body);
+    if (!isCreated) {
+      return sendResErr(res, { status: HttpStatus.CONFLICT, message: Messages.INVALID_QUANTITY });
+    }
+
     res.sendStatus(HttpStatus.CREATED);
   } catch (err) {
     next(err);
   }
 };
 
-const getUserOrders = async (req, res, next) => {
+const getCustomerOrders = async (req, res, next) => {
 
 };
 
@@ -35,7 +45,7 @@ const deleteOrder = async (req, res, next) => {
 
 module.exports = {
   postOrder,
-  getUserOrders,
+  getCustomerOrders,
   getOrder,
   patchOrder,
   deleteOrder

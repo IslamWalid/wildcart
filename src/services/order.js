@@ -1,23 +1,38 @@
 const crypto = require('crypto');
 
-const { Customer, Order } = require('../models');
+const { Customer, Order, sequelize } = require('../models');
 
-async function createOrder(customerId, productId, order) {
-  await Order.create({
-    id: crypto.randomUUID(),
-    customerId,
-    productId,
-    status: 'pending',
-    quantity: order.quantity,
-    unitPrice: order.unitPrice,
-    totalPrice: order.totalPrice
+async function createOrder(customerId, product, order) {
+  if (product.quantity < order.quantity) {
+    return false;
+  }
+
+  await sequelize.transaction(async (t) => {
+    await Order.create({
+      id: crypto.randomUUID(),
+      customerId,
+      productId: product.id,
+      quantity: order.quantity
+    }, {
+      transaction: t
+    });
+
+    await product.update({
+      quantity: product.quantity - order.quantity
+    }, {
+      transaction: t
+    });
   });
+
+  return true;
 }
 
 async function retrieveCustomerOrders(customerId) {
   const customer = await Customer.findByPk(customerId, {
     attributes: [],
-    include: Order
+    include: Order,
+    raw: true,
+    nest: true
   });
 
   return customer ? customer.orders : null;
@@ -53,8 +68,8 @@ async function updateOrder(user, orderId, order) {
 async function deleteOrder(customerId, orderId) {
   await Order.destroy({
     where: {
-      customerId,
-      id: orderId
+      id: orderId,
+      customerId
     }
   });
 }

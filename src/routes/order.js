@@ -9,13 +9,13 @@ const router = express.Router();
 
 router.use(authenticate);
 
-router.get('/', controllers.getUserOrders);
-
-router.get('/:orderId', controllers.getOrder);
-
 router.patch('/:orderId', controllers.patchOrder);
 
 router.use(authorize(Roles.CUSTOMER));
+
+router.get('/:orderId', controllers.getOrder);
+
+router.get('/', controllers.getCustomerOrders);
 
 router.post('/:productId', controllers.postOrder);
 
