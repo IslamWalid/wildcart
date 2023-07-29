@@ -7,6 +7,8 @@ const productAttributes = [
   'name',
   'imageURL',
   'sellerId',
+  'price',
+  'quantity',
   [sequelize.col('seller.shop_name'), 'shopName'],
   [sequelize.fn('COALESCE', sequelize.fn('AVG', sequelize.col('rate')), 0), 'avgRate'],
   [sequelize.fn('array_agg', sequelize.literal('DISTINCT "category_name"')), 'categories']
