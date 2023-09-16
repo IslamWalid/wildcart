@@ -41,15 +41,6 @@ async function retrieveCustomerOrders(customerId, skip, limit) {
   };
 }
 
-async function retrieveOrder(customerId, orderId) {
-  return await Order.findOne({
-    where: {
-      customerId,
-      orderId
-    }
-  });
-}
-
 async function updateOrder(user, orderId, order) {
   // let result;
   // const { quantity, status } = order;
@@ -80,7 +71,6 @@ async function deleteOrder(customerId, orderId) {
 module.exports = {
   createOrder,
   retrieveCustomerOrders,
-  retrieveOrder,
   updateOrder,
   deleteOrder
 };

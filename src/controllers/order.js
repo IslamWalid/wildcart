@@ -44,10 +44,6 @@ const getCustomerOrders = async (req, res, next) => {
   }
 };
 
-const getOrder = async (req, res, next) => {
-
-};
-
 const patchOrder = async (req, res, next) => {
 
 };
@@ -59,7 +55,6 @@ const deleteOrder = async (req, res, next) => {
 module.exports = {
   postOrder,
   getCustomerOrders,
-  getOrder,
   patchOrder,
   deleteOrder
 };
