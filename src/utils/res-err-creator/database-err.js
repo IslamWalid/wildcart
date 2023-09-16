@@ -62,21 +62,18 @@ function databaseResErr(err) {
   switch (errInfo.meta.constraint) {
     case DATA_TYPE_ERROR_CODE:
       return { status: HttpStatus.BAD_REQUEST, message: Messages.INVALID_DATATYPE, errInfo };
-    case 'product_category_category_name_fkey':
+    case 'products_categories_category_name_fkey':
       return { status: HttpStatus.BAD_REQUEST, message: Messages.INVALID_CATEGORY, errInfo };
-    case 'image_product_id_fkey':
-    case 'review_product_id_fkey':
+    case 'reviews_product_id_fkey':
       return { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND, errInfo };
-    case 'user_username_key':
+    case 'users_username_key':
       return { status: HttpStatus.CONFLICT, message: Messages.USERNAME_ALREADY_EXISTS, errInfo };
-    case 'user_phone_key':
+    case 'users_phone_key':
       return { status: HttpStatus.CONFLICT, message: Messages.PHONE_ALREADY_EXISTS, errInfo };
     case 'product_name_seller_id_unique_constraint':
       return { status: HttpStatus.CONFLICT, message: Messages.PRODUCT_NAME_ALREADY_EXISTS, errInfo };
-    case 'review_pkey':
+    case 'reviews_pkey':
       return { status: HttpStatus.CONFLICT, message: Messages.REVIEW_ALREADY_EXISTS, errInfo };
-    case 'image_pkey':
-      return { status: HttpStatus.CONFLICT, message: 'product already has an image', errInfo };
     default:
       return null;
   }
