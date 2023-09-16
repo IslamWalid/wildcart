@@ -28,7 +28,20 @@ const postOrder = async (req, res, next) => {
 };
 
 const getCustomerOrders = async (req, res, next) => {
+  try {
+    const { orders, pageCount } = await services.retrieveCustomerOrders(req.user.id, req.skip, req.query.limit);
 
+    const next = res.locals.paginate.hasNextPages(pageCount)
+      ? res.locals.paginate.href()
+      : null;
+    const prev = res.locals.paginate.hasPreviousPages
+      ? res.locals.paginate.href(true)
+      : null;
+
+    res.status(HttpStatus.OK).json({ orders, next, prev, pageCount });
+  } catch (err) {
+    next(err);
+  }
 };
 
 const getOrder = async (req, res, next) => {

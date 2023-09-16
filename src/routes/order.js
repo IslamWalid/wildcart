@@ -1,4 +1,5 @@
 const express = require('express');
+const paginate = require('express-paginate');
 
 const controllers = require('../controllers/order');
 const authorize = require('../middlewares/authorize');
@@ -6,6 +7,9 @@ const authenticate = require('../middlewares/authenticate');
 const { Roles } = require('../utils/enums');
 
 const router = express.Router();
+
+const DEFAULT_LIMIT = 4;
+const MAX_LIMIT = 10;
 
 router.use(authenticate);
 
@@ -15,7 +19,7 @@ router.use(authorize(Roles.CUSTOMER));
 
 router.get('/:orderId', controllers.getOrder);
 
-router.get('/', controllers.getCustomerOrders);
+router.get('/', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getCustomerOrders);
 
 router.post('/:productId', controllers.postOrder);
 

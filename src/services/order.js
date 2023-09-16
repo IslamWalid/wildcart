@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const { Customer, Order, sequelize } = require('../models');
+const { Order, sequelize } = require('../models');
 
 async function createOrder(customerId, product, order) {
   if (product.quantity < order.quantity) {
@@ -27,15 +27,18 @@ async function createOrder(customerId, product, order) {
   return true;
 }
 
-async function retrieveCustomerOrders(customerId) {
-  const customer = await Customer.findByPk(customerId, {
-    attributes: [],
-    include: Order,
+async function retrieveCustomerOrders(customerId, skip, limit) {
+  const { rows, count } = await Order.findAndCountAll({
+    where: { customerId },
     raw: true,
-    nest: true
+    limit,
+    offset: skip
   });
 
-  return customer ? customer.orders : null;
+  return {
+    orders: rows,
+    pageCount: Math.ceil(count / limit)
+  };
 }
 
 async function retrieveOrder(customerId, orderId) {
