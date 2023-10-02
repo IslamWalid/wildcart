@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
 const { Order, sequelize } = require('../models');
+const { OrderStatus } = require('../utils/enums');
 
 async function createOrder(customerId, product, order) {
   if (product.quantity < order.quantity) {
@@ -42,30 +43,19 @@ async function retrieveCustomerOrders(customerId, skip, limit) {
 }
 
 async function updateOrder(user, orderId, order) {
-  // let result;
-  // const { quantity, status } = order;
-  //
-  // if (user.userType === 'customer') {
-  //   result = await Order.update({ quantity }, {
-  //     where: {
-  //       id: orderId,
-  //       customerId: user.id
-  //     }
-  //   });
-  // } else {
-  //   result = await Order.update()
-  // }
-  //
-  // return result[0] > 0;
+
 }
 
 async function deleteOrder(customerId, orderId) {
-  await Order.destroy({
+  const deletedRows = await Order.destroy({
     where: {
       id: orderId,
-      customerId
+      customerId,
+      status: OrderStatus.PENDING
     }
   });
+
+  return deletedRows === 1;
 }
 
 module.exports = {

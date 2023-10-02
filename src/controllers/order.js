@@ -49,7 +49,16 @@ const patchOrder = async (req, res, next) => {
 };
 
 const deleteOrder = async (req, res, next) => {
+  try {
+    const isDeleted = await services.deleteOrder(req.user.id, req.params.orderId);
+    if (!isDeleted) {
+      return sendResErr(res, { status: HttpStatus.CONFLICT, message: Messages.CANCEL_REFUSED });
+    }
 
+    res.sendStatus(HttpStatus.OK);
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = {

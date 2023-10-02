@@ -44,6 +44,7 @@ const Messages = {
   PHONE_ALREADY_EXISTS: 'user with this phone number already exists',
   PRODUCT_NAME_ALREADY_EXISTS: 'user already has product with this name',
   REVIEW_ALREADY_EXISTS: 'user has alreayd reviewed this product',
+  CANCEL_REFUSED: 'order can only be canceled in pending status',
   UNEXPECTED_ERROR: 'unexpected error'
 };
 
