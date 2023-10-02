@@ -13,7 +13,7 @@ const MAX_LIMIT = 10;
 
 router.use(authenticate);
 
-router.patch('/:orderId', controllers.patchOrder);
+router.patch('/:orderId', authorize(Roles.SELLER), controllers.patchOrder);
 
 router.use(authorize(Roles.CUSTOMER));
 

@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const { Order, sequelize } = require('../models');
+const { Order, Product, sequelize } = require('../models');
 const { OrderStatus } = require('../utils/enums');
 
 async function createOrder(customerId, product, order) {
@@ -42,8 +42,23 @@ async function retrieveCustomerOrders(customerId, skip, limit) {
   };
 }
 
-async function updateOrder(user, orderId, order) {
+async function updateOrderStatus(sellerId, orderId, status) {
+  const order = await Order.findOne({
+    where: { id: orderId },
+    include: {
+      model: Product,
+      required: true,
+      where: {
+        sellerId
+      }
+    }
+  });
 
+  if (!order) {
+    return null;
+  }
+
+  return await order.update({ status });
 }
 
 async function deleteOrder(customerId, orderId) {
@@ -61,6 +76,6 @@ async function deleteOrder(customerId, orderId) {
 module.exports = {
   createOrder,
   retrieveCustomerOrders,
-  updateOrder,
+  updateOrderStatus,
   deleteOrder
 };

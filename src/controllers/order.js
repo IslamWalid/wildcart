@@ -45,7 +45,16 @@ const getCustomerOrders = async (req, res, next) => {
 };
 
 const patchOrder = async (req, res, next) => {
+  try {
+    const isUpdated = await services.updateOrderStatus(req.user.id, req.params.orderId, req.body.status);
+    if (!isUpdated) {
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.ORDER_NOT_FOUND });
+    }
 
+    res.sendStatus(HttpStatus.OK);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const deleteOrder = async (req, res, next) => {
