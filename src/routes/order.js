@@ -15,9 +15,9 @@ router.use(authenticate);
 
 router.patch('/:orderId', authorize(Roles.SELLER), controllers.patchOrder);
 
-router.use(authorize(Roles.CUSTOMER));
+router.get('/', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getOrders);
 
-router.get('/', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getCustomerOrders);
+router.use(authorize(Roles.CUSTOMER));
 
 router.post('/:productId', controllers.postOrder);
 

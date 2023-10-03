@@ -2,7 +2,7 @@ const services = require('../services/order');
 const sendResErr = require('../utils/send-res-err');
 const validateInput = require('../utils/validate-input');
 const { retrieveProduct } = require('../services/product');
-const { HttpStatus, InputTypes, Messages } = require('../utils/enums');
+const { HttpStatus, InputTypes, Messages, Roles } = require('../utils/enums');
 
 const postOrder = async (req, res, next) => {
   const message = validateInput(req.body, InputTypes.POST_ORDER);
@@ -11,7 +11,7 @@ const postOrder = async (req, res, next) => {
   }
 
   try {
-    const product = await retrieveProduct(req.params.id);
+    const product = await retrieveProduct(req.params.productId);
     if (!product) {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
@@ -27,9 +27,11 @@ const postOrder = async (req, res, next) => {
   }
 };
 
-const getCustomerOrders = async (req, res, next) => {
+const getOrders = async (req, res, next) => {
   try {
-    const { orders, pageCount } = await services.retrieveCustomerOrders(req.user.id, req.skip, req.query.limit);
+    const { orders, pageCount } = req.user.role === Roles.CUSTOMER
+      ? await services.retrieveCustomerOrders(req.user.id, req.skip, req.query.limit)
+      : await services.retrieveSellerOrders(req.user.id, req.skip, req.query.limit);
 
     const next = res.locals.paginate.hasNextPages(pageCount)
       ? res.locals.paginate.href()
@@ -72,7 +74,7 @@ const deleteOrder = async (req, res, next) => {
 
 module.exports = {
   postOrder,
-  getCustomerOrders,
+  getOrders,
   patchOrder,
   deleteOrder
 };

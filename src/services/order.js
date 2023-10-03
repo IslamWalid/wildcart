@@ -42,6 +42,24 @@ async function retrieveCustomerOrders(customerId, skip, limit) {
   };
 }
 
+async function retrieveSellerOrders(sellerId, skip, limit) {
+  const { rows, count } = await Order.findAndCountAll({
+    include: {
+      model: Product,
+      attributes: [],
+      required: true,
+      where: { sellerId }
+    },
+    subQuery: false,
+    raw: true
+  });
+
+  return {
+    orders: rows,
+    pageCount: Math.ceil(count / limit)
+  };
+}
+
 async function updateOrderStatus(sellerId, orderId, status) {
   const order = await Order.findOne({
     where: { id: orderId },
@@ -76,6 +94,7 @@ async function deleteOrder(customerId, orderId) {
 module.exports = {
   createOrder,
   retrieveCustomerOrders,
+  retrieveSellerOrders,
   updateOrderStatus,
   deleteOrder
 };
