@@ -94,10 +94,20 @@ async function deleteOrder(customerId, orderId) {
   return deletedRows === 1;
 }
 
+function retrievePaymentEvent(stripeSignature, payload) {
+  return stripe.webhooks.constructEvent(payload, stripeSignature, process.env.STRIPE_WEBHOOK_SECRET_KEY);
+}
+
+async function handlePaymentIntentSucceeded() {
+
+}
+
 module.exports = {
   createOrder,
   retrieveCustomerOrders,
   retrieveSellerOrders,
   updateOrderStatus,
-  deleteOrder
+  deleteOrder,
+  retrievePaymentEvent,
+  handlePaymentIntentSucceeded
 };

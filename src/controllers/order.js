@@ -16,12 +16,13 @@ const postOrder = async (req, res, next) => {
       return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    const isCreated = await services.createOrder(req.user.id, product, req.body);
-    if (!isCreated) {
+    if (product.quantity < req.body.quantity) {
       return sendResErr(res, { status: HttpStatus.CONFLICT, message: Messages.INVALID_QUANTITY });
     }
 
-    res.sendStatus(HttpStatus.CREATED);
+    res.status(HttpStatus.CREATED).json({
+      clientSecret: await services.createOrder(req.user.id, product, req.body.quantity)
+    });
   } catch (err) {
     next(err);
   }
@@ -72,9 +73,28 @@ const deleteOrder = async (req, res, next) => {
   }
 };
 
+const handlePaymentEvents = async (req, res, next) => {
+  try {
+    const event = services.retrievePaymentEvent(req.headers['stripe-signature'], req.rawBody);
+    res.sendStatus(HttpStatus.OK);
+
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        await services.handlePaymentIntentSucceeded();
+        break;
+
+      default:
+        break;
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   postOrder,
   getOrders,
   patchOrder,
-  deleteOrder
+  deleteOrder,
+  handlePaymentEvents
 };

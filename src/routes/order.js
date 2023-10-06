@@ -11,6 +11,8 @@ const router = express.Router();
 const DEFAULT_LIMIT = 4;
 const MAX_LIMIT = 10;
 
+router.post('/payment-events', controllers.handlePaymentEvents);
+
 router.use(authenticate);
 
 router.patch('/:orderId', authorize(Roles.SELLER), controllers.patchOrder);
