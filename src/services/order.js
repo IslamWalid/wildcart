@@ -1,31 +1,34 @@
 const crypto = require('crypto');
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 const { Order, Product, sequelize } = require('../models');
 const { OrderStatus } = require('../utils/enums');
 
-async function createOrder(customerId, product, order) {
-  if (product.quantity < order.quantity) {
-    return false;
-  }
-
+async function createOrder(customerId, product, quantity) {
   await sequelize.transaction(async (t) => {
     await Order.create({
       id: crypto.randomUUID(),
       customerId,
       productId: product.id,
-      quantity: order.quantity
+      quantity
     }, {
       transaction: t
     });
 
     await product.update({
-      quantity: product.quantity - order.quantity
+      quantity: product.quantity - quantity
     }, {
       transaction: t
     });
   });
 
-  return true;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: product.price * quantity * 100,
+    currency: 'usd'
+  });
+
+  return paymentIntent.client_secret;
 }
 
 async function retrieveCustomerOrders(customerId, skip, limit) {
