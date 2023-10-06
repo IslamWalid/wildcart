@@ -33,7 +33,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, rawBody) => {
+    req.rawBody = rawBody;
+  }
+}));
+
 app.use(cors({
   origin: process.env.ALLOWED_ORIGIN
 }));
