@@ -28,8 +28,7 @@ async function createOrder(customerId, product, quantity) {
     amount: product.price * quantity * 100,
     currency: 'usd',
     metadata: {
-      orderId: id,
-      customerId
+      orderId: id
     }
   });
 
@@ -87,11 +86,10 @@ async function updateOrderStatus(sellerId, orderId, status) {
   return await order.update({ status });
 }
 
-async function deleteOrder(customerId, orderId) {
+async function deleteOrder(orderId) {
   const deletedRows = await Order.destroy({
     where: {
       id: orderId,
-      customerId,
       status: [OrderStatus.UNPAID, OrderStatus.PENDING]
     }
   });
@@ -106,8 +104,7 @@ function retrievePaymentEvent(stripeSignature, payload) {
 async function handlePaymentIntentSucceeded(paymentIntent) {
   await Order.update({ status: OrderStatus.PENDING }, {
     where: {
-      id: paymentIntent.metadata.orderId,
-      customerId: paymentIntent.metadata.customerId
+      id: paymentIntent.metadata.orderId
     }
   });
 }
