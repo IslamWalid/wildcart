@@ -7,11 +7,21 @@ const { OrderStatus } = require('../utils/enums');
 
 async function createOrder(customerId, product, quantity) {
   const id = crypto.randomUUID();
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: product.price * quantity * 100,
+    currency: 'usd',
+    metadata: {
+      orderId: id
+    }
+  });
+
   await sequelize.transaction(async (t) => {
     await Order.create({
       id,
       customerId,
       productId: product.id,
+      paymentIntentId: paymentIntent.id,
       quantity
     }, {
       transaction: t
@@ -22,14 +32,6 @@ async function createOrder(customerId, product, quantity) {
     }, {
       transaction: t
     });
-  });
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: product.price * quantity * 100,
-    currency: 'usd',
-    metadata: {
-      orderId: id
-    }
   });
 
   return paymentIntent.client_secret;

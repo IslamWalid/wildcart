@@ -25,6 +25,10 @@ class Order extends Model {
         onDelete: 'CASCADE',
         allowNull: false
       },
+      paymentIntentId: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       status: {
         type: DataTypes.ENUM,
         values: ['unpaid', 'pending', 'shipped', 'arrived'],

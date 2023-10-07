@@ -130,6 +130,10 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false
       },
+      payment_intent_id: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       status: {
         type: Sequelize.ENUM,
         values: ['unpaid', 'pending', 'shipped', 'arrived'],
