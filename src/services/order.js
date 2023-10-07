@@ -92,7 +92,7 @@ async function deleteOrder(customerId, orderId) {
     where: {
       id: orderId,
       customerId,
-      status: OrderStatus.PENDING
+      status: [OrderStatus.UNPAID, OrderStatus.PENDING]
     }
   });
 
