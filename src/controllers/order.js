@@ -80,7 +80,7 @@ const handlePaymentEvents = async (req, res, next) => {
 
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await services.handlePaymentIntentSucceeded();
+        await services.handlePaymentIntentSucceeded(event.data.object);
         break;
 
       default:

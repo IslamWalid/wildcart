@@ -25,7 +25,10 @@ async function createOrder(customerId, product, quantity) {
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount: product.price * quantity * 100,
-    currency: 'usd'
+    currency: 'usd',
+    metadata: {
+      customerId
+    }
   });
 
   return paymentIntent.client_secret;
@@ -98,7 +101,7 @@ function retrievePaymentEvent(stripeSignature, payload) {
   return stripe.webhooks.constructEvent(payload, stripeSignature, process.env.STRIPE_WEBHOOK_SECRET_KEY);
 }
 
-async function handlePaymentIntentSucceeded() {
+async function handlePaymentIntentSucceeded(paymentIntent) {
 
 }
 
