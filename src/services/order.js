@@ -104,7 +104,12 @@ function retrievePaymentEvent(stripeSignature, payload) {
 }
 
 async function handlePaymentIntentSucceeded(paymentIntent) {
-
+  await Order.update({ status: OrderStatus.PENDING }, {
+    where: {
+      id: paymentIntent.metadata.orderId,
+      customerId: paymentIntent.metadata.customerId
+    }
+  });
 }
 
 module.exports = {
