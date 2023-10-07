@@ -27,8 +27,8 @@ class Order extends Model {
       },
       status: {
         type: DataTypes.ENUM,
-        values: ['pending', 'shipped', 'arrived'],
-        defaultValue: 'pending'
+        values: ['unpaid', 'pending', 'shipped', 'arrived'],
+        defaultValue: 'unpaid'
       },
       quantity: {
         type: DataTypes.INTEGER,

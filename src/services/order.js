@@ -6,9 +6,10 @@ const { Order, Product, sequelize } = require('../models');
 const { OrderStatus } = require('../utils/enums');
 
 async function createOrder(customerId, product, quantity) {
+  const id = crypto.randomUUID();
   await sequelize.transaction(async (t) => {
     await Order.create({
-      id: crypto.randomUUID(),
+      id,
       customerId,
       productId: product.id,
       quantity
@@ -27,6 +28,7 @@ async function createOrder(customerId, product, quantity) {
     amount: product.price * quantity * 100,
     currency: 'usd',
     metadata: {
+      orderId: id,
       customerId
     }
   });

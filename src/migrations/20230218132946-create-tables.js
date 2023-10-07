@@ -132,8 +132,8 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM,
-        values: ['pending', 'shipped', 'arrived'],
-        defaultValue: 'pending'
+        values: ['unpaid', 'pending', 'shipped', 'arrived'],
+        defaultValue: 'unpaid'
       },
       quantity: {
         type: Sequelize.INTEGER,

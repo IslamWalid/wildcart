@@ -4,6 +4,7 @@ const Roles = {
 };
 
 const OrderStatus = {
+  UNPAID: 'unpaid',
   PENDING: 'pending',
   SHIPPED: 'shipped',
   ARRIVED: 'arrived'
