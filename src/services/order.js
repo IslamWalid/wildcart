@@ -88,15 +88,26 @@ async function updateOrderStatus(sellerId, orderId, status) {
   return await order.update({ status });
 }
 
-async function deleteOrder(orderId) {
-  const deletedRows = await Order.destroy({
+async function deleteOrder(customerId, orderId) {
+  const order = await Order.findOne({
     where: {
       id: orderId,
+      customerId,
       status: [OrderStatus.UNPAID, OrderStatus.PENDING]
     }
   });
 
-  return deletedRows === 1;
+  if (!order) {
+    return false;
+  }
+
+  if (order.status === OrderStatus.UNPAID) {
+    await stripe.paymentIntents.cancel(order.paymentIntentId);
+  } else {
+    await stripe.refunds.create({ payment_intent: order.paymentIntentId });
+  }
+
+  return true;
 }
 
 function retrievePaymentEvent(stripeSignature, payload) {
@@ -111,6 +122,14 @@ async function handlePaymentIntentSucceeded(paymentIntent) {
   });
 }
 
+async function handleOrderCancelation(data) {
+  await Order.destroy({
+    where: {
+      paymentIntentId: data.object === 'payment_intent' ? data.id : data.payment_intent
+    }
+  });
+}
+
 module.exports = {
   createOrder,
   retrieveCustomerOrders,
@@ -118,5 +137,6 @@ module.exports = {
   updateOrderStatus,
   deleteOrder,
   retrievePaymentEvent,
-  handlePaymentIntentSucceeded
+  handlePaymentIntentSucceeded,
+  handleOrderCancelation
 };

@@ -83,6 +83,11 @@ const handlePaymentEvents = async (req, res, next) => {
         await services.handlePaymentIntentSucceeded(event.data.object);
         break;
 
+      case 'charge.refunded':
+      case 'payment_intent.canceled':
+        await services.handleOrderCancelation(event.data.object);
+        break;
+
       default:
         break;
     }
