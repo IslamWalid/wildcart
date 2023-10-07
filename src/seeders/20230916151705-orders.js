@@ -23,7 +23,7 @@ module.exports = {
         product_id: _.id,
         payment_intent_id: `pi_${faker.string.alphanumeric({ length: 24 })}`,
         quantity: faker.number.int({ min: 1, max: 10 }),
-        order_date: faker.date.anytime()
+        order_date: faker.date.past()
       });
     });
 
