@@ -8,7 +8,7 @@ const { sequelize, User, Customer, Seller } = require('../models');
 async function createUser(userData) {
   const id = crypto.randomUUID();
 
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
   const hash = await bcrypt.hash(userData.password, salt);
 
   userData.id = id;
