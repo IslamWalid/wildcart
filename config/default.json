@@ -4,8 +4,6 @@
     "host": "localhost",
     "port": 5432,
     "database": "wildcart_dev",
-    "username": "postgres",
-    "password": "secret",
     "migrationStorageTableName": "sequelize_meta"
   },
   "server": {
