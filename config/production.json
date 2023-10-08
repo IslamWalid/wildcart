@@ -1,0 +1,6 @@
+{
+  "dbConfig": {
+    "host": "db",
+    "database": "wildcart"
+  }
+}
