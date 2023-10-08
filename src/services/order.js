@@ -10,10 +10,7 @@ async function createOrder(customerId, product, quantity) {
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount: product.price * quantity * 100,
-    currency: 'usd',
-    metadata: {
-      orderId: id
-    }
+    currency: 'usd'
   });
 
   await sequelize.transaction(async (t) => {
@@ -117,7 +114,7 @@ function retrievePaymentEvent(stripeSignature, payload) {
 async function handlePaymentIntentSucceeded(paymentIntent) {
   await Order.update({ status: OrderStatus.PENDING }, {
     where: {
-      id: paymentIntent.metadata.orderId
+      paymentIntentId: paymentIntent.id
     }
   });
 }
