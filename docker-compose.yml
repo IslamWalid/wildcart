@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    environment:
+      NODE_ENV: production
+      SALT_ROUNDS: ${SALT_ROUNDS}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN}
+      SESSION_SECRET: ${SESSION_SECRET}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET_KEY: ${STRIPE_WEBHOOK_SECRET_KEY}
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+        window: 1s
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
+      args:
+        POSTGRES_USER: ${POSTGRES_USER}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+        window: 1s
+
+volumes:
+  db_data:
