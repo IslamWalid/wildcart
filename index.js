@@ -4,6 +4,9 @@ require('./src/utils/check-env')();
 const config = require('config');
 
 const app = require('./app');
+const log = require('./src/configs/log');
 
-const serverCofig = config.get('server');
-app.listen(serverCofig.port);
+const serverConfig = config.get('server');
+app.listen(serverConfig.port, () => {
+  log.info(`server is listening on port ${serverConfig.port}`);
+});
