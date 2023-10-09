@@ -42,3 +42,5 @@ jobs:
       env:
         ALLOWED_ORIGIN: "*"
         SESSION_SECRET: session secret
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: secret
