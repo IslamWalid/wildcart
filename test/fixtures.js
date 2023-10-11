@@ -9,8 +9,8 @@ function generateUser(user) {
     username: user?.username || faker.internet.userName(),
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
-    password: user?.password || faker.internet.password(),
-    phone: user?.phone || faker.phone.number('+201#########'),
+    password: user?.password || 'StrongPassword@12345!!',
+    phone: user?.phone || faker.phone.number('+2010########'),
     address: faker.location.city(),
     role,
     shopName: role === Roles.SELLER ? faker.company.name() : null
