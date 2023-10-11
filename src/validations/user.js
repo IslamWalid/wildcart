@@ -18,6 +18,4 @@ const register = joi.object({
   })
 });
 
-module.exports = {
-  register
-};
+module.exports = { register };

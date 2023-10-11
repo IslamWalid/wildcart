@@ -10,15 +10,6 @@ const OrderStatus = {
   ARRIVED: 'arrived'
 };
 
-const InputTypes = {
-  REGISTER: 0,
-  POST_PRODUCT: 1,
-  PATCH_PRODUCT: 2,
-  POST_REVIEW: 3,
-  PATCH_REVIEW: 4,
-  POST_ORDER: 5
-};
-
 const HttpStatus = {
   OK: 200,
   CREATED: 201,
@@ -54,7 +45,6 @@ const Messages = {
 module.exports = {
   Roles,
   OrderStatus,
-  InputTypes,
   HttpStatus,
   Messages
 };
