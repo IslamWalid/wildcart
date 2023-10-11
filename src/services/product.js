@@ -102,7 +102,7 @@ async function retrieveProduct(productId) {
 async function updateProduct(sellerId, productId, product) {
   const result = await Product.update(product, {
     where: { sellerId, id: productId },
-    fields: ['name', 'brand', 'quantity', 'price']
+    fields: ['quantity', 'price']
   });
 
   return result[0] > 0;
