@@ -2,7 +2,7 @@ const sendResErr = require('../utils/send-res-err');
 const createResErr = require('../utils/res-err-creator');
 const { HttpStatus, Messages } = require('../utils/enums');
 
-const errHandler = async (err, req, res, next) => {
+const errHandler = (err, req, res, next) => {
   const resErr = createResErr(err);
 
   if (!resErr.status) {
