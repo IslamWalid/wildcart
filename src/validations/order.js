@@ -1,7 +1,7 @@
 const joi = require('joi');
 
-const postOrder = joi.object({
+const post = joi.object({
   quantity: joi.number().integer().required()
 });
 
-module.exports = { postOrder };
+module.exports = { post };

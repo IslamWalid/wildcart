@@ -1,15 +1,9 @@
 const services = require('../services/order');
 const sendResErr = require('../utils/send-res-err');
-const validateInput = require('../utils/validate-input');
 const { retrieveProduct } = require('../services/product');
-const { HttpStatus, InputTypes, Messages, Roles } = require('../utils/enums');
+const { HttpStatus, Messages, Roles } = require('../utils/enums');
 
 const postOrder = async (req, res, next) => {
-  const message = validateInput(req.body, InputTypes.POST_ORDER);
-  if (message) {
-    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
-  }
-
   try {
     const product = await retrieveProduct(req.params.productId);
     if (!product) {

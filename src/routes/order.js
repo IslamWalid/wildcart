@@ -5,6 +5,8 @@ const controllers = require('../controllers/order');
 const authorize = require('../middlewares/authorize');
 const authenticate = require('../middlewares/authenticate');
 const { Roles } = require('../utils/enums');
+const validate = require('../middlewares/validate');
+const validations = require('../validations');
 
 const router = express.Router();
 
@@ -21,7 +23,7 @@ router.get('/', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getOr
 
 router.use(authorize(Roles.CUSTOMER));
 
-router.post('/:productId', controllers.postOrder);
+router.post('/:productId', validate(validations.order.post), controllers.postOrder);
 
 router.delete('/:orderId', controllers.deleteOrder);
 

@@ -1,5 +1,6 @@
 module.exports = {
   user: require('./user'),
   product: require('./product'),
-  review: require('./review')
+  review: require('./review'),
+  order: require('./order')
 };
