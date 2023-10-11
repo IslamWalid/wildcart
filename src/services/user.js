@@ -6,21 +6,22 @@ const { Roles } = require('../utils/enums');
 const { sequelize, User, Customer, Seller } = require('../models');
 
 async function createUser(userData) {
+  const user = { ...userData };
   const id = crypto.randomUUID();
 
   const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
-  const hash = await bcrypt.hash(userData.password, salt);
+  const hash = await bcrypt.hash(user.password, salt);
 
-  userData.id = id;
-  userData.password = hash;
+  user.id = id;
+  user.password = hash;
 
   await sequelize.transaction(async (t) => {
-    if (userData.role === Roles.CUSTOMER) {
-      userData.customer = { id };
-      await User.create(userData, { include: Customer, transaction: t });
+    if (user.role === Roles.CUSTOMER) {
+      user.customer = { id };
+      await User.create(user, { include: Customer, transaction: t });
     } else {
-      userData.seller = { id, shopName: userData.shopName };
-      await User.create(userData, { include: Seller, transaction: t });
+      user.seller = { id, shopName: user.shopName };
+      await User.create(user, { include: Seller, transaction: t });
     }
   });
 }
