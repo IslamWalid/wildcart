@@ -1,15 +1,9 @@
 const services = require('../services/user');
 const passport = require('../configs/passport');
 const sendResErr = require('../utils/send-res-err');
-const validateInput = require('../utils/validate-input');
-const { HttpStatus, Messages, InputTypes } = require('../utils/enums');
+const { HttpStatus, Messages } = require('../utils/enums');
 
 const register = async (req, res, next) => {
-  const message = validateInput(req.body, InputTypes.REGISTER);
-  if (message) {
-    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
-  }
-
   try {
     await services.createUser(req.body);
     res.sendStatus(HttpStatus.CREATED);
