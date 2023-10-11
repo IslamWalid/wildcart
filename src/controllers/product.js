@@ -1,14 +1,8 @@
 const services = require('../services/product');
 const sendResErr = require('../utils/send-res-err');
-const validateInput = require('../utils/validate-input');
-const { HttpStatus, Messages, InputTypes } = require('../utils/enums');
+const { HttpStatus, Messages } = require('../utils/enums');
 
 const postProduct = async (req, res, next) => {
-  const message = validateInput(req.body, InputTypes.POST_PRODUCT);
-  if (message) {
-    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
-  }
-
   try {
     const id = await services.createProduct(req.body, req.user.id);
     res.status(HttpStatus.CREATED).json({ id });
@@ -68,11 +62,6 @@ const getProduct = async (req, res, next) => {
 };
 
 const patchProduct = async (req, res, next) => {
-  const message = validateInput(req.body, InputTypes.PATCH_PRODUCT);
-  if (message) {
-    return sendResErr(res, { status: HttpStatus.BAD_REQUEST, message });
-  }
-
   try {
     const updated = await services.updateProduct(req.user.id, req.params.productId, req.body);
     if (!updated) {

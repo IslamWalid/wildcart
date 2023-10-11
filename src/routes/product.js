@@ -5,6 +5,8 @@ const controllers = require('../controllers/product');
 const upload = require('../middlewares/upload.js');
 const authorize = require('../middlewares/authorize');
 const authenticate = require('../middlewares/authenticate');
+const validate = require('../middlewares/validate');
+const validations = require('../validations');
 const { Roles } = require('../utils/enums');
 
 const router = express.Router();
@@ -20,9 +22,9 @@ router.get('/:productId', controllers.getProduct);
 
 router.use(authenticate, authorize(Roles.SELLER));
 
-router.post('/', controllers.postProduct);
+router.post('/', validate(validations.product.post), controllers.postProduct);
 
-router.patch('/:productId', controllers.patchProduct);
+router.patch('/:productId', validate(validations.product.patch), controllers.patchProduct);
 
 router.patch('/images/:productId', upload, controllers.patchImage);
 

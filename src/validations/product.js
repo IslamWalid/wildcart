@@ -1,6 +1,6 @@
 const joi = require('joi');
 
-const postProduct = joi.object({
+const post = joi.object({
   name: joi.string().required(),
   brand: joi.string().required(),
   quantity: joi.number().integer().required(),
@@ -8,15 +8,12 @@ const postProduct = joi.object({
   categories: joi.array().required()
 });
 
-const patchProduct = joi.object({
-  name: joi.string(),
-  brand: joi.string(),
+const patch = joi.object({
   quantity: joi.number().integer(),
-  price: joi.number().integer(),
-  categories: joi.array()
+  price: joi.number().integer()
 });
 
 module.exports = {
-  postProduct,
-  patchProduct
+  post,
+  patch
 };
