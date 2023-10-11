@@ -17,7 +17,7 @@ router.post('/payment-events', controllers.handlePaymentEvents);
 
 router.use(authenticate);
 
-router.patch('/:orderId', authorize(Roles.SELLER), controllers.patchOrder);
+router.patch('/:orderId', authorize(Roles.SELLER), validate(validations.order.patch), controllers.patchOrder);
 
 router.get('/', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getOrders);
 
