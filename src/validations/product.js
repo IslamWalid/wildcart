@@ -11,7 +11,7 @@ const post = joi.object({
 const patch = joi.object({
   quantity: joi.number().integer(),
   price: joi.number().integer()
-});
+}).min(1);
 
 module.exports = {
   post,

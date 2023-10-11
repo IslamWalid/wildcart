@@ -8,7 +8,7 @@ const post = joi.object({
 const patch = joi.object({
   comment: joi.string(),
   rate: joi.number().integer().min(1).max(5)
-});
+}).min(1);
 
 module.exports = {
   post,
