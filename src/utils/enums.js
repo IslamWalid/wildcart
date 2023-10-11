@@ -31,6 +31,7 @@ const HttpStatus = {
 };
 
 const Messages = {
+  MISSING_SHOPNAME: '"shopName" is required for users of role "seller"',
   INVALID_USERNAME: 'invalid username',
   INVALID_PASSWORD: 'invalid password',
   INVALID_DATATYPE: 'invalid input datatype error',
@@ -38,7 +39,6 @@ const Messages = {
   INVALID_QUANTITY: 'order quantity greater than available products',
   INVALID_PHONE: 'invalid phone number',
   WEAK_PASSWORD: 'weak password',
-  MISSING_FIELDS: 'required fields are missing',
   UNAUTHORIZED: 'user is unauthorized',
   ROUTE_NOT_FOUND: 'requested route not found',
   NOT_FOUND: 'requested resource not found',
