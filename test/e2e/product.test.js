@@ -1,9 +1,35 @@
 require('dotenv').config();
 require('../../src/utils/check-env')();
 
-const { sequelize } = require('../../src/models/');
+const { sequelize, User, Category, Product } = require('../../src/models/');
+const { createUser } = require('../../src/services/user');
+const { createProduct } = require('../../src/services/product');
+const { Roles } = require('../../src/utils/enums');
+const { generateMultiple, generateProduct, generateCategory, generateUser } = require('../fixtures');
 
 describe('product endpoints', () => {
+  let seller, categories, products;
+
+  beforeAll(async () => {
+    seller = generateUser({ role: Roles.SELLER });
+    await createUser(seller);
+    const _seller = await User.findOne({
+      attributes: ['id'],
+      where: { username: seller.username },
+      raw: true
+    });
+    seller.id = _seller.id;
+
+    categories = generateMultiple(generateCategory, 3);
+    await Category.bulkCreate(categories);
+
+    products = generateMultiple(generateProduct, 10, {
+      sellerId: seller.id,
+      categories: categories.map((_) => _.name)
+    });
+    await Promise.all(products.map((_) => createProduct(_, seller.id)));
+  });
+
   describe('get products', () => {
     it.todo('should return the available products with status code 200');
     it.todo('should return a specific number of products specified in limit query param with status code 200');
@@ -32,6 +58,9 @@ describe('product endpoints', () => {
   });
 
   afterAll(async () => {
+    await Product.destroy({ where: { sellerId: seller.id } });
+    await Category.destroy({ where: { name: categories.map((_) => _.name) } });
+    await User.destroy({ where: { id: seller.id } });
     await sequelize.close();
   });
 });
