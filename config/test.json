@@ -1,5 +1,9 @@
 {
   "dbConfig": {
-    "database": "wildcart_test"
+    "database": "wildcart_test",
+    "logging": false
+  },
+  "log": {
+    "level": "error"
   }
 }
