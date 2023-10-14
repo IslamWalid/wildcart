@@ -36,6 +36,9 @@ async function createOrder(customerId, product, quantity) {
 
 async function retrieveCustomerOrders(customerId, skip, limit) {
   const { rows, count } = await Order.findAndCountAll({
+    attributes: {
+      exclude: ['paymentIntentId']
+    },
     where: { customerId },
     raw: true,
     limit,
@@ -50,6 +53,9 @@ async function retrieveCustomerOrders(customerId, skip, limit) {
 
 async function retrieveSellerOrders(sellerId, skip, limit) {
   const { rows, count } = await Order.findAndCountAll({
+    attributes: {
+      exclude: ['paymentIntentId']
+    },
     include: {
       model: Product,
       attributes: [],
