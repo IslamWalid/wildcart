@@ -50,6 +50,16 @@ function generateOrder(order) {
   };
 }
 
+function generateReview(review) {
+  return {
+    customerId: review?.customerId || faker.string.uuid(),
+    productId: review?.productId || faker.string.uuid(),
+    rate: faker.number.int({ min: 1, max: 5 }),
+    comment: faker.lorem.sentence({ min: 10, max: 20 }),
+    createdAt: faker.date.past()
+  };
+}
+
 function generateMultiple(generator, count, obj) {
   return faker.helpers.multiple(() => generator(obj), { count });
 }
@@ -59,5 +69,6 @@ module.exports = {
   generateProduct,
   generateCategory,
   generateOrder,
+  generateReview,
   generateMultiple
 };
