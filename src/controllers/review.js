@@ -11,14 +11,19 @@ const postReview = async (req, res, next) => {
   }
 };
 
-const getReview = async (req, res, next) => {
+const getProductReviews = async (req, res, next) => {
   try {
-    const reviews = await services.retrieveProductReviews(req.params.productId);
-    if (!reviews) {
-      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
-    }
+    const { reviews, pageCount } =
+      await services.retrieveProductReviews(req.params.productId, req.skip, req.query.limit);
 
-    res.status(HttpStatus.OK).json({ reviews });
+    const next = res.locals.paginate.hasNextPages(pageCount)
+      ? res.locals.paginate.href()
+      : null;
+    const prev = res.locals.paginate.hasPreviousPages
+      ? res.locals.paginate.href(true)
+      : null;
+
+    res.status(HttpStatus.OK).json({ reviews, next, prev, pageCount });
   } catch (err) {
     next(err);
   }
@@ -52,7 +57,7 @@ const deleteReview = async (req, res, next) => {
 
 module.exports = {
   postReview,
-  getReview,
+  getProductReviews,
   patchReview,
   deleteReview
 };

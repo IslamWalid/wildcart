@@ -1,4 +1,4 @@
-const { Product, Review } = require('../models');
+const { Review } = require('../models');
 
 async function createReview(customerId, productId, review) {
   await Review.create({
@@ -8,18 +8,21 @@ async function createReview(customerId, productId, review) {
   });
 }
 
-async function retrieveProductReviews(productId) {
-  const product = await Product.findByPk(productId, {
-    attributes: [],
-    include: {
-      model: Review,
-      attributes: {
-        exclude: ['productId']
-      }
-    }
+async function retrieveProductReviews(productId, skip, limit) {
+  const { rows, count } = await Review.findAndCountAll({
+    where: { productId },
+    attributes: {
+      exclude: ['productId']
+    },
+    offset: skip,
+    limit,
+    raw: true
   });
 
-  return product ? product.reviews : null;
+  return {
+    reviews: rows,
+    pageCount: Math.ceil(count / limit)
+  };
 }
 
 async function updateProductReview(customerId, productId, review) {

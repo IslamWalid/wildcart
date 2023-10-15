@@ -1,4 +1,5 @@
 const express = require('express');
+const paginate = require('express-paginate');
 
 const controllers = require('../controllers/review');
 const authorize = require('../middlewares/authorize');
@@ -9,7 +10,10 @@ const validations = require('../validations');
 
 const router = express.Router();
 
-router.get('/:productId', controllers.getReview);
+const DEFAULT_LIMIT = 4;
+const MAX_LIMIT = 10;
+
+router.get('/:productId', paginate.middleware(DEFAULT_LIMIT, MAX_LIMIT), controllers.getProductReviews);
 
 router.use(authenticate, authorize(Roles.CUSTOMER));
 
