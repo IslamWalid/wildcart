@@ -23,7 +23,7 @@ function generateProduct(product) {
     name: product?.name || faker.commerce.productName(),
     sellerId: product?.sellerId || faker.string.uuid(),
     price: faker.number.int({ min: 10, max: 200 }),
-    quantity: faker.number.int({ min: 1, max: 50 }),
+    quantity: faker.number.int({ min: 10, max: 50 }),
     brand: faker.company.name(),
     avgRate: faker.number.float({ min: 1, max: 5, precision: 2 }),
     categories: product?.categories ||
@@ -38,6 +38,18 @@ function generateCategory(category) {
   };
 }
 
+function generateOrder(order) {
+  return {
+    id: faker.string.uuid(),
+    customerId: order?.customerId || faker.string.uuid(),
+    productId: order?.productId || faker.string.uuid(),
+    paymentIntentId: `pi_${faker.string.alphanumeric({ length: 24 })}`,
+    status: order?.status,
+    quantity: faker.number.int({ min: 1, max: 10 }),
+    arrivalDate: faker.date.past()
+  };
+}
+
 function generateMultiple(generator, count, obj) {
   return faker.helpers.multiple(() => generator(obj), { count });
 }
@@ -46,5 +58,6 @@ module.exports = {
   generateUser,
   generateProduct,
   generateCategory,
+  generateOrder,
   generateMultiple
 };

@@ -4,7 +4,7 @@ require('../../src/utils/check-env')();
 const req = require('supertest');
 
 const app = require('../../app');
-const { sequelize, User, Category, Product, Session } = require('../../src/models/');
+const { sequelize, User, Category, Product } = require('../../src/models/');
 const { createUser } = require('../../src/services/user');
 const { createProduct } = require('../../src/services/product');
 const { Roles, HttpStatus, Messages } = require('../../src/utils/enums');
@@ -216,7 +216,6 @@ describe('product endpoints', () => {
     await Product.destroy({ where: { sellerId: seller.id } });
     await Category.destroy({ where: { name: categories.map((_) => _.name) } });
     await User.destroy({ where: { id: seller.id } });
-    await Session.destroy({ where: {} });
     await sequelize.close();
   });
 });
