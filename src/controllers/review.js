@@ -28,7 +28,7 @@ const patchReview = async (req, res, next) => {
   try {
     const updated = await services.updateProductReview(req.user.id, req.params.productId, req.body);
     if (!updated) {
-      return sendResErr(res, { status: 404, message: Messages.NOT_FOUND });
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
     res.sendStatus(HttpStatus.OK);
@@ -41,7 +41,7 @@ const deleteReview = async (req, res, next) => {
   try {
     const deleted = await services.deleteProductReview(req.user.id, req.params.productId);
     if (!deleted) {
-      return sendResErr(res, { status: 404, message: Messages.NOT_FOUND });
+      return sendResErr(res, { status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
     res.sendStatus(HttpStatus.OK);
