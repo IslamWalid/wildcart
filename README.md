@@ -23,7 +23,7 @@
 | **Payment Service** | [Stripe] |
 | **Auth** | [Passport] (Authentication framework for Nodejs) |
 | **Testing Framework** | [Jest] (testing framework for javascript) |
-| Logger | [Winston] (log with different levels written to several mediums like stdout, files, database, etc.. ) |
+| **Logger** | [Winston] (log with different levels written to several mediums like stdout, files, database, etc.. ) |
 
 ## Project Structure
 
@@ -81,6 +81,28 @@ This directory consists of JSON formated files used to provide the server with g
     └── ...
 ```
 
+## Server
+
+### API
+The server provides REST interface to its consumers, the API is documented using OpenAPI specs [here](https://app.swaggerhub.com/apis-docs/IslamWalid/wildcart/1.0.0).
+
+### Build And Test
+
+**Using docker compose:**
+```sh
+docker-compose up --env-file .env --build -d
+```
+
+**Environment Variables:**
+
+- `ALLOWED_ORIGIN`: controls the allowed cors.
+- `POSTGRES_USER`: postgres database username.
+- `POSTGRES_PASSWORD`: postgres database password.
+- `SALT_ROUNDS`: used for password hashing.
+- `SESSION_SECRET`: used by [express-session].
+- `STRIPE_SECRET_KEY`: stripe secret key obtained from a stripe account for the API integration.
+- `STRIPE_WEBHOOK_SECRET_KEY`: webhook secret used to validate the identity of stripe webhook requests.
+
 
 [Nodejs]: https://nodejs.org
 [Express]: https://expressjs.com
@@ -91,3 +113,4 @@ This directory consists of JSON formated files used to provide the server with g
 [Jest]: https://jestjs.io
 [config]: https://www.npmjs.com/package/config
 [Winston]: https://www.npmjs.com/package/winston
+[express-session]: https://www.npmjs.com/package/express-session
