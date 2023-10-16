@@ -31,16 +31,20 @@ jobs:
       run: docker container exec --user postgres postgres-test psql -c "CREATE DATABASE wildcart_test"
 
     - name: create database tables
-      run: |
-        npm run migrate:up
-        npm run seed:up
+      run: npm run migrate:up
       env:
         NODE_ENV: test
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: secret
 
     - name: run jest tests
       run: npm test
       env:
+        NODE_ENV: test
         ALLOWED_ORIGIN: "*"
         SESSION_SECRET: session secret
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: secret
+        SALT_ROUNDS: 5
+        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        STRIPE_WEBHOOK_SECRET_KEY: ${{ secrets.STRIPE_WEBHOOK_SECRET_KEY }}
