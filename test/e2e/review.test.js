@@ -1,3 +1,6 @@
+require('dotenv').config();
+require('../../src/utils/check-env')();
+
 const req = require('supertest');
 
 const app = require('../../app');
